@@ -1,0 +1,272 @@
+How to use it:
+1. Put the jQuery Mark Your Calendar plugin's JavaScript and CSS files on the HTML page.
+
+1
+<link rel="stylesheet" href="/path/to/css/mark-your-calendar.css" />
+2
+<script src="/path/to/cdn/jquery.slim.min.js"></script>
+3
+<script src="/path/to/js/mark-your-calendar.js"></script>
+2. Create a container in which the plugin renders the calendar.
+
+1
+<div id="picker"></div>
+3. Define the available hours of availability for each day of the week.
+
+1
+const myHours: = [
+2
+      ['1:00', '2:00', '3:00', '4:00', '5:00'],
+3
+      ['2:00'],
+4
+      ['3:00'],
+5
+      ['4:00'],
+6
+      ['5:00'],
+7
+      ['6:00'],
+8
+      ['7:00']
+9
+],
+4. Call the plugin on the calendar container and done.
+
+1
+$('#picker').markyourcalendar({
+2
+  availability: myAvailability
+3
+});
+5. Determine whether to allow the user to select multiple time slots. Default: false.
+
+1
+$('#picker').markyourcalendar({
+2
+  availability: myAvailability,
+3
+  isMultiple:true
+4
+});
+6. Localize the day/month names.
+
+1
+$('#picker').markyourcalendar({
+2
+  availability: myAvailability,
+3
+  months: ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'],
+4
+  weekdays: ['sun','mon','tue','wed','thurs','fri','sat']
+5
+});
+7. Determine the start date.
+
+1
+$('#picker').markyourcalendar({
+2
+  availability: myAvailability,
+3
+  startDate:new Date()
+4
+});
+8. Specify an array of pre-selected dates.
+
+1
+$('#picker').markyourcalendar({
+2
+  availability: myAvailability,
+3
+  selectedDates: []
+4
+});
+9. Customize the prev/next navigation buttons.
+
+1
+$('#picker').markyourcalendar({
+2
+  availability: myAvailability,
+3
+  prevHtml: prevHtml,
+4
+  nextHtml: nextHtml
+5
+});
+10. Get the selected date(s) using the onClick callback.
+
+01
+$('#picker').markyourcalendar({
+02
+  availability: myAvailability,
+03
+  onClick:function(ev, data) {
+04
+    // data is a list of datetimes
+05
+    console.log(data);
+06
+    var html = ``;
+07
+    $.each(data,function() {
+08
+      var d =this.split(' ')[0];
+09
+      var t =this.split(' ')[1];
+10
+      html += `<p>` + d + ` ` + t + `</p>`;
+11
+    });
+12
+    $('#output').html(html);
+13
+  },
+14
+});
+11. Trigger a function when users click navigation buttons.
+
+view source
+01
+$('#picker').markyourcalendar({
+02
+  availability: myAvailability,
+03
+  onClickNavigator:function(ev, instance) {
+04
+  var arr = [
+05
+    [
+06
+      ['4:00','5:00','6:00','7:00','8:00'],
+07
+      ['1:00','5:00'],
+08
+      ['2:00','5:00'],
+09
+      ['3:30'],
+10
+      ['2:00','5:00'],
+11
+      ['2:00','5:00'],
+12
+      ['2:00','5:00']
+13
+    ],
+14
+    [
+15
+      ['2:00','5:00'],
+16
+      ['4:00','5:00','6:00','7:00','8:00'],
+17
+      ['4:00','5:00'],
+18
+      ['2:00','5:00'],
+19
+      ['2:00','5:00'],
+20
+      ['2:00','5:00'],
+21
+      ['2:00','5:00']
+22
+    ],
+23
+    [
+24
+      ['4:00','5:00'],
+25
+      ['4:00','5:00'],
+26
+      ['4:00','5:00','6:00','7:00','8:00'],
+27
+      ['3:00','6:00'],
+28
+      ['3:00','6:00'],
+29
+      ['3:00','6:00'],
+30
+      ['3:00','6:00']
+31
+    ],
+32
+    [
+33
+      ['4:00','5:00'],
+34
+      ['4:00','5:00'],
+35
+      ['4:00','5:00'],
+36
+      ['4:00','5:00','6:00','7:00','8:00'],
+37
+      ['4:00','5:00'],
+38
+      ['4:00','5:00'],
+39
+      ['4:00','5:00']
+40
+    ],
+41
+    [
+42
+      ['4:00','6:00'],
+43
+      ['4:00','6:00'],
+44
+      ['4:00','6:00'],
+45
+      ['4:00','6:00'],
+46
+      ['4:00','5:00','6:00','7:00','8:00'],
+47
+      ['4:00','6:00'],
+48
+      ['4:00','6:00']
+49
+    ],
+50
+    [
+51
+      ['3:00','6:00'],
+52
+      ['3:00','6:00'],
+53
+      ['3:00','6:00'],
+54
+      ['3:00','6:00'],
+55
+      ['3:00','6:00'],
+56
+      ['4:00','5:00','6:00','7:00','8:00'],
+57
+      ['3:00','6:00']
+58
+    ],
+59
+    [
+60
+      ['3:00','4:00'],
+61
+      ['3:00','4:00'],
+62
+      ['3:00','4:00'],
+63
+      ['3:00','4:00'],
+64
+      ['3:00','4:00'],
+65
+      ['3:00','4:00'],
+66
+      ['4:00','5:00','6:00','7:00','8:00']
+67
+    ]
+68
+  ]
+69
+  var rn = Math.floor(Math.random() * 10) % 7;
+70
+  instance.setAvailability(arr[rn]);
+71
+}
+72
+});
