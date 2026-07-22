@@ -31,6 +31,7 @@ jobs:
             composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
             php artisan package:discover --ansi
             php artisan migrate --force
+            php artisan optimize:clear
             php artisan config:cache
             php artisan view:cache
             php artisan route:cache || true
