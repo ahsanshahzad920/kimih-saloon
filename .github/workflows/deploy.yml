@@ -32,24 +32,8 @@ jobs:
 
             # Regenerate the subdomain's front controller every deploy so it can't
             # go missing (e.g. security-scanner quarantine) without self-healing.
-            cat > "$DEST/index.php" <<'PHPEOF'
-<?php
-
-use Illuminate\Http\Request;
-
-define('LARAVEL_START', microtime(true));
-
-$appPath = '__APP_PATH__';
-
-if (file_exists($maintenance = $appPath.'/storage/framework/maintenance.php')) {
-    require $maintenance;
-}
-
-require $appPath.'/vendor/autoload.php';
-
-(require_once $appPath.'/bootstrap/app.php')
-    ->handleRequest(Request::capture());
-PHPEOF
+            # (base64-encoded to dodge YAML block-scalar indentation rules)
+            echo 'PD9waHAKCnVzZSBJbGx1bWluYXRlXEh0dHBcUmVxdWVzdDsKCmRlZmluZSgnTEFSQVZFTF9TVEFSVCcsIG1pY3JvdGltZSh0cnVlKSk7CgokYXBwUGF0aCA9ICdfX0FQUF9QQVRIX18nOwoKaWYgKGZpbGVfZXhpc3RzKCRtYWludGVuYW5jZSA9ICRhcHBQYXRoLicvc3RvcmFnZS9mcmFtZXdvcmsvbWFpbnRlbmFuY2UucGhwJykpIHsKICAgIHJlcXVpcmUgJG1haW50ZW5hbmNlOwp9CgpyZXF1aXJlICRhcHBQYXRoLicvdmVuZG9yL2F1dG9sb2FkLnBocCc7CgoocmVxdWlyZV9vbmNlICRhcHBQYXRoLicvYm9vdHN0cmFwL2FwcC5waHAnKQogICAgLT5oYW5kbGVSZXF1ZXN0KFJlcXVlc3Q6OmNhcHR1cmUoKSk7Cg==' | base64 -d > "$DEST/index.php"
             sed -i "s#__APP_PATH__#$APP_ABS_PATH#" "$DEST/index.php"
 
             composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
