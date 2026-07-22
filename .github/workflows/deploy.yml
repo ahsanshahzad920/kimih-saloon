@@ -9,36 +9,6 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Diagnose document root
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          port: ${{ secrets.SSH_PORT }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            echo "HOME=$HOME"
-            ls -la "$HOME"
-            echo "--- looking for public_html dirs ---"
-            find "$HOME" -maxdepth 4 -iname "public_html" 2>/dev/null | while read -r d; do
-              echo "FOUND: $d"
-              echo "  type: $(stat -c '%F' "$d" 2>/dev/null)"
-              readlink -f "$d"
-              ls -la "$d" | head -20
-              echo "  landing-page.css present? $(test -f "$d/assets/css/landing-page.css" && echo yes || echo no)"
-            done
-            echo "--- kimih_app/public vs candidates ---"
-            ls -la ~/kimih_app/public | head -20
-            echo "--- inside goodsessentialsllc.com/public_html/kimih ---"
-            ls -la ~/domains/goodsessentialsllc.com/public_html/kimih
-            echo "landing-page.css present? $(test -f ~/domains/goodsessentialsllc.com/public_html/kimih/assets/css/landing-page.css && echo yes || echo no)"
-            echo "--- index.php diff ---"
-            diff ~/kimih_app/public/index.php ~/domains/goodsessentialsllc.com/public_html/kimih/index.php && echo "IDENTICAL" || echo "DIFFERENT (see above)"
-            echo "--- htaccess diff ---"
-            diff ~/kimih_app/public/.htaccess ~/domains/goodsessentialsllc.com/public_html/kimih/.htaccess && echo "IDENTICAL" || echo "DIFFERENT (see above)"
-            echo "--- storage entry ---"
-            ls -la ~/domains/goodsessentialsllc.com/public_html/kimih/storage 2>&1
-
       - name: Deploy over SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -50,6 +20,14 @@ jobs:
             cd ~/kimih_app
             git fetch origin main
             git reset --hard origin/main
+
+            DEST=~/domains/goodsessentialsllc.com/public_html/kimih
+            if command -v rsync >/dev/null 2>&1; then
+              rsync -a --exclude 'index.php' --exclude 'storage' ~/kimih_app/public/ "$DEST/"
+            else
+              find ~/kimih_app/public -mindepth 1 -maxdepth 1 ! -name index.php ! -name storage -exec cp -a {} "$DEST/" \;
+            fi
+
             composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
             php artisan package:discover --ansi
             php artisan migrate --force
