@@ -190,7 +190,7 @@
             },
             1000:{
                 items: 2,
-                center: true,
+                center: false,
             }
         },
         navText: [

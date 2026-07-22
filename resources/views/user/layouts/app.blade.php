@@ -324,7 +324,7 @@
     </div>
     @yield('top-scripts')
 
-    {{-- Google Translator for Multi Language Mode --}}
+    {{-- Google Translator for Multi Language Mode
     <script type="text/javascript">
         function googleTranslateElementInit() {
             new google.translate.TranslateElement({
@@ -365,6 +365,7 @@
             }, 100);
         });
     </script>
+    --}}
 
 
     {{-- <script src="{{asset('assets/js/jquery.min.js')}}"></script> --}}

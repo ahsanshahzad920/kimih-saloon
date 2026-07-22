@@ -3779,4 +3779,22 @@ position: relative;
   .single-content h5 {
     font-size: 20px;
   }
+  .nav-tabs {
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    justify-content: flex-start !important;
+    white-space: nowrap !important;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* IE and Edge */
+  }
+  .nav-tabs::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
+  .nav-tabs .nav-link,
+  .nav-tabs button.nav-link {
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+  }
 }

@@ -111,9 +111,9 @@
                                 </ul>
                             </div>
                         </li> --}}
-                        <li class="nav-item ms-3">
+                        {{-- <li class="nav-item ms-3">
                             <div id="google_translate_element"></div>
-                        </li>
+                        </li> --}}
                     </ul>
 
                 </div>
