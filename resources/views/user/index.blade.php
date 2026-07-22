@@ -48,8 +48,8 @@
         <div class="container">
             <div class="banner-form">
                 <form action="{{ route('shop.search') }}" method="GET">
-                    <div class="row">
-                        <div class="col-lg-3 col-12">
+                    <div class="row g-3 align-items-end">
+                        <div class="col-lg-3 col-md-6 col-12">
                             <div class="form-group form-group-list">
                                 <div class="from-icon">
                                     <i class="flaticon-user"></i>
@@ -65,7 +65,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-lg-3 col-12">
+                        <div class="col-lg-3 col-md-6 col-12">
                             <div class="form-group form-group-list">
                                 <div class="from-icon">
                                     <i class="flaticon-pin"></i>
@@ -73,14 +73,12 @@
                                 <label>Current Location <i class="flaticon-arrow-down-sign-to-navigate"></i>
                                 </label>
                                 <input type="text" class="form-control" name="location" id="addressInput"
-                                    placeholder="Type location">
+                                    placeholder="Type location" autocomplete="off">
                                 <div id="suggestionsContainer"></div>
                             </div>
                         </div>
-                        <input type="hidden" name="lat" id="lat">
-                        <input type="hidden" name="lon" id="lon">
 
-                        <div class="col-lg-3 col-12">
+                        <div class="col-lg-3 col-md-6 col-12">
                             <div class="form-group form-group-list">
                                 <div class="from-icon">
                                     <i class="flaticon-booking-1"></i>
@@ -91,7 +89,7 @@
                                     data-error="Please Enter Date" placeholder="December 28, 2021">
                             </div>
                         </div>
-                        <div class="col-lg-3 col-12">
+                        <div class="col-lg-3 col-md-6 col-12">
                             <div class="form-group form-group-list">
                                 <div class="from-icon">
                                     <i class="flaticon-clock"></i>
@@ -103,9 +101,13 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-3 mx-auto text-center">
-                        <button type="submit" class="default-btn"> Book Now <i class="flaticon-booking"></i>
-                        </button>
+                    <input type="hidden" name="lat" id="lat">
+                    <input type="hidden" name="lon" id="lon">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-6 col-12 mx-auto mt-3">
+                            <button type="submit" class="default-btn w-100"> Book Now <i class="flaticon-booking"></i>
+                            </button>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -116,7 +118,7 @@
     {{-- Stores  --}}
     <section class="services-area ptb-100 mt-0 mt-md-5 pt-0 pt-md-5">
         <div class="container">
-            <div class="section-title mb-45 text-center">
+            <div class="section-title mb-45 text-center" data-aos="fade-up" data-aos-duration="800">
                 <span>Best For you</span>
                 <h2>Recommended</h2>
 
@@ -125,10 +127,9 @@
                 @foreach ($users as $user)
                     <div class="col-lg-4 col-sm-6 col-12 col-container">
                         <div class="services-card">
-                            <a href="#">
-                                {{-- {{dd($user->businessUser->images[0]['image'])}} --}}
+                            <a href="{{ route('shop.details', $user->businessUser->slug ?? '') }}">
                                 <img src="{{ isset($user->businessUser->images[0]) ? asset('storage/' . $user->businessUser->images[0]['image']) : asset('assets/images/shope.png') }}"
-                                    alt="Services" />
+                                    alt="{{ $user->businessUser->business_name ?? 'Salon' }}" loading="lazy" />
                             </a>
                             <div class="content">
                                 <h3><a
@@ -164,16 +165,15 @@
     <section class="about-area section-bg pt-100 pb-70">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-lg-6">
+                <div class="col-lg-6 col-12" data-aos="fade-right" data-aos-duration="800">
                     <div class="about-img-three mr-20">
-                        {{-- <img class="rounded" src="assets/images/shope4.png" alt="About" /> --}}
-                        <img class="rounded"
+                        <img class="rounded img-fluid"
                             src="{{ isset($home->section1_image) ? asset($home->section1_image) : asset('assets/images/shope4.png') }}"
-                            alt="About" />
+                            alt="{{ $home->section1_title ?? 'About Kimih' }}" loading="lazy" />
 
                     </div>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-lg-6 col-12" data-aos="fade-left" data-aos-duration="800">
                     <div class="about-content about-content-max">
                         <div class="section-title">
 
@@ -214,9 +214,8 @@
                     <i class="ri-play-fill"></i>
                 </a>
 
-                <div class="section-title text-center">
+                <div class="section-title text-center" data-aos="zoom-in" data-aos-duration="800">
                     <span>You're Welcomed!</span>
-                    {{-- {{dd($home)}} --}}
                     <h2>{{ $home->section2_title ?? 'We Care About Your Nail And Your well-Being' }}</h2>
                 </div>
                 <div class="top-vector" data-aos="fade-left" data-aos-delay="300" data-aos-duration="500">
@@ -232,7 +231,7 @@
     {{-- Feedback Section --}}
     <section class="testimonial-area section-bg ptb-100">
         <div class="container">
-            <div class="section-title mb-45 text-center">
+            <div class="section-title mb-45 text-center" data-aos="fade-up" data-aos-duration="800">
                 <span>Our Testimonial</span>
                 <h2>What Our Clients Feedback</h2>
             </div>
@@ -241,8 +240,7 @@
                     <div class="testimonial-card">
                         <div class="testimonial-img">
                             <img src="{{ isset($feedback->image) ? asset($feedback->image) : asset('assets/images/testimonial/testimonial-img1.jpg') }}"
-                                alt="Testimonial" style="max-width: 130px;
-                        " />
+                                alt="{{ $feedback->name ?? 'Client' }}" loading="lazy" style="max-width: 130px;" />
                             <i class="flaticon-quote"></i>
                         </div>
                         <div class="content">

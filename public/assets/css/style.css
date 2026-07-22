@@ -8794,3 +8794,34 @@ background-size: cover;
 @media screen and (max-width:990px){
     .counter{ margin-bottom: 40px; }
 }
+
+/* Accessibility: visible keyboard focus state on interactive elements */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+.default-btn:focus-visible,
+.more-btn:focus-visible,
+.services-card a:focus-visible {
+  outline: 2px solid var(--mainColor) !important;
+  outline-offset: 2px !important;
+}
+
+/* Recommended shop cards: clearer hover affordance + comfortable touch target */
+.services-card {
+  -webkit-transition: -webkit-transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.services-card:hover {
+  -webkit-box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
+.services-card .content h3 a {
+  display: inline-block;
+  min-height: 44px;
+}
+.services-card .more-btn {
+  min-width: 44px;
+  min-height: 44px;
+}

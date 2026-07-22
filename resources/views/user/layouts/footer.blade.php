@@ -3,7 +3,7 @@
 <footer class="footer-area footer-bg">
     <div class="container pt-100 pb-70">
         <div class="row">
-            <div class="col-lg-4 col-sm-6">
+            <div class="col-lg-4 col-sm-6 col-12">
                 <div class="footer-widget pe-5">
                     <div class="footer-logo">
                         <a href="#">
@@ -15,29 +15,29 @@
                     <!-- <p> Pellentesque habitant morbi tristique senectus netus malesuada fames ac turpis egestas vesti ulum tortor quam bulum tortor feugiat </p> -->
                     <ul class="social-link">
                         <li>
-                            <a href="{{ siteSocialLinks()->facebook_link ?? '' }}" target="_blank">
-                                <img style="width: 40px;" src="{{ url('assets/images/facebook.png') }}">
+                            <a href="{{ siteSocialLinks()->facebook_link ?? '#' }}" target="_blank" aria-label="Facebook">
+                                <i class="fa-brands fa-facebook-f"></i>
                             </a>
                         </li>
                         <li>
-                            <a href="{{ siteSocialLinks()->twitter_link ?? '' }}" target="_blank">
-                                <img style="width: 40px;" src="{{ asset('assets/images/social.png') }}">
+                            <a href="{{ siteSocialLinks()->twitter_link ?? '#' }}" target="_blank" aria-label="Twitter / X">
+                                <i class="fa-brands fa-x-twitter"></i>
                             </a>
                         </li>
                         <li>
-                            <a href="{{ siteSocialLinks()->linkedin_link ?? '' }}" target="_blank">
-                                <img style="width: 40px;" src="{{ asset('assets/images/twitter.png') }}">
+                            <a href="{{ siteSocialLinks()->linkedin_link ?? '#' }}" target="_blank" aria-label="LinkedIn">
+                                <i class="fa-brands fa-linkedin-in"></i>
                             </a>
                         </li>
                         <li>
-                            <a href="{{ siteSocialLinks()->instagram_link ?? '' }}" target="_blank">
-                                <img style="width: 40px;" src="{{ asset('assets/images/instagram.png') }}">
+                            <a href="{{ siteSocialLinks()->instagram_link ?? '#' }}" target="_blank" aria-label="Instagram">
+                                <i class="fa-brands fa-instagram"></i>
                             </a>
                         </li>
                     </ul>
                 </div>
             </div>
-            <div class="col-lg-4 col-sm-6">
+            <div class="col-lg-4 col-sm-6 col-12">
                 <div class="footer-widget pe-2">
                     <h3>Our Newsletter</h3>
                     <form class="newsletter-form" data-toggle="validator" method="POST">
@@ -49,7 +49,7 @@
                     </form>
                 </div>
             </div>
-            <div class="col-lg-4 col-sm-6">
+            <div class="col-lg-4 col-sm-6 col-12">
                 <div class="footer-widget ps-3">
                     <h3>Get In Touch</h3>
                     <ul class="footer-contact">
@@ -76,7 +76,7 @@
             </div>
         </div>
         <div class="row mt-4">
-            <div class="col-lg-4 col-sm-6">
+            <div class="col-lg-4 col-sm-6 col-12">
                 <div class="footer-widget ps-3">
                     <h3>For Business</h3>
                     <ul class="footer-contact">
@@ -93,7 +93,7 @@
                     </ul>
                 </div>
             </div>
-            <div class="col-lg-4 col-sm-6">
+            <div class="col-lg-4 col-sm-6 col-12">
                 <div class="footer-widget ps-3">
                     <h3>Legal</h3>
                     <ul class="footer-contact">
@@ -113,7 +113,7 @@
                     </ul>
                 </div>
             </div>
-            <div class="col-lg-4 col-sm-6">
+            <div class="col-lg-4 col-sm-6 col-12">
                 <div class="footer-widget ps-3">
                     <h3>Customer Support</h3>
                     <ul class="footer-contact">
