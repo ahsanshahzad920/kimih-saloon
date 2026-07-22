@@ -5,15 +5,30 @@
                 <img src="{{ asset(Storage::url(settings()->logo_front ?? '')) }}" alt="{{ settings()->site_name ?? 'Kimih' }} home">
             </a>
 
+            @php
+                $isHome = request()->is('/');
+            @endphp
             <ul class="kimih-nav-links">
                 <li>
-                    <a href="{{ route('shop.search') }}" class="kimih-nav-link {{ request()->routeIs('shop.search') ? 'is-active' : '' }}">Explore</a>
+                    <a href="{{ $isHome ? '#home' : url('/#home') }}" class="kimih-nav-link">Home</a>
                 </li>
                 <li>
-                    <a href="{{ route('business.page') }}" class="kimih-nav-link {{ request()->routeIs('business.page') ? 'is-active' : '' }}">For Business</a>
+                    <a href="{{ $isHome ? '#explore' : url('/#explore') }}" class="kimih-nav-link">Explore</a>
                 </li>
                 <li>
-                    <a href="{{ route('pricing') }}" class="kimih-nav-link {{ request()->routeIs('pricing') ? 'is-active' : '' }}">Pricing</a>
+                    <a href="{{ $isHome ? '#how-it-works' : url('/#how-it-works') }}" class="kimih-nav-link">How It Works</a>
+                </li>
+                <li>
+                    <a href="{{ $isHome ? '#why-kimih' : url('/#why-kimih') }}" class="kimih-nav-link">Why Kimih</a>
+                </li>
+                <li>
+                    <a href="{{ $isHome ? '#pricing' : url('/#pricing') }}" class="kimih-nav-link">Pricing</a>
+                </li>
+                <li>
+                    <a href="{{ $isHome ? '#for-business' : url('/#for-business') }}" class="kimih-nav-link">For Business</a>
+                </li>
+                <li>
+                    <a href="{{ $isHome ? '#testimonials' : url('/#testimonials') }}" class="kimih-nav-link">Testimonials</a>
                 </li>
                 <li class="dropdown">
                     <button class="kimih-nav-link kimih-nav-more bg-transparent dropdown-toggle" type="button"
@@ -71,9 +86,13 @@
         </div>
         <div class="kimih-mobile-drawer-body">
             <ul class="kimih-mobile-links">
-                <li><a href="{{ route('shop.search') }}">Explore</a></li>
-                <li><a href="{{ route('business.page') }}">For Business</a></li>
-                <li><a href="{{ route('pricing') }}">Pricing</a></li>
+                <li><a href="{{ $isHome ? '#home' : url('/#home') }}">Home</a></li>
+                <li><a href="{{ $isHome ? '#explore' : url('/#explore') }}">Explore</a></li>
+                <li><a href="{{ $isHome ? '#how-it-works' : url('/#how-it-works') }}">How It Works</a></li>
+                <li><a href="{{ $isHome ? '#why-kimih' : url('/#why-kimih') }}">Why Kimih</a></li>
+                <li><a href="{{ $isHome ? '#pricing' : url('/#pricing') }}">Pricing</a></li>
+                <li><a href="{{ $isHome ? '#for-business' : url('/#for-business') }}">For Business</a></li>
+                <li><a href="{{ $isHome ? '#testimonials' : url('/#testimonials') }}">Testimonials</a></li>
                 @auth
                     @if (auth()->user()->hasRole('Client'))
                         <li><a href="{{ route('user-profile.index') }}">Profile</a></li>

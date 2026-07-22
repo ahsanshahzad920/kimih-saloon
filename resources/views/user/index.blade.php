@@ -23,7 +23,7 @@
 @section('content')
 
     {{-- Redesigned Hero Section --}}
-    <section class="hero-wrapper-modern">
+    <section class="hero-wrapper-modern" id="home">
         {{-- Background glow blobs --}}
         <div class="hero-blob hero-blob-1"></div>
         <div class="hero-blob hero-blob-2"></div>
@@ -177,11 +177,14 @@
     </section>
 
     {{-- Section 2: Popular Categories --}}
-    <section class="categories-area kimih-section-spacing">
+    <section class="categories-area kimih-section-spacing" id="explore">
         <div class="container">
             <div class="kimih-section-header">
-                <span>Quick Discovery</span>
-                <h2>Popular Categories</h2>
+                <span>Explore</span>
+                <h2>Explore Beauty & Wellness</h2>
+                <p class="text-muted mt-3 text-center max-w-600 mx-auto" style="max-width: 600px;">
+                    Discover the services you love, from hair and beauty to wellness and self-care.
+                </p>
             </div>
             <div class="categories-grid">
                 <div class="category-card-wrapper">
@@ -261,11 +264,14 @@
     </section>
 
     {{-- Section 3: Recommended Businesses & Section 4: View All Shops CTA --}}
-    <section class="services-area kimih-section-spacing bg-light">
+    <section class="services-area kimih-section-spacing bg-light" id="businesses">
         <div class="container">
             <div class="kimih-section-header">
-                <span>Best For You</span>
-                <h2>Recommended Salons & Wellness Shops</h2>
+                <span>Businesses</span>
+                <h2>Discover Top Beauty & Wellness Businesses</h2>
+                <p class="text-muted mt-3 text-center max-w-600 mx-auto" style="max-width: 600px;">
+                    Explore trusted local businesses, compare your options, and find the perfect place for your next appointment.
+                </p>
             </div>
             <div class="row g-4">
                 @foreach ($users as $user)
@@ -273,9 +279,14 @@
                         $avgRating = $user->feedback->count() > 0 ? number_format($user->feedback->avg('rating'), 1) : null;
                         $reviewCount = $user->feedback->count();
                         $minPrice = $user->services->count() > 0 ? $user->services->min('price') : null;
+                        
+                        $fallbackIndex = ($loop->index % 6) + 1;
+                        if ($fallbackIndex == 2) {
+                            $fallbackIndex = 3;
+                        }
                         $firstImage = isset($user->businessUser->images[0]) 
                             ? asset('storage/' . $user->businessUser->images[0]['image']) 
-                            : asset('assets/images/shope.png');
+                            : asset('assets/images/shope' . $fallbackIndex . '.png');
                         
                         // Extract categories or show short service list
                         $servicesText = $user->businessUser->services ?? '';
@@ -355,13 +366,13 @@
     </section>
 
     {{-- Section 5: How Kimih Works --}}
-    <section class="how-it-works kimih-section-spacing">
+    <section class="how-it-works kimih-section-spacing" id="how-it-works">
         <div class="container">
             <div class="kimih-section-header">
-                <span>Simple & Easy</span>
-                <h2>Book Your Perfect Experience in 3 Easy Steps</h2>
-                <p class="text-muted mt-2 text-center max-w-600 mx-auto" style="max-width: 600px;">
-                    Discover trusted beauty and wellness professionals, compare your options, and book your appointment with ease.
+                <span>How It Works</span>
+                <h2>How Kimih Works</h2>
+                <p class="text-muted mt-3 text-center max-w-600 mx-auto" style="max-width: 600px;">
+                    Find the right service, compare your options, and book your appointment in just a few simple steps.
                 </p>
             </div>
             
@@ -374,8 +385,8 @@
                             <div class="journey-icon">
                                 <i class="fa-solid fa-magnifying-glass"></i>
                             </div>
-                            <h3>Find</h3>
-                            <p>Search for beauty and wellness services near you.</p>
+                            <h3>Discover</h3>
+                            <p>Find beauty and wellness services near you.</p>
                         </div>
                     </div>
                     <div class="col-md-4 col-12">
@@ -384,8 +395,8 @@
                             <div class="journey-icon">
                                 <i class="fa-solid fa-sliders"></i>
                             </div>
-                            <h3>Choose</h3>
-                            <p>Compare businesses, services, prices, and reviews.</p>
+                            <h3>Compare</h3>
+                            <p>Explore businesses, services, prices, and reviews.</p>
                         </div>
                     </div>
                     <div class="col-md-4 col-12">
@@ -395,7 +406,7 @@
                                 <i class="fa-solid fa-calendar-check"></i>
                             </div>
                             <h3>Book</h3>
-                            <p>Select your preferred time and book your appointment.</p>
+                            <p>Choose your preferred time and book your appointment.</p>
                         </div>
                     </div>
                 </div>
@@ -404,11 +415,14 @@
     </section>
 
     {{-- Section 6: Why Choose Kimih --}}
-    <section class="why-choose-us kimih-section-spacing bg-light">
+    <section class="why-choose-us kimih-section-spacing bg-light" id="why-kimih">
         <div class="container">
             <div class="kimih-section-header">
                 <span>Why Kimih</span>
-                <h2>Everything You Need to Book With Confidence</h2>
+                <h2>Why Choose Kimih?</h2>
+                <p class="text-muted mt-3 text-center max-w-600 mx-auto" style="max-width: 600px;">
+                    Everything you need to discover and book your next beauty and wellness experience.
+                </p>
             </div>
             
             <div class="row g-4 mt-2">
@@ -417,8 +431,8 @@
                         <div class="benefit-icon-wrapper">
                             <i class="fa-solid fa-shop"></i>
                         </div>
-                        <h3>Trusted Professionals</h3>
-                        <p>Discover beauty and wellness businesses in one convenient place.</p>
+                        <h3>Trusted Choices</h3>
+                        <p>Explore beauty and wellness businesses in one convenient place.</p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 col-12">
@@ -427,7 +441,7 @@
                             <i class="fa-solid fa-bolt"></i>
                         </div>
                         <h3>Easy Booking</h3>
-                        <p>Find your service and book your appointment in just a few clicks.</p>
+                        <p>Find and book your preferred service in just a few clicks.</p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 col-12">
@@ -435,8 +449,8 @@
                         <div class="benefit-icon-wrapper">
                             <i class="fa-solid fa-compress"></i>
                         </div>
-                        <h3>Explore Your Options</h3>
-                        <p>Compare businesses, services, and experiences before you decide.</p>
+                        <h3>Compare Your Options</h3>
+                        <p>Explore services, businesses, and experiences before you decide.</p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 col-12">
@@ -444,8 +458,8 @@
                         <div class="benefit-icon-wrapper">
                             <i class="fa-solid fa-user-clock"></i>
                         </div>
-                        <h3>Book on Your Terms</h3>
-                        <p>Find the service, professional, location, and time that work best for you.</p>
+                        <h3>Book With Confidence</h3>
+                        <p>Choose the service, professional, location, and time that work best for you.</p>
                     </div>
                 </div>
             </div>
@@ -453,16 +467,19 @@
     </section>
 
     {{-- Section 7: For Business Section --}}
-    <section class="for-business-section kimih-section-spacing">
+    <section class="for-business-section kimih-section-spacing" id="for-business">
         <div class="container">
             <div class="business-banner-area">
                 <div class="row align-items-center">
                     <div class="col-lg-6 col-12 order-lg-1 order-2 mt-4 mt-lg-0" data-aos="fade-right">
                         <div class="business-content">
-                            <h2>Grow Your Beauty & Wellness Business</h2>
-                            <p>
-                                Manage your bookings, appointments, schedules, and customer relationships — all from one simple platform.
-                            </p>
+                            <div class="kimih-section-header text-start mb-4">
+                                <span>For Business</span>
+                                <h2>Grow Your Beauty & Wellness Business</h2>
+                                <p class="text-muted mt-3">
+                                    Connect with new customers and manage your beauty and wellness business with Kimih.
+                                </p>
+                            </div>
                             <ul class="business-checklist">
                                 <li class="business-checklist-item">
                                     <i class="fa-solid fa-check"></i> Manage appointments
@@ -500,15 +517,15 @@
     </section>
 
     {{-- Section 8: Video / Wellness Section --}}
-    <section class="wellness-video-section kimih-section-spacing bg-light">
+    <section class="wellness-video-section kimih-section-spacing bg-light" id="wellness">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-5 col-12" data-aos="fade-right">
                     <div class="kimih-section-header text-start mb-4">
-                        <span>Your Well-Being</span>
+                        <span>Wellness</span>
                         <h2>Your Well-Being Starts Here</h2>
                         <p class="text-muted mt-3" style="text-align: justify; line-height: 1.8;">
-                            Discover experiences that help you look good, feel good, and take time for yourself. From rejuvenating massage therapies to state-of-the-art hair styling, Kimih brings premium wellness solutions directly to your fingertips.
+                            Discover experiences that help you look good, feel good, and take time for yourself.
                         </p>
                     </div>
                 </div>
@@ -536,16 +553,115 @@
         </div>
     </section>
 
-    {{-- Section 9: Testimonials --}}
-    <section class="testimonial-area kimih-section-spacing">
+    {{-- Section 9: Pricing --}}
+    <section class="pricing-section bg-white kimih-section-spacing" id="pricing">
+        <div class="container">
+            <div class="kimih-section-header text-center mb-5">
+                <span>Pricing</span>
+                <h2>Simple, Transparent Pricing</h2>
+                <p class="mx-auto text-muted mt-3" style="max-width: 600px;">
+                    Choose the plan that works best for your beauty and wellness business.
+                </p>
+            </div>
+            
+            <div class="row justify-content-center g-4">
+                @forelse ($plans as $plan)
+                    <div class="col-lg-4 col-md-6 col-12">
+                        <div class="pricing-card-modern {{ $loop->index === 1 ? 'active' : '' }}" data-aos="fade-up" data-aos-delay="{{ ($loop->index + 1) * 100 }}">
+                            <div class="pricing-card-header">
+                                @if ($loop->index === 1)
+                                    <span class="pricing-badge">Popular</span>
+                                @endif
+                                <h3>{{ $plan->name ?? '' }}</h3>
+                                <div class="price-tag-wrap">
+                                    <span class="price-currency">AED</span>
+                                    <span class="price-value">{{ intval($plan->price ?? 0) }}</span>
+                                    <span class="price-period">/month</span>
+                                </div>
+                            </div>
+                            
+                            <ul class="pricing-features-list">
+                                @foreach ($plan->planServices as $planService)
+                                    <li>
+                                        <i class="fa-solid fa-circle-check"></i>
+                                        <span>{{ $planService->name ?? '' }}</span>
+                                    </li>
+                                @endforeach
+                            </ul>
+                            
+                            <div class="pricing-card-footer">
+                                <a href="{{ route('auth-business-sign-up') }}" class="pricing-btn">
+                                    Get Started
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                @empty
+                    {{-- Fallback placeholder structure --}}
+                    <div class="col-lg-4 col-md-6 col-12">
+                        <div class="pricing-card-modern" data-aos="fade-up" data-aos-delay="100">
+                            <div class="pricing-card-header">
+                                <h3>Free</h3>
+                                <div class="price-tag-wrap">
+                                    <span class="price-currency">AED</span>
+                                    <span class="price-value">0</span>
+                                    <span class="price-period">/month</span>
+                                </div>
+                            </div>
+                            <ul class="pricing-features-list">
+                                <li><i class="fa-solid fa-circle-check"></i> <span>For businesses getting started</span></li>
+                                <li><i class="fa-solid fa-circle-check"></i> <span>Basic scheduling features</span></li>
+                            </ul>
+                            <div class="pricing-card-footer">
+                                <a href="{{ route('auth-business-sign-up') }}" class="pricing-btn">Start Free</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-12">
+                        <div class="pricing-card-modern active" data-aos="fade-up" data-aos-delay="200">
+                            <div class="pricing-card-header">
+                                <span class="pricing-badge">Popular</span>
+                                <h3>Pro</h3>
+                                <div class="price-tag-wrap">
+                                    <span class="price-currency">AED</span>
+                                    <span class="price-value">199</span>
+                                    <span class="price-period">/month</span>
+                                </div>
+                            </div>
+                            <ul class="pricing-features-list">
+                                <li><i class="fa-solid fa-circle-check"></i> <span>For growing businesses</span></li>
+                                <li><i class="fa-solid fa-circle-check"></i> <span>Advanced marketing tools</span></li>
+                            </ul>
+                            <div class="pricing-card-footer">
+                                <a href="{{ route('auth-business-sign-up') }}" class="pricing-btn">Choose Plan</a>
+                            </div>
+                        </div>
+                    </div>
+                @endforelse
+            </div>
+        </div>
+    </section>
+
+    {{-- Section 10: Testimonials --}}
+    @php
+        $cleanFeedbacks = $feedbacks->filter(function($item) {
+            $f = strtolower(trim($item->feedback ?? ''));
+            $n = strtolower(trim($item->name ?? ''));
+            return $f !== '' && !in_array($f, ['test', 'fff', 'lorem ipsum']) && !in_array($n, ['test', 'fff']);
+        });
+    @endphp
+    <section class="testimonial-area kimih-section-spacing" id="testimonials">
         <div class="container">
             <div class="kimih-section-header">
                 <span>Testimonials</span>
-                <h2>Loved by Our Community</h2>
+                <h2>What Our Clients Say</h2>
+                <p class="text-muted mt-3 text-center max-w-600 mx-auto" style="max-width: 600px;">
+                    See what our customers and community have to say about their Kimih experience.
+                </p>
             </div>
             
             <div class="row g-4 mt-2">
-                @forelse ($feedbacks as $feedback)
+                @forelse ($cleanFeedbacks as $feedback)
                     <div class="col-lg-4 col-md-6 col-12">
                         <div class="testimonial-card-modern" data-aos="fade-up">
                             <div class="testimonial-quote">
