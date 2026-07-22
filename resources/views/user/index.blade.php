@@ -134,11 +134,13 @@
                                 <h3><a
                                         href="{{ route('shop.details', $user->businessUser->slug ?? '') }}">{{ $user->businessUser->business_name }}</a>
                                 </h3>
-                                {{-- <p class="mb-0">4.8 <i class="flaticon-star mt-1"></i> (1028)</p> --}}
-                                <p class="mb-0">{{ number_format($user->feedback()->avg('rating'), 1) ?? '0.0'}} <i class="flaticon-star mt-1"></i> ({{$user->feedback->count()}})</p>
+                                @if ($user->feedback->count() > 0)
+                                    <p class="mb-0">{{ number_format($user->feedback()->avg('rating'), 1) }} <i class="flaticon-star mt-1"></i> ({{ $user->feedback->count() }})</p>
+                                @else
+                                    <p class="mb-0 text-muted">New</p>
+                                @endif
                                 <p>{{ $user->businessUser->city ?? '' }} {{$user->businessUser->city != null ? ',':''}}
                                     {{ $user->businessUser->country ?? '' }}</p>
-                                <p><span class="bage-outline">{{ $user->name ?? '' }}</p>
                                 <a href="{{ route('shop.details', $user->businessUser->slug ?? '') }}" class="more-btn">
                                     <i class="flaticon-arrow-pointing-to-right"></i>
                                 </a>
@@ -146,6 +148,10 @@
                         </div>
                     </div>
                 @endforeach
+                <div class="col-lg-12 text-center mt-20">
+                    <a href="{{ route('shop.search') }}" class="default-btn two border-radius-5">View All Shops <i
+                            class="flaticon-arrow-pointing-to-right"></i></a>
+                </div>
                 {{-- <div class="col-lg-12 text-center mt-20">
                     <a href="{{ route('services.list') }}" class="default-btn two border-radius-5">See All Service <i
                             class="flaticon-arrow-pointing-to-right"></i></a>

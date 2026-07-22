@@ -24,7 +24,7 @@ class HomeController extends Controller
             $query->where('name', 'Business User');
         })->whereHas('businessUser', function ($query) {
             $query->where('business_name', '!=', null);
-        })->latest()->get();
+        })->latest()->take(6)->get();
 
         $admin = Role::where('name', 'Admin')->first();
         $admin = $admin ? $admin->users->first() : collect();
