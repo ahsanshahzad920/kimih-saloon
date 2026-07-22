@@ -16,8 +16,9 @@
     <link rel="stylesheet" href="{{ asset('assets/css/theme-dark.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <title>@yield('title')</title>
-    <link rel="icon" type="image/png" href="assets/images/favicon.png">
+    <title>@yield('title') | {{ settings()->site_name ?? 'Kimih' }} - Discover Your Next Beauty & Wellness Experience</title>
+    <meta name="description" content="Discover and book beauty, massage, hair, nail, spa, and wellness services from trusted professionals near you. Compare prices, reviews, and options instantly.">
+    <link rel="icon" type="image/png" href="{{ asset('assets/images/favicon.png') }}">
     <style>
         .myc-available-time {
             background: linear-gradient(267deg, rgba(221, 63, 235, 1) 0%, rgba(58, 55, 236, 1) 100%) !important;

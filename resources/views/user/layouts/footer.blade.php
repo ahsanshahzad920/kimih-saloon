@@ -1,142 +1,118 @@
-
-
-<footer class="footer-area footer-bg">
-    <div class="container pt-100 pb-70">
-        <div class="row">
-            <div class="col-lg-4 col-sm-6 col-12">
-                <div class="footer-widget pe-5">
-                    <div class="footer-logo">
-                        <a href="#">
-<!--                             <img src="{{ asset('assets/images/logo 2.png') }}" class="footer-logo1" height="65"
-                                alt="Images"> -->
-                            <h4>KIMIH</h4>
-                        </a>
+<footer class="kimih-footer">
+    <div class="kimih-footer-top">
+        <div class="container">
+            <div class="row g-5">
+                {{-- COLUMN 1 — KIMIH --}}
+                <div class="col-lg-3 col-md-6 col-12">
+                    <div class="kimih-footer-brand">
+                        <h3>KIMIH</h3>
+                        <p>Discover and book beauty and wellness experiences near you. Find trusted salons, compare ratings, and book appointments 24/7.</p>
+                        <ul class="kimih-footer-social">
+                            @if(siteSocialLinks()?->facebook_link)
+                            <li>
+                                <a href="{{ siteSocialLinks()->facebook_link }}" target="_blank" class="kimih-footer-social-link" aria-label="Facebook">
+                                    <i class="fa-brands fa-facebook-f"></i>
+                                </a>
+                            </li>
+                            @endif
+                            @if(siteSocialLinks()?->twitter_link)
+                            <li>
+                                <a href="{{ siteSocialLinks()->twitter_link }}" target="_blank" class="kimih-footer-social-link" aria-label="Twitter">
+                                    <i class="fa-brands fa-x-twitter"></i>
+                                </a>
+                            </li>
+                            @endif
+                            @if(siteSocialLinks()?->linkedin_link)
+                            <li>
+                                <a href="{{ siteSocialLinks()->linkedin_link }}" target="_blank" class="kimih-footer-social-link" aria-label="LinkedIn">
+                                    <i class="fa-brands fa-linkedin-in"></i>
+                                </a>
+                            </li>
+                            @endif
+                            @if(siteSocialLinks()?->instagram_link)
+                            <li>
+                                <a href="{{ siteSocialLinks()->instagram_link }}" target="_blank" class="kimih-footer-social-link" aria-label="Instagram">
+                                    <i class="fa-brands fa-instagram"></i>
+                                </a>
+                            </li>
+                            @endif
+                        </ul>
                     </div>
-                    <!-- <p> Pellentesque habitant morbi tristique senectus netus malesuada fames ac turpis egestas vesti ulum tortor quam bulum tortor feugiat </p> -->
-                    <ul class="social-link">
-                        <li>
-                            <a href="{{ siteSocialLinks()->facebook_link ?? '#' }}" target="_blank" aria-label="Facebook">
-                                <i class="fa-brands fa-facebook-f"></i>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ siteSocialLinks()->twitter_link ?? '#' }}" target="_blank" aria-label="Twitter / X">
-                                <i class="fa-brands fa-x-twitter"></i>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ siteSocialLinks()->linkedin_link ?? '#' }}" target="_blank" aria-label="LinkedIn">
-                                <i class="fa-brands fa-linkedin-in"></i>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ siteSocialLinks()->instagram_link ?? '#' }}" target="_blank" aria-label="Instagram">
-                                <i class="fa-brands fa-instagram"></i>
-                            </a>
-                        </li>
-                    </ul>
                 </div>
-            </div>
-            <div class="col-lg-4 col-sm-6 col-12">
-                <div class="footer-widget pe-2">
-                    <h3>Our Newsletter</h3>
-                    <form class="newsletter-form" data-toggle="validator" method="POST">
-                        <input type="email" class="form-control" placeholder="Enter Your Email Address" name="EMAIL"
-                            required autocomplete="off">
-                        <button class="subscribe-btn" type="submit"> Subscribe Now <i class="flaticon-paper-plane"></i>
-                        </button>
-                        <div id="validator-newsletter" class="form-result"></div>
-                    </form>
+
+                {{-- COLUMN 2 — EXPLORE --}}
+                <div class="col-lg-2 col-md-6 col-6">
+                    <div class="kimih-footer-col">
+                        <h4>Explore</h4>
+                        <ul class="kimih-footer-links">
+                            <li><a href="{{ route('shop.search', ['service' => 'Makeup & Beauty']) }}">Beauty Services</a></li>
+                            <li><a href="{{ route('shop.search', ['service' => 'Hair Styling']) }}">Hair Salons</a></li>
+                            <li><a href="{{ route('shop.search', ['service' => 'Nail Care']) }}">Nails Care</a></li>
+                            <li><a href="{{ route('shop.search', ['service' => 'Spa & Massage']) }}">Spas & Massage</a></li>
+                            <li><a href="{{ route('shop.search', ['service' => 'Spa & Massage']) }}">Wellness Shops</a></li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-            <div class="col-lg-4 col-sm-6 col-12">
-                <div class="footer-widget ps-3">
-                    <h3>Get In Touch</h3>
-                    <ul class="footer-contact">
-                        <li>
-                            <a href="{{ route('about') }}">About Us</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('privacy.index') }}">Privacy Policy</a>
-                        </li>
-                        
-                        <li>
-                            <a href="{{ route('front.faqs') }}">Faq's</a>
-                        </li>
-                        @if(auth()->user()?->hasRole('Admin') ||auth()->user()?->hasRole('Business User'))
-                        <li>
-                            <a href="{{ route('dashboard') }}">Dashboard</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('calendar.index') }}">Appointment calender</a>
-                        </li>
-                        @endif
-                    </ul>
+
+                {{-- COLUMN 3 — FOR BUSINESSES --}}
+                <div class="col-lg-2 col-md-6 col-6">
+                    <div class="kimih-footer-col">
+                        <h4>For Businesses</h4>
+                        <ul class="kimih-footer-links">
+                            <li><a href="{{ route('auth-business-sign-up') }}">List Your Business</a></li>
+                            <li><a href="{{ route('auth-for-business') }}">Partner Login</a></li>
+                            <li><a href="{{ route('partner.terms') }}">Partner Terms</a></li>
+                            @auth
+                                @if(auth()->user()->hasRole('Business User') || auth()->user()->hasRole('Admin'))
+                                    <li><a href="{{ route('calendar.index') }}">Appointment Calendar</a></li>
+                                @endif
+                            @endauth
+                        </ul>
+                    </div>
+                </div>
+
+                {{-- COLUMN 4 — SUPPORT --}}
+                <div class="col-lg-2 col-md-6 col-6">
+                    <div class="kimih-footer-col">
+                        <h4>Support</h4>
+                        <ul class="kimih-footer-links">
+                            <li><a href="{{ route('contact-us.index') }}">Help Center</a></li>
+                            <li><a href="{{ route('contact-us.index') }}">Contact Us</a></li>
+                            <li><a href="{{ route('front.faqs') }}">FAQs</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                {{-- COLUMN 5 — NEWSLETTER & LEGAL --}}
+                <div class="col-lg-3 col-md-6 col-12">
+                    <div class="kimih-footer-newsletter">
+                        <h4>Newsletter</h4>
+                        <p>Subscribe to receive updates, wellness tips, and exclusive partner discounts.</p>
+                        <form class="kimih-newsletter-form" action="{{ route('subscribe.store') }}" method="POST">
+                            @csrf
+                            <input type="email" placeholder="Email address" name="email" required autocomplete="off" aria-label="Email address for newsletter">
+                            <button type="submit">Subscribe</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="row mt-4">
-            <div class="col-lg-4 col-sm-6 col-12">
-                <div class="footer-widget ps-3">
-                    <h3>For Business</h3>
-                    <ul class="footer-contact">
-                        <li>
-                            <a href="{{ route('partner.terms') }}">Partners Terms</a>
-                        </li>
-                        
-                        <li>
-                            <a href="{{ route('contact-us.index') }}">Support</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('calendar.index') }}">Appointment calender</a>
-                        </li>
-                    </ul>
+    </div>
+    
+    <div class="kimih-footer-bottom">
+        <div class="container">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-md-6 text-center text-md-start">
+                    <p>&copy; {{ date('Y') }} <strong>Kimih</strong>. All rights reserved.</p>
                 </div>
-            </div>
-            <div class="col-lg-4 col-sm-6 col-12">
-                <div class="footer-widget ps-3">
-                    <h3>Legal</h3>
-                    <ul class="footer-contact">
-                        <li>
-                            <a href="{{ route('privacy.index') }}">Privacy policy</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('term_of_service.index') }}">Term of Services</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('cancellation.policy') }}">Cancellation Policy</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('term_of_service.index') }}">Term of use</a>
-                        </li>
-
-                    </ul>
-                </div>
-            </div>
-            <div class="col-lg-4 col-sm-6 col-12">
-                <div class="footer-widget ps-3">
-                    <h3>Customer Support</h3>
-                    <ul class="footer-contact">
-                        <li>
-                            <a href="{{ route('blogs.show.front') }}">Blog</a>
-                        </li>
-                        
-                        <li>
-                           <a href="{{ route('contact-us.index') }}">Support</a>
-                        </li>
-
+                <div class="col-md-6 text-center text-md-end mt-2 mt-md-0">
+                    <ul class="list-inline mb-0">
+                        <li class="list-inline-item mx-2"><a href="{{ route('privacy.index') }}" class="text-decoration-none text-muted">Privacy Policy</a></li>
+                        <li class="list-inline-item mx-2"><a href="{{ route('term_of_service.index') }}" class="text-decoration-none text-muted">Terms of Service</a></li>
+                        <li class="list-inline-item mx-2"><a href="{{ route('cancellation.policy') }}" class="text-decoration-none text-muted">Cancellation Policy</a></li>
                     </ul>
                 </div>
             </div>
         </div>
     </div>
 </footer>
-<div class="copyright-area">
-    <div class="container">
-        <div class="copy-right-text text-center">
-            <p> Copyright @
-                <b>Kimih</b> All Rights Reserved <a href="/" target="_blank"></a>
-            </p>
-        </div>
-    </div>
-</div>
