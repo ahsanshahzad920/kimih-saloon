@@ -538,6 +538,9 @@ position: relative;
     line-height: 48px !important;
     font-size: 16px !important;
   }
+  .services-card a {
+    height: 180px;
+  }
   .services-card .content .more-btn {
     top: -30px;
     right: 20px;

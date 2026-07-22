@@ -2897,9 +2897,14 @@ min-height: 90vh;
 }
 .services-card a {
   display: block;
+  height: 230px;
+  overflow: hidden;
 }
 .services-card a img {
+  width: 100%;
+  height: 100%;
   max-width: 100%;
+  object-fit: cover;
 }
 .services-card .content {
   padding: 30px;

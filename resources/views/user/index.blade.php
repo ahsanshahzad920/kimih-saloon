@@ -123,7 +123,7 @@
             </div>
             <div class="row">
                 @foreach ($users as $user)
-                    <div class="col-lg-4 col-6 col-container">
+                    <div class="col-lg-4 col-sm-6 col-12 col-container">
                         <div class="services-card">
                             <a href="#">
                                 {{-- {{dd($user->businessUser->images[0]['image'])}} --}}
