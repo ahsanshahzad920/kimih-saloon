@@ -33,11 +33,18 @@
         <div class="banner  ">
             <div class="banner-item">
                 <div class="container-fluid">
-                    <div class="banner-content " data-aos="fade-down" data-aos-duration="3000">
+                    <div class="banner-content " data-aos="fade-up" data-aos-duration="800">
 
-                        <h1>{{ $home->home_title ?? 'Book beauty & <br> wellness services' }} </h1>
-                        <!--    <a href="#" class="learn-btn">Learn More <i class="flaticon-arrow-pointing-to-right"></i>
-                                                            </a> -->
+                        <h1>{{ $home->home_title ?? 'Discover Your Next Beauty & Wellness Experience' }}</h1>
+                        <p class="banner-subtext">Find trusted salons, spas, barbers, and wellness professionals near
+                            you — and book your appointment in just a few clicks.</p>
+                        <ul class="banner-journey" aria-label="How Kimih works">
+                            <li>Discover</li>
+                            <li aria-hidden="true"><i class="fa-solid fa-arrow-right"></i></li>
+                            <li>Compare</li>
+                            <li aria-hidden="true"><i class="fa-solid fa-arrow-right"></i></li>
+                            <li>Book</li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -54,11 +61,11 @@
                                 <div class="from-icon">
                                     <i class="flaticon-user"></i>
                                 </div>
-                                <label>Any treatment or venue <i class="flaticon-arrow-down-sign-to-navigate"></i>
+                                <label for="serviceSelect">What are you looking for? <i class="flaticon-arrow-down-sign-to-navigate"></i>
                                 </label>
 
-                                <select class="form-control" name="service">
-                                    <option disable value="">Please Select</option>
+                                <select class="form-control" name="service" id="serviceSelect">
+                                    <option disable value="">Haircut, Massage, Nails...</option>
                                     @foreach ($serviceCategory as $serviceCategory)
                                         <option value="{{ $serviceCategory->name }}">{{ $serviceCategory->name }}</option>
                                     @endforeach
@@ -70,10 +77,10 @@
                                 <div class="from-icon">
                                     <i class="flaticon-pin"></i>
                                 </div>
-                                <label>Current Location <i class="flaticon-arrow-down-sign-to-navigate"></i>
+                                <label for="addressInput">Location <i class="flaticon-arrow-down-sign-to-navigate"></i>
                                 </label>
                                 <input type="text" class="form-control" name="location" id="addressInput"
-                                    placeholder="Type location" autocomplete="off">
+                                    placeholder="Karachi, Pakistan" autocomplete="off">
                                 <div id="suggestionsContainer"></div>
                             </div>
                         </div>
@@ -83,10 +90,10 @@
                                 <div class="from-icon">
                                     <i class="flaticon-booking-1"></i>
                                 </div>
-                                <label>Any Date <i class="flaticon-arrow-down-sign-to-navigate"></i>
+                                <label for="datetimepicker">Date <i class="flaticon-arrow-down-sign-to-navigate"></i>
                                 </label>
                                 <input type="text" id="datetimepicker" class="form-control form-control-bg"
-                                    data-error="Please Enter Date" placeholder="December 28, 2021">
+                                    data-error="Please Enter Date" placeholder="Choose a date">
                             </div>
                         </div>
                         <div class="col-lg-3 col-md-6 col-12">
@@ -94,18 +101,18 @@
                                 <div class="from-icon">
                                     <i class="flaticon-clock"></i>
                                 </div>
-                                <label>Any Time <i class="flaticon-arrow-down-sign-to-navigate"></i>
+                                <label for="timeInput">Time <i class="flaticon-arrow-down-sign-to-navigate"></i>
                                 </label>
-                                <input type="time" class="form-control form-control-bg" data-error="Please Enter Time"
-                                    placeholder="Enter Time">
+                                <input type="time" id="timeInput" class="form-control form-control-bg" data-error="Please Enter Time"
+                                    placeholder="Any time">
                             </div>
                         </div>
                     </div>
                     <input type="hidden" name="lat" id="lat">
                     <input type="hidden" name="lon" id="lon">
                     <div class="row">
-                        <div class="col-lg-3 col-md-6 col-12 mx-auto mt-3">
-                            <button type="submit" class="default-btn w-100"> Book Now <i class="flaticon-booking"></i>
+                        <div class="col-lg-4 col-md-6 col-12 mx-auto mt-3">
+                            <button type="submit" class="default-btn w-100 kimih-find-btn" aria-label="Find beauty and wellness services"> Find Services <i class="flaticon-search"></i>
                             </button>
                         </div>
                     </div>
