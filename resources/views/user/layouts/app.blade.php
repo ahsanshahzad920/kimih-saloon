@@ -10,8 +10,8 @@
     <script src="{{ asset('assets/js/jquery.min.js') }}"></script>
     <link rel="stylesheet" href="{{ asset('assets/css/plugins.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/iconplugins.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/responsive.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}?v={{ filemtime(public_path('assets/css/style.css')) }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/responsive.css') }}?v={{ filemtime(public_path('assets/css/responsive.css')) }}">
     <link rel="stylesheet" href="{{ asset('assets/css/theme-dark.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
