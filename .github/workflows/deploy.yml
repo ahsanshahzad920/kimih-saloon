@@ -9,27 +9,6 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Diagnose homepage 403
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          port: ${{ secrets.SSH_PORT }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            echo "--- laravel.log tail ---"
-            tail -n 120 ~/kimih_app/storage/logs/laravel.log 2>&1
-            echo "--- direct curl to origin IP with Host header ---"
-            curl -skv -H "Host: kimih.goodsessentialsllc.com" "https://127.0.0.1/" 2>&1 | tail -50
-            echo "--- .htaccess in kimih webroot ---"
-            cat ~/domains/goodsessentialsllc.com/public_html/kimih/.htaccess
-            echo "--- permissions on index.php and .htaccess ---"
-            ls -la ~/domains/goodsessentialsllc.com/public_html/kimih/index.php ~/domains/goodsessentialsllc.com/public_html/kimih/.htaccess
-            echo "--- storage/bootstrap perms ---"
-            ls -la ~/kimih_app/storage ~/kimih_app/bootstrap/cache | head -20
-            echo "--- route:list (may fail, that's fine) ---"
-            cd ~/kimih_app && php artisan route:list 2>&1 | head -20
-
       - name: Deploy over SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -43,11 +22,35 @@ jobs:
             git reset --hard origin/main
 
             DEST=~/domains/goodsessentialsllc.com/public_html/kimih
+            APP_ABS_PATH="$(pwd)"
+
             if command -v rsync >/dev/null 2>&1; then
               rsync -a --exclude 'index.php' --exclude 'storage' ~/kimih_app/public/ "$DEST/"
             else
               find ~/kimih_app/public -mindepth 1 -maxdepth 1 ! -name index.php ! -name storage -exec cp -a {} "$DEST/" \;
             fi
+
+            # Regenerate the subdomain's front controller every deploy so it can't
+            # go missing (e.g. security-scanner quarantine) without self-healing.
+            cat > "$DEST/index.php" <<'PHPEOF'
+<?php
+
+use Illuminate\Http\Request;
+
+define('LARAVEL_START', microtime(true));
+
+$appPath = '__APP_PATH__';
+
+if (file_exists($maintenance = $appPath.'/storage/framework/maintenance.php')) {
+    require $maintenance;
+}
+
+require $appPath.'/vendor/autoload.php';
+
+(require_once $appPath.'/bootstrap/app.php')
+    ->handleRequest(Request::capture());
+PHPEOF
+            sed -i "s#__APP_PATH__#$APP_ABS_PATH#" "$DEST/index.php"
 
             composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
             php artisan package:discover --ansi
