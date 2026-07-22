@@ -12,7 +12,6 @@ use App\Models\ServiceCategory;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
-use App\Models\Plan;
 
 class HomeController extends Controller
 {
@@ -25,7 +24,7 @@ class HomeController extends Controller
             $query->where('name', 'Business User');
         })->whereHas('businessUser', function ($query) {
             $query->where('business_name', '!=', null);
-        })->with(['businessUser.images', 'feedback', 'services'])->latest()->take(6)->get();
+        })->latest()->get();
 
         $admin = Role::where('name', 'Admin')->first();
         $admin = $admin ? $admin->users->first() : collect();
@@ -36,9 +35,8 @@ class HomeController extends Controller
         // $users = $businessRole ? $businessRole->users : collect();
         $home = Home::first();
         $feedbacks = Feedback::where('status', 1)->latest()->get();
-        $plans = Plan::with('planServices')->get();
 
-        return view('user.index', compact('users', 'serviceCategory', 'home', 'feedbacks', 'plans'));
+        return view('user.index', compact('users', 'serviceCategory', 'home', 'feedbacks'));
     }
 
     /**

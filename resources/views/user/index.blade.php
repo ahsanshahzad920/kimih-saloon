@@ -2,7 +2,12 @@
 
 @section('title', 'Home')
 @section('styles')
-    <link rel="stylesheet" href="{{ asset('assets/css/landing-page.css') }}?v={{ time() }}">
+    {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css" integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" /> --}}
+@endsection
+@section('styles')
+
     <style>
         .ui-auticomplete {
             width: 440px !important;
@@ -10,689 +15,309 @@
         }
         @media(max-width: 576px){
             .youtube-video{
-                width: 325px !important;
+            width: 325px !important;
             }
-        }
+            }
+
         @media(max-width: 576px){
-            .banner-item{
-                padding-bottom: 0 !important;
-            }
+           .banner-item{
+              padding-bottom: 0 !important;
+           }
         }
+
     </style>
 @endsection
 @section('content')
 
-    {{-- Redesigned Hero Section --}}
-    <section class="hero-wrapper-modern" id="home">
-        {{-- Background glow blobs --}}
-        <div class="hero-blob hero-blob-1"></div>
-        <div class="hero-blob hero-blob-2"></div>
-        
-        <div class="container">
-            <h1 class="hero-title-modern">
-                {{ $home->home_title ?? 'Discover Your Next Beauty & Wellness Experience' }}
-            </h1>
-            <p class="hero-subtitle-modern">
-                Find trusted salons, spas, barbers, and wellness professionals near you — and book your appointment in just a few clicks.
-            </p>
-            
-            {{-- Journey Indicators --}}
-            <div class="hero-journey-indicator" aria-label="Kimih booking journey">
-                <span class="hero-journey-step is-active">01 Discover</span>
-                <span class="hero-journey-arrow"><i class="fa-solid fa-chevron-right"></i></span>
-                <span class="hero-journey-step">02 Compare</span>
-                <span class="hero-journey-arrow"><i class="fa-solid fa-chevron-right"></i></span>
-                <span class="hero-journey-step">03 Book</span>
-            </div>
-        </div>
+    <section class="banner-area-three">
+        <div class="banner  ">
+            <div class="banner-item">
+                <div class="container-fluid">
+                    <div class="banner-content " data-aos="fade-down" data-aos-duration="3000">
 
-        {{-- SVG Wave shape divider --}}
-        <div class="hero-wave-divider">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120" preserveAspectRatio="none">
-                <path d="M0,32L120,42.7C240,53,480,75,720,74.7C960,75,1200,53,1320,42.7L1440,32L1440,120L1320,120C1200,120,960,120,720,120C480,120,240,120,120,120L0,120Z"></path>
-            </svg>
+                        <h1>{{ $home->home_title ?? 'Book beauty & <br> wellness services' }} </h1>
+                        <!--    <a href="#" class="learn-btn">Learn More <i class="flaticon-arrow-pointing-to-right"></i>
+                                                            </a> -->
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
-    {{-- Floating Search Card Section --}}
-    <section class="search-card-section bg-transparent" style="margin-bottom: 30px;">
+    <section class="banner-form-area " data-aos="fade-up" data-aos-anchor-placement="top-bottom" data-aos-duration="3000">
         <div class="container">
-            <div class="search-card-wrapper">
+            <div class="banner-form">
                 <form action="{{ route('shop.search') }}" method="GET">
-                    <div class="search-fields-container">
-                        
-                        {{-- Field 1: Service --}}
-                        <div class="search-field-col">
-                            <div class="search-field-group">
-                                <div class="search-field-icon">
-                                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <div class="row">
+                        <div class="col-lg-3 col-12">
+                            <div class="form-group form-group-list">
+                                <div class="from-icon">
+                                    <i class="flaticon-user"></i>
                                 </div>
-                                <div class="search-field-content">
-                                    <label id="serviceSelectLabel" for="serviceDropdownTrigger">Looking for?</label>
-                                    
-                                    {{-- Visually hidden original select to preserve functionality --}}
-                                    <select name="service" id="serviceSelect" class="visually-hidden">
-                                        <option value="">Haircut, Massage, Nails...</option>
-                                        @foreach ($serviceCategory as $category)
-                                            <option value="{{ $category->name }}">{{ $category->name }}</option>
-                                        @endforeach
-                                    </select>
+                                <label>Any treatment or venue <i class="flaticon-arrow-down-sign-to-navigate"></i>
+                                </label>
 
-                                    {{-- Custom premium dropdown widget --}}
-                                    <div class="custom-dropdown-container">
-                                        <button type="button" class="custom-dropdown-trigger" id="serviceDropdownTrigger" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="serviceSelectLabel">
-                                            <span class="selected-text-holder">Haircut, Massage, Nails...</span>
-                                            <i class="fa-solid fa-chevron-down dropdown-arrow-icon"></i>
-                                        </button>
-                                        <ul class="custom-dropdown-menu" role="listbox" aria-labelledby="serviceSelectLabel" tabindex="-1">
-                                            <li class="custom-dropdown-item selected" role="option" data-value="" aria-selected="true" tabindex="0">
-                                                <span class="item-icon"><i class="fa-solid fa-sparkles"></i></span>
-                                                <span class="item-text">All Services</span>
-                                                <span class="check-icon"><i class="fa-solid fa-check"></i></span>
-                                            </li>
-                                            @foreach ($serviceCategory as $category)
-                                                <li class="custom-dropdown-item" role="option" data-value="{{ $category->name }}" aria-selected="false" tabindex="0">
-                                                    <span class="item-icon">
-                                                        @if(stripos($category->name, 'hair') !== false || stripos($category->name, 'barber') !== false)
-                                                            <i class="fa-solid fa-scissors"></i>
-                                                        @elseif(stripos($category->name, 'nail') !== false)
-                                                            <i class="fa-solid fa-hand-sparkles"></i>
-                                                        @elseif(stripos($category->name, 'massage') !== false)
-                                                            <i class="fa-solid fa-spa"></i>
-                                                        @elseif(stripos($category->name, 'spa') !== false)
-                                                            <i class="fa-solid fa-soap"></i>
-                                                        @elseif(stripos($category->name, 'make') !== false || stripos($category->name, 'beauty') !== false)
-                                                            <i class="fa-solid fa-wand-magic-sparkles"></i>
-                                                        @elseif(stripos($category->name, 'well') !== false)
-                                                            <i class="fa-solid fa-heart"></i>
-                                                        @else
-                                                            <i class="fa-solid fa-sparkles"></i>
-                                                        @endif
-                                                    </span>
-                                                    <span class="item-text">{{ $category->name }}</span>
-                                                    <span class="check-icon"><i class="fa-solid fa-check"></i></span>
-                                                </li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                </div>
+                                <select class="form-control" name="service">
+                                    <option disable value="">Please Select</option>
+                                    @foreach ($serviceCategory as $serviceCategory)
+                                        <option value="{{ $serviceCategory->name }}">{{ $serviceCategory->name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
-
-                        {{-- Field 2: Location --}}
-                        <div class="search-field-col">
-                            <div class="search-field-group">
-                                <div class="search-field-icon">
-                                    <i class="fa-solid fa-location-dot"></i>
+                        <div class="col-lg-3 col-12">
+                            <div class="form-group form-group-list">
+                                <div class="from-icon">
+                                    <i class="flaticon-pin"></i>
                                 </div>
-                                <div class="search-field-content">
-                                    <label for="addressInput">Location</label>
-                                    <input type="text" name="location" id="addressInput" placeholder="Karachi, Pakistan" autocomplete="off">
-                                    <div id="suggestionsContainer"></div>
-                                </div>
+                                <label>Current Location <i class="flaticon-arrow-down-sign-to-navigate"></i>
+                                </label>
+                                <input type="text" class="form-control" name="location" id="addressInput"
+                                    placeholder="Type location">
+                                <div id="suggestionsContainer"></div>
                             </div>
                         </div>
-
-                        {{-- Field 3: Date --}}
-                        <div class="search-field-col">
-                            <div class="search-field-group">
-                                <div class="search-field-icon">
-                                    <i class="fa-solid fa-calendar-days"></i>
-                                </div>
-                                <div class="search-field-content">
-                                    <label for="datetimepicker">Date</label>
-                                    <input type="text" id="datetimepicker" placeholder="Choose date">
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- Field 4: Time --}}
-                        <div class="search-field-col">
-                            <div class="search-field-group">
-                                <div class="search-field-icon">
-                                    <i class="fa-solid fa-clock"></i>
-                                </div>
-                                <div class="search-field-content">
-                                    <label for="timeInput">Time</label>
-                                    <input type="time" id="timeInput" placeholder="Any time">
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- Hidden inputs --}}
                         <input type="hidden" name="lat" id="lat">
                         <input type="hidden" name="lon" id="lon">
 
-                        {{-- Field 5: Action Submit Button --}}
-                        <div class="search-field-col">
-                            <button type="submit" class="search-submit-btn" aria-label="Find beauty and wellness services">
-                                Search <i class="fa-solid fa-magnifying-glass"></i>
-                            </button>
+                        <div class="col-lg-3 col-12">
+                            <div class="form-group form-group-list">
+                                <div class="from-icon">
+                                    <i class="flaticon-booking-1"></i>
+                                </div>
+                                <label>Any Date <i class="flaticon-arrow-down-sign-to-navigate"></i>
+                                </label>
+                                <input type="text" id="datetimepicker" class="form-control form-control-bg"
+                                    data-error="Please Enter Date" placeholder="December 28, 2021">
+                            </div>
                         </div>
-
+                        <div class="col-lg-3 col-12">
+                            <div class="form-group form-group-list">
+                                <div class="from-icon">
+                                    <i class="flaticon-clock"></i>
+                                </div>
+                                <label>Any Time <i class="flaticon-arrow-down-sign-to-navigate"></i>
+                                </label>
+                                <input type="time" class="form-control form-control-bg" data-error="Please Enter Time"
+                                    placeholder="Enter Time">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 mx-auto text-center">
+                        <button type="submit" class="default-btn"> Book Now <i class="flaticon-booking"></i>
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
-    </section>
-
-    {{-- Section 2: Popular Categories --}}
-    <section class="categories-area kimih-section-spacing" id="explore">
-        <div class="container">
-            <div class="kimih-section-header">
-                <span>Explore</span>
-                <h2>Explore Beauty & Wellness</h2>
-                <p class="text-muted mt-3 text-center max-w-600 mx-auto" style="max-width: 600px;">
-                    Discover the services you love, from hair and beauty to wellness and self-care.
-                </p>
-            </div>
-            <div class="categories-grid">
-                <div class="category-card-wrapper">
-                    <a href="{{ route('shop.search', ['service' => 'Hair Styling']) }}" class="category-card">
-                        <div class="category-icon-wrapper">
-                            <img src="{{ asset('assets/images/Haircut-styling.svg') }}" alt="Hair icon" />
-                        </div>
-                        <h4>Hair</h4>
-                        <span>Explore Services &rarr;</span>
-                    </a>
-                </div>
-                <div class="category-card-wrapper">
-                    <a href="{{ route('shop.search', ['service' => 'Barber Shop']) }}" class="category-card">
-                        <div class="category-icon-wrapper">
-                            <img src="{{ asset('assets/images/Barbering.svg') }}" alt="Barber icon" />
-                        </div>
-                        <h4>Barber</h4>
-                        <span>Explore Services &rarr;</span>
-                    </a>
-                </div>
-                <div class="category-card-wrapper">
-                    <a href="{{ route('shop.search', ['service' => 'Nail Care']) }}" class="category-card">
-                        <div class="category-icon-wrapper">
-                            <img src="{{ asset('assets/images/Nail services.svg') }}" alt="Nails icon" />
-                        </div>
-                        <h4>Nails</h4>
-                        <span>Explore Services &rarr;</span>
-                    </a>
-                </div>
-                <div class="category-card-wrapper">
-                    <a href="{{ route('shop.search', ['service' => 'Spa & Massage']) }}" class="category-card">
-                        <div class="category-icon-wrapper">
-                            <img src="{{ asset('assets/images/Eyebrows-lashes.svg') }}" alt="Spa icon" />
-                        </div>
-                        <h4>Spa</h4>
-                        <span>Explore Services &rarr;</span>
-                    </a>
-                </div>
-                <div class="category-card-wrapper">
-                    <a href="{{ route('shop.search', ['service' => 'Spa & Massage']) }}" class="category-card">
-                        <div class="category-icon-wrapper">
-                            <img src="{{ asset('assets/images/Massage.svg') }}" alt="Massage icon" />
-                        </div>
-                        <h4>Massage</h4>
-                        <span>Explore Services &rarr;</span>
-                    </a>
-                </div>
-                <div class="category-card-wrapper">
-                    <a href="{{ route('shop.search', ['service' => 'Makeup & Beauty']) }}" class="category-card">
-                        <div class="category-icon-wrapper">
-                            <img src="{{ asset('assets/images/Makeup.svg') }}" alt="Makeup icon" />
-                        </div>
-                        <h4>Makeup</h4>
-                        <span>Explore Services &rarr;</span>
-                    </a>
-                </div>
-                <div class="category-card-wrapper">
-                    <a href="{{ route('shop.search', ['service' => 'Skin Care']) }}" class="category-card">
-                        <div class="category-icon-wrapper">
-                            <img src="{{ asset('assets/images/Facial And skincare.svg') }}" alt="Skincare icon" />
-                        </div>
-                        <h4>Skincare</h4>
-                        <span>Explore Services &rarr;</span>
-                    </a>
-                </div>
-                <div class="category-card-wrapper">
-                    <a href="{{ route('shop.search', ['service' => 'Spa & Massage']) }}" class="category-card">
-                        <div class="category-icon-wrapper">
-                            <img src="{{ asset('assets/images/Fitness.svg') }}" alt="Wellness icon" />
-                        </div>
-                        <h4>Wellness</h4>
-                        <span>Explore Services &rarr;</span>
-                    </a>
-                </div>
-            </div>
         </div>
     </section>
 
-    {{-- Section 3: Recommended Businesses & Section 4: View All Shops CTA --}}
-    <section class="services-area kimih-section-spacing bg-light" id="businesses">
+    {{-- Stores  --}}
+    <section class="services-area ptb-100 mt-0 mt-md-5 pt-0 pt-md-5">
         <div class="container">
-            <div class="kimih-section-header">
-                <span>Businesses</span>
-                <h2>Discover Top Beauty & Wellness Businesses</h2>
-                <p class="text-muted mt-3 text-center max-w-600 mx-auto" style="max-width: 600px;">
-                    Explore trusted local businesses, compare your options, and find the perfect place for your next appointment.
-                </p>
+            <div class="section-title mb-45 text-center">
+                <span>Best For you</span>
+                <h2>Recommended</h2>
+
             </div>
-            <div class="row g-4">
+            <div class="row">
                 @foreach ($users as $user)
-                    @php
-                        $avgRating = $user->feedback->count() > 0 ? number_format($user->feedback->avg('rating'), 1) : null;
-                        $reviewCount = $user->feedback->count();
-                        $minPrice = $user->services->count() > 0 ? $user->services->min('price') : null;
-                        
-                        $fallbackIndex = ($loop->index % 6) + 1;
-                        if ($fallbackIndex == 2) {
-                            $fallbackIndex = 3;
-                        }
-                        $firstImage = isset($user->businessUser->images[0]) 
-                            ? asset('storage/' . $user->businessUser->images[0]['image']) 
-                            : asset('assets/images/shope' . $fallbackIndex . '.png');
-                        
-                        // Extract categories or show short service list
-                        $servicesText = $user->businessUser->services ?? '';
-                        if (strlen($servicesText) > 40) {
-                            $servicesText = substr($servicesText, 0, 37) . '...';
-                        }
-                    @endphp
-                    <div class="col-lg-4 col-md-6 col-12">
-                        <div class="salon-card">
-                            <span class="salon-badge">Top Rated</span>
-                            
-                            {{-- Favorite button (visual/heart) --}}
-                            <button type="button" class="salon-favorite-btn" aria-label="Add to favorites">
-                                <i class="fa-regular fa-heart"></i>
-                            </button>
-
-                            <div class="salon-card-image-wrapper">
-                                <a href="{{ route('shop.details', $user->businessUser->slug ?? '') }}">
-                                    <img src="{{ $firstImage }}" alt="{{ $user->businessUser->business_name ?? 'Salon image' }}" loading="lazy" />
+                    <div class="col-lg-4 col-sm-6 col-12 col-container">
+                        <div class="services-card">
+                            <a href="#">
+                                {{-- {{dd($user->businessUser->images[0]['image'])}} --}}
+                                <img src="{{ isset($user->businessUser->images[0]) ? asset('storage/' . $user->businessUser->images[0]['image']) : asset('assets/images/shope.png') }}"
+                                    alt="Services" />
+                            </a>
+                            <div class="content">
+                                <h3><a
+                                        href="{{ route('shop.details', $user->businessUser->slug ?? '') }}">{{ $user->businessUser->business_name }}</a>
+                                </h3>
+                                {{-- <p class="mb-0">4.8 <i class="flaticon-star mt-1"></i> (1028)</p> --}}
+                                <p class="mb-0">{{ number_format($user->feedback()->avg('rating'), 1) ?? '0.0'}} <i class="flaticon-star mt-1"></i> ({{$user->feedback->count()}})</p>
+                                <p>{{ $user->businessUser->city ?? '' }} {{$user->businessUser->city != null ? ',':''}}
+                                    {{ $user->businessUser->country ?? '' }}</p>
+                                <p><span class="bage-outline">{{ $user->name ?? '' }}</p>
+                                <a href="{{ route('shop.details', $user->businessUser->slug ?? '') }}" class="more-btn">
+                                    <i class="flaticon-arrow-pointing-to-right"></i>
                                 </a>
-                            </div>
-                            
-                            <div class="salon-card-body">
-                                <div class="salon-card-meta">
-                                    <span class="salon-card-category">{{ $servicesText ?: 'Wellness & Beauty' }}</span>
-                                    <div class="salon-card-rating">
-                                        <i class="fa-solid fa-star"></i>
-                                        @if ($avgRating)
-                                            {{ $avgRating }} <span>({{ $reviewCount }})</span>
-                                        @else
-                                            <span>New</span>
-                                        @endif
-                                    </div>
-                                </div>
-
-                                <a href="{{ route('shop.details', $user->businessUser->slug ?? '') }}" class="salon-card-title">
-                                    {{ $user->businessUser->business_name }}
-                                </a>
-
-                                <div class="salon-card-location">
-                                    <i class="fa-solid fa-location-dot"></i>
-                                    {{ $user->businessUser->city ?? 'Local' }}{{ $user->businessUser->country ? ', ' . $user->businessUser->country : '' }}
-                                </div>
-
-                                <div class="salon-card-footer">
-                                    <div class="salon-card-price">
-                                        @if ($minPrice)
-                                            <span class="price-label">Starting from</span>
-                                            <span class="price-value">${{ number_format($minPrice, 0) }}</span>
-                                        @else
-                                            <span class="price-label">Services</span>
-                                            <span class="price-value">View Menu</span>
-                                        @endif
-                                    </div>
-                                    <div class="salon-card-actions">
-                                        <a href="{{ route('shop.details', $user->businessUser->slug ?? '') }}" class="salon-btn-view">
-                                            Details
-                                        </a>
-                                        <a href="{{ route('shop.services', $user->businessUser->slug ?? '') }}" class="salon-btn-book">
-                                            Book Now
-                                        </a>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
                 @endforeach
+                {{-- <div class="col-lg-12 text-center mt-20">
+                    <a href="{{ route('services.list') }}" class="default-btn two border-radius-5">See All Service <i
+                            class="flaticon-arrow-pointing-to-right"></i></a>
+                </div> --}}
             </div>
-            
-            {{-- Section 4: Explore All Businesses CTA --}}
-            <div class="explore-all-btn-container">
-                <a href="{{ route('shop.search') }}" class="explore-all-btn">
-                    Explore All Beauty & Wellness <i class="fa-solid fa-arrow-right-long"></i>
-                </a>
-            </div>
+
         </div>
     </section>
 
-    {{-- Section 5: How Kimih Works --}}
-    <section class="how-it-works kimih-section-spacing" id="how-it-works">
-        <div class="container">
-            <div class="kimih-section-header">
-                <span>How It Works</span>
-                <h2>How Kimih Works</h2>
-                <p class="text-muted mt-3 text-center max-w-600 mx-auto" style="max-width: 600px;">
-                    Find the right service, compare your options, and book your appointment in just a few simple steps.
-                </p>
-            </div>
-            
-            <div class="journey-wrapper mt-5">
-                <div class="journey-line"></div>
-                <div class="row g-4">
-                    <div class="col-md-4 col-12">
-                        <div class="journey-step" data-aos="fade-up" data-aos-delay="100">
-                            <div class="journey-number">01</div>
-                            <div class="journey-icon">
-                                <i class="fa-solid fa-magnifying-glass"></i>
-                            </div>
-                            <h3>Discover</h3>
-                            <p>Find beauty and wellness services near you.</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-12">
-                        <div class="journey-step" data-aos="fade-up" data-aos-delay="200">
-                            <div class="journey-number">02</div>
-                            <div class="journey-icon">
-                                <i class="fa-solid fa-sliders"></i>
-                            </div>
-                            <h3>Compare</h3>
-                            <p>Explore businesses, services, prices, and reviews.</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-12">
-                        <div class="journey-step" data-aos="fade-up" data-aos-delay="300">
-                            <div class="journey-number">03</div>
-                            <div class="journey-icon">
-                                <i class="fa-solid fa-calendar-check"></i>
-                            </div>
-                            <h3>Book</h3>
-                            <p>Choose your preferred time and book your appointment.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    {{-- Section 6: Why Choose Kimih --}}
-    <section class="why-choose-us kimih-section-spacing bg-light" id="why-kimih">
-        <div class="container">
-            <div class="kimih-section-header">
-                <span>Why Kimih</span>
-                <h2>Why Choose Kimih?</h2>
-                <p class="text-muted mt-3 text-center max-w-600 mx-auto" style="max-width: 600px;">
-                    Everything you need to discover and book your next beauty and wellness experience.
-                </p>
-            </div>
-            
-            <div class="row g-4 mt-2">
-                <div class="col-lg-3 col-md-6 col-12">
-                    <div class="benefit-card" data-aos="fade-up" data-aos-delay="100">
-                        <div class="benefit-icon-wrapper">
-                            <i class="fa-solid fa-shop"></i>
-                        </div>
-                        <h3>Trusted Choices</h3>
-                        <p>Explore beauty and wellness businesses in one convenient place.</p>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-12">
-                    <div class="benefit-card" data-aos="fade-up" data-aos-delay="200">
-                        <div class="benefit-icon-wrapper">
-                            <i class="fa-solid fa-bolt"></i>
-                        </div>
-                        <h3>Easy Booking</h3>
-                        <p>Find and book your preferred service in just a few clicks.</p>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-12">
-                    <div class="benefit-card" data-aos="fade-up" data-aos-delay="300">
-                        <div class="benefit-icon-wrapper">
-                            <i class="fa-solid fa-compress"></i>
-                        </div>
-                        <h3>Compare Your Options</h3>
-                        <p>Explore services, businesses, and experiences before you decide.</p>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-12">
-                    <div class="benefit-card" data-aos="fade-up" data-aos-delay="400">
-                        <div class="benefit-icon-wrapper">
-                            <i class="fa-solid fa-user-clock"></i>
-                        </div>
-                        <h3>Book With Confidence</h3>
-                        <p>Choose the service, professional, location, and time that work best for you.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    {{-- Section 7: For Business Section --}}
-    <section class="for-business-section kimih-section-spacing" id="for-business">
-        <div class="container">
-            <div class="business-banner-area">
-                <div class="row align-items-center">
-                    <div class="col-lg-6 col-12 order-lg-1 order-2 mt-4 mt-lg-0" data-aos="fade-right">
-                        <div class="business-content">
-                            <div class="kimih-section-header text-start mb-4">
-                                <span>For Business</span>
-                                <h2>Grow Your Beauty & Wellness Business</h2>
-                                <p class="text-muted mt-3">
-                                    Connect with new customers and manage your beauty and wellness business with Kimih.
-                                </p>
-                            </div>
-                            <ul class="business-checklist">
-                                <li class="business-checklist-item">
-                                    <i class="fa-solid fa-check"></i> Manage appointments
-                                </li>
-                                <li class="business-checklist-item">
-                                    <i class="fa-solid fa-check"></i> Organize your schedule
-                                </li>
-                                <li class="business-checklist-item">
-                                    <i class="fa-solid fa-check"></i> Reach new customers
-                                </li>
-                                <li class="business-checklist-item">
-                                    <i class="fa-solid fa-check"></i> Grow your bookings
-                                </li>
-                            </ul>
-                            <div class="business-cta-group">
-                                <a href="{{ route('auth-business-sign-up') }}" class="btn-business-primary">
-                                    Join Kimih
-                                </a>
-                                <a href="{{ route('business.page') }}" class="btn-business-secondary">
-                                    Learn More
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-12 order-lg-2 order-1" data-aos="fade-left">
-                        <div class="business-visual text-center">
-                            <img class="img-fluid rounded shadow-lg"
-                                src="{{ asset('banners/dashboard.png') }}"
-                                alt="Kimih Business Dashboard Mockup" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    {{-- Section 8: Video / Wellness Section --}}
-    <section class="wellness-video-section kimih-section-spacing bg-light" id="wellness">
+    <section class="about-area section-bg pt-100 pb-70">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-lg-5 col-12" data-aos="fade-right">
-                    <div class="kimih-section-header text-start mb-4">
-                        <span>Wellness</span>
-                        <h2>Your Well-Being Starts Here</h2>
-                        <p class="text-muted mt-3" style="text-align: justify; line-height: 1.8;">
-                            Discover experiences that help you look good, feel good, and take time for yourself.
-                        </p>
+                <div class="col-lg-6">
+                    <div class="about-img-three mr-20">
+                        {{-- <img class="rounded" src="assets/images/shope4.png" alt="About" /> --}}
+                        <img class="rounded"
+                            src="{{ isset($home->section1_image) ? asset($home->section1_image) : asset('assets/images/shope4.png') }}"
+                            alt="About" />
+
                     </div>
                 </div>
-                <div class="col-lg-7 col-12 mt-4 mt-lg-0" data-aos="fade-left">
-                    @php
-                        $videoLink = $home->section2_video_link ?? 'https://www.youtube.com/watch?v=Zd00oIDAt60';
-                        // Convert watch URL to embed URL if needed
-                        if (strpos($videoLink, 'watch?v=') !== false) {
-                            $videoLink = str_replace('watch?v=', 'embed/', $videoLink);
-                        }
-                    @endphp
-                    <div class="wellness-video-card">
-                        {{-- Background placeholder matching the wellness vibe --}}
-                        <img src="{{ asset('assets/images/shope4.png') }}" class="wellness-video-placeholder" alt="Wellness video thumbnail" />
-                        <div class="wellness-video-overlay">
-                            <a href="{{ $videoLink }}" target="_blank" class="wellness-video-play-btn" aria-label="Play video" rel="noopener">
-                                <i class="fa-solid fa-play"></i>
-                            </a>
-                            <h3>Watch Our Story</h3>
-                            <p>See how Kimih is transforming the beauty and wellness booking experience.</p>
+                <div class="col-lg-6">
+                    <div class="about-content about-content-max">
+                        <div class="section-title">
+
+                            <h2>{{ $home->section1_title ?? '' }}</h2>
+                            <p style="text-align: justify;">
+                                {{ $home->section1_desc ?? '' }}
+                            </p>
+
                         </div>
+                        <a href="{{ route('blogs.show.front') }}" class="default-btn">Learn More <i
+                                class="flaticon-arrow-pointing-to-right"></i>
+                        </a>
                     </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+
+    <section class="intro-video-bg2 ptb-100">
+        <div class="container">
+            <div class="video-content-two-bg">
+                {{-- <a href="{{ $home->section2_video_link ?? 'www.youtube.com' }}" class="play-btn">
+                    <i class="ri-play-fill"></i>
+                </a> --}}
+                @php
+                    $videoLink = $home->section2_video_link ?? '';
+                    if (strpos($videoLink, 'watch?v=') !== false) {
+                        $videoLink = str_replace('watch?v=', 'embed/', $videoLink);
+                    }
+                @endphp
+
+                <!-- <iframe class="youtube-video" width="560" height="315" src="{!! $videoLink !!}" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe> -->
+                <a href="{{$videoLink??'https://www.youtube.com/watch?v=Zd00oIDAt60'}}" target="_blank" class="play-btn" style="margin: 60px 0;">
+                    <i class="ri-play-fill"></i>
+                </a>
+
+                <div class="section-title text-center">
+                    <span>You're Welcomed!</span>
+                    {{-- {{dd($home)}} --}}
+                    <h2>{{ $home->section2_title ?? 'We Care About Your Nail And Your well-Being' }}</h2>
+                </div>
+                <div class="top-vector" data-aos="fade-left" data-aos-delay="300" data-aos-duration="500">
+                    <img src="assets/images/video/video-vector2.png" alt="Video" />
+                </div>
+                <div class="bottom-vector" data-aos="fade-right" data-aos-delay="300" data-aos-duration="500">
+                    <img src="assets/images/video/video-vector1.png" alt="Video" />
                 </div>
             </div>
         </div>
     </section>
 
-    {{-- Section 9: Pricing --}}
-    <section class="pricing-section bg-white kimih-section-spacing" id="pricing">
+    {{-- Feedback Section --}}
+    <section class="testimonial-area section-bg ptb-100">
         <div class="container">
-            <div class="kimih-section-header text-center mb-5">
-                <span>Pricing</span>
-                <h2>Simple, Transparent Pricing</h2>
-                <p class="mx-auto text-muted mt-3" style="max-width: 600px;">
-                    Choose the plan that works best for your beauty and wellness business.
-                </p>
+            <div class="section-title mb-45 text-center">
+                <span>Our Testimonial</span>
+                <h2>What Our Clients Feedback</h2>
             </div>
-            
-            <div class="row justify-content-center g-4">
-                @forelse ($plans as $plan)
-                    <div class="col-lg-4 col-md-6 col-12">
-                        <div class="pricing-card-modern {{ $loop->index === 1 ? 'active' : '' }}" data-aos="fade-up" data-aos-delay="{{ ($loop->index + 1) * 100 }}">
-                            <div class="pricing-card-header">
-                                @if ($loop->index === 1)
-                                    <span class="pricing-badge">Popular</span>
-                                @endif
-                                <h3>{{ $plan->name ?? '' }}</h3>
-                                <div class="price-tag-wrap">
-                                    <span class="price-currency">AED</span>
-                                    <span class="price-value">{{ intval($plan->price ?? 0) }}</span>
-                                    <span class="price-period">/month</span>
-                                </div>
-                            </div>
-                            
-                            <ul class="pricing-features-list">
-                                @foreach ($plan->planServices as $planService)
-                                    <li>
-                                        <i class="fa-solid fa-circle-check"></i>
-                                        <span>{{ $planService->name ?? '' }}</span>
-                                    </li>
-                                @endforeach
-                            </ul>
-                            
-                            <div class="pricing-card-footer">
-                                <a href="{{ route('auth-business-sign-up') }}" class="pricing-btn">
-                                    Get Started
-                                </a>
+            <div class="testimonial-slider-three owl-carousel owl-theme">
+                @forelse ($feedbacks as $feedback)
+                    <div class="testimonial-card">
+                        <div class="testimonial-img">
+                            <img src="{{ isset($feedback->image) ? asset($feedback->image) : asset('assets/images/testimonial/testimonial-img1.jpg') }}"
+                                alt="Testimonial" style="max-width: 130px;
+                        " />
+                            <i class="flaticon-quote"></i>
+                        </div>
+                        <div class="content">
+                            <p>{{ $feedback->feedback ?? 'Feedback' }}</p>
+                            <h3>{{ $feedback->name ?? 'Name' }}
+                            </h3>
+                            <div class="rating">
+                                @for ($i = 0; $i < $feedback->rating; $i++)
+                                    <i class="ri-star-fill"></i>
+                                @endfor
                             </div>
                         </div>
                     </div>
                 @empty
-                    {{-- Fallback placeholder structure --}}
-                    <div class="col-lg-4 col-md-6 col-12">
-                        <div class="pricing-card-modern" data-aos="fade-up" data-aos-delay="100">
-                            <div class="pricing-card-header">
-                                <h3>Free</h3>
-                                <div class="price-tag-wrap">
-                                    <span class="price-currency">AED</span>
-                                    <span class="price-value">0</span>
-                                    <span class="price-period">/month</span>
-                                </div>
-                            </div>
-                            <ul class="pricing-features-list">
-                                <li><i class="fa-solid fa-circle-check"></i> <span>For businesses getting started</span></li>
-                                <li><i class="fa-solid fa-circle-check"></i> <span>Basic scheduling features</span></li>
-                            </ul>
-                            <div class="pricing-card-footer">
-                                <a href="{{ route('auth-business-sign-up') }}" class="pricing-btn">Start Free</a>
-                            </div>
+                    <div class="testimonial-card">
+                        <div class="testimonial-img">
+                            <img src="assets/images/testimonial/testimonial-img1.jpg" alt="Testimonial" />
+                            <i class="flaticon-quote"></i>
                         </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-12">
-                        <div class="pricing-card-modern active" data-aos="fade-up" data-aos-delay="200">
-                            <div class="pricing-card-header">
-                                <span class="pricing-badge">Popular</span>
-                                <h3>Pro</h3>
-                                <div class="price-tag-wrap">
-                                    <span class="price-currency">AED</span>
-                                    <span class="price-value">199</span>
-                                    <span class="price-period">/month</span>
-                                </div>
-                            </div>
-                            <ul class="pricing-features-list">
-                                <li><i class="fa-solid fa-circle-check"></i> <span>For growing businesses</span></li>
-                                <li><i class="fa-solid fa-circle-check"></i> <span>Advanced marketing tools</span></li>
-                            </ul>
-                            <div class="pricing-card-footer">
-                                <a href="{{ route('auth-business-sign-up') }}" class="pricing-btn">Choose Plan</a>
+                        <div class="content">
+                            <p>Pellentesque habitant morbi tristique senectus netu et pell malesuada fames ac turpis egestas
+                                vestibulu tortor quam feugiat vit tristique senectus</p>
+                            <h3>Emanuele Ebrew <span>/Senior Manager</span>
+                            </h3>
+                            <div class="rating">
+                                <i class="ri-star-fill"></i>
+                                <i class="ri-star-fill"></i>
+                                <i class="ri-star-fill"></i>
+                                <i class="ri-star-line"></i>
+                                <i class="ri-star-line"></i>
                             </div>
                         </div>
                     </div>
                 @endforelse
+
             </div>
         </div>
     </section>
 
-    {{-- Section 10: Testimonials --}}
-    @php
-        $cleanFeedbacks = $feedbacks->filter(function($item) {
-            $f = strtolower(trim($item->feedback ?? ''));
-            $n = strtolower(trim($item->name ?? ''));
-            return $f !== '' && !in_array($f, ['test', 'fff', 'lorem ipsum']) && !in_array($n, ['test', 'fff']);
-        });
-    @endphp
-    <section class="testimonial-area kimih-section-spacing" id="testimonials">
+    {{-- <section class="home-status">
         <div class="container">
-            <div class="kimih-section-header">
-                <span>Testimonials</span>
-                <h2>What Our Clients Say</h2>
-                <p class="text-muted mt-3 text-center max-w-600 mx-auto" style="max-width: 600px;">
-                    See what our customers and community have to say about their Kimih experience.
-                </p>
-            </div>
-            
-            <div class="row g-4 mt-2">
-                @forelse ($cleanFeedbacks as $feedback)
-                    <div class="col-lg-4 col-md-6 col-12">
-                        <div class="testimonial-card-modern" data-aos="fade-up">
-                            <div class="testimonial-quote">
-                                {{ $feedback->feedback ?? 'Amazing services and booking experience!' }}
-                            </div>
-                            <div class="testimonial-user">
-                                <img src="{{ isset($feedback->image) ? asset($feedback->image) : asset('assets/images/testimonial/testimonial-img1.jpg') }}"
-                                    class="testimonial-avatar" alt="{{ $feedback->name ?? 'Client' }} avatar" />
-                                <div class="testimonial-info">
-                                    <h4>{{ $feedback->name ?? 'Client' }}</h4>
-                                    <div class="testimonial-rating">
-                                        @for ($i = 0; $i < ($feedback->rating ?? 5); $i++)
-                                            <i class="fa-solid fa-star"></i>
-                                        @endfor
-                                    </div>
-                                    <span class="testimonial-verified">
-                                        <i class="fa-solid fa-circle-check"></i> Verified Customer
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @empty
-                    {{-- Graceful fallback if no feedback exists --}}
-                    <div class="col-12 text-center text-muted">
-                        <p>No testimonials available yet. Be the first to share your experience!</p>
-                    </div>
-                @endforelse
+            <h5>The top-rated destination for beauty and wellness</h5>
+            <p>One solution, one software. Trusted by the best in the beauty and wellness industry</p>
+            <h1>5 Billion+</h1>
+            <p>Appointments booked on Kimih</p>
+            <div class="row">
+                <div class="col-lg-4 mt-5">
+                    <h5>580,000+</h5>
+                    <h6>partner businesses</h6>
+                </div>
+                <div class="col-lg-4  mt-5">
+                    <h5>98+ countries</h5>
+                    <h6>using Kimih </h6>
+                </div>
+                <div class="col-lg-4  mt-5">
+                    <h5>150,000+</h5>
+                    <h6>stylists and professionals</h6>
+                </div>
             </div>
         </div>
-    </section>
+    </section> --}}
+    {{-- <section class="for-business">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <h1>{{ $home->last_section_title ?? 'Title' }}</h1>
+                    <p> {{ $home->last_section_desc ?? 'Description' }}</p>
+                    <button class="default-btn mt-2">Learn more</button>
+                    <h5 class="mt-3">Excellent 5/5</h5>
+                    <h6><i class="flaticon-star mx-1"></i><i class="flaticon-star mx-1"></i><i
+                            class="flaticon-star mx-1"></i><i class="flaticon-star mx-1"></i><i
+                            class="flaticon-star mx-1"></i></h6>
+
+                </div>
+                <div class="col-lg-6">
+                    <img class="img-fluid"
+                        src="{{ isset($home->last_section_image) ? asset($home->last_section_image) : asset('assets/images/dashboard.jpg') }}">
+                </div>
+            </div>
+        </div>
+    </section> --}}
 @endsection
 
 @section('top-scripts')
@@ -758,82 +383,6 @@
                 $("#lon").val(longitude);
             });
 
-            // Custom dropdown select element sync and accessibility
-            const $select = $('#serviceSelect');
-            const $trigger = $('#serviceDropdownTrigger');
-            const $menu = $('.custom-dropdown-menu');
-            const $items = $('.custom-dropdown-item');
-
-            $items.on('click', function(e) {
-                e.stopPropagation();
-                const val = $(this).attr('data-value');
-                const text = $(this).find('.item-text').text();
-
-                $items.removeClass('selected').attr('aria-selected', 'false');
-                $(this).addClass('selected').attr('aria-selected', 'true');
-
-                $select.val(val).trigger('change');
-                $trigger.find('.selected-text-holder').text(text || 'Haircut, Massage, Nails...');
-                
-                closeDropdown();
-                $trigger.focus();
-            });
-
-            $trigger.on('click', function(e) {
-                e.stopPropagation();
-                const isOpen = $menu.hasClass('show');
-                if (isOpen) {
-                    closeDropdown();
-                } else {
-                    openDropdown();
-                }
-            });
-
-            $(document).on('click', function(e) {
-                if (!$(e.target).closest('.custom-dropdown-container').length) {
-                    closeDropdown();
-                }
-            });
-
-            $trigger.on('keydown', function(e) {
-                if (e.key === 'ArrowDown' || e.key === ' ' || e.key === 'Enter') {
-                    e.preventDefault();
-                    openDropdown();
-                    setTimeout(() => {
-                        $menu.find('.custom-dropdown-item.selected').focus();
-                    }, 50);
-                }
-            });
-
-            $menu.on('keydown', '.custom-dropdown-item', function(e) {
-                const $currentItem = $(this);
-                if (e.key === 'ArrowDown') {
-                    e.preventDefault();
-                    const $next = $currentItem.next('.custom-dropdown-item');
-                    if ($next.length) $next.focus();
-                } else if (e.key === 'ArrowUp') {
-                    e.preventDefault();
-                    const $prev = $currentItem.prev('.custom-dropdown-item');
-                    if ($prev.length) $prev.focus();
-                } else if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    $currentItem.click();
-                } else if (e.key === 'Escape') {
-                    e.preventDefault();
-                    closeDropdown();
-                    $trigger.focus();
-                }
-            });
-
-            function openDropdown() {
-                $menu.addClass('show');
-                $trigger.attr('aria-expanded', 'true');
-            }
-
-            function closeDropdown() {
-                $menu.removeClass('show');
-                $trigger.attr('aria-expanded', 'false');
-            }
 
         });
     </script>
