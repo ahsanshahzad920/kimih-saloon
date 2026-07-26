@@ -5,18 +5,31 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="theme-color" content="#ef4444">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="{{ asset('manifest.json') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/pwa-responsive.css') }}">
     @yield('top-styles')
     <script src="{{ asset('assets/js/jquery.min.js') }}"></script>
     <link rel="stylesheet" href="{{ asset('assets/css/plugins.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/iconplugins.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/responsive.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/magnific-popup.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}?v={{ filemtime(public_path('assets/css/style.css')) }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/landing-page.css') }}?v={{ filemtime(public_path('assets/css/landing-page.css')) }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/kimih.css') }}?v={{ filemtime(public_path('assets/css/kimih.css')) }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/responsive.css') }}?v={{ filemtime(public_path('assets/css/responsive.css')) }}">
+
     <link rel="stylesheet" href="{{ asset('assets/css/theme-dark.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <title>@yield('title')</title>
-    <link rel="icon" type="image/png" href="assets/images/favicon.png">
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.places_api_key', 'AIzaSyCv7T8wOWYwc4vCgkiF60CZ_WM9b0nzdQA') }}&libraries=places"></script>
+
+    <title>@yield('title') | {{ settings()->site_name ?? 'Kimih' }} - Discover Your Next Beauty & Wellness Experience</title>
+    <meta name="description" content="Discover and book beauty, massage, hair, nail, spa, and wellness services from trusted professionals near you. Compare prices, reviews, and options instantly.">
+    <link rel="icon" type="image/png" href="{{ asset('assets/images/favicon.png') }}">
     <style>
         .myc-available-time {
             background: linear-gradient(267deg, rgba(221, 63, 235, 1) 0%, rgba(58, 55, 236, 1) 100%) !important;
@@ -402,12 +415,17 @@
         </script>
     @endif
 
-    {{-- <script>
-        $(window).on('load', function() {
-            $('#loader').fadeOut('slow');
-        });
-    </script> --}}
-
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js').then(function(registration) {
+                    console.log('User PWA ServiceWorker registered with scope:', registration.scope);
+                }, function(err) {
+                    console.log('User PWA ServiceWorker registration failed:', err);
+                });
+            });
+        }
+    </script>
 </body>
 
 </html>

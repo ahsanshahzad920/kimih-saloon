@@ -12,6 +12,7 @@ use App\Models\ServiceCategory;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
+use App\Models\Plan;
 
 class HomeController extends Controller
 {
@@ -20,23 +21,52 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $users = User::whereHas('roles', function ($query) {
+        $baseQuery = User::whereHas('roles', function ($query) {
             $query->where('name', 'Business User');
         })->whereHas('businessUser', function ($query) {
             $query->where('business_name', '!=', null);
-        })->latest()->get();
+        })->with(['businessUser.images', 'feedback', 'services']);
+
+        // 1. Recommended (Highest Average Rating)
+        $recommendedUsers = (clone $baseQuery)
+            ->withAvg('feedback', 'rating')
+            ->orderByDesc('feedback_avg_rating')
+            ->take(8)
+            ->get();
+
+        // 2. New to Kimih (Newly Registered Salons)
+        $newUsers = (clone $baseQuery)
+            ->latest('created_at')
+            ->take(8)
+            ->get();
+
+        // 3. Trending (Highest Activity / Feedback Count)
+        $trendingUsers = (clone $baseQuery)
+            ->withCount('feedback')
+            ->orderByDesc('feedback_count')
+            ->take(8)
+            ->get();
+
+        $users = $recommendedUsers; // Fallback compatibility
 
         $admin = Role::where('name', 'Admin')->first();
         $admin = $admin ? $admin->users->first() : collect();
 
-        $serviceCategory = ServiceCategory::where('created_by', $admin->id)->get();
-
-        // $businessRole = Role::where('name', 'Business User')->first();
-        // $users = $businessRole ? $businessRole->users : collect();
+        $serviceCategory = ServiceCategory::where('created_by', optional($admin)->id)->get();
         $home = Home::first();
         $feedbacks = Feedback::where('status', 1)->latest()->get();
+        $plans = Plan::with('planServices')->get();
 
-        return view('user.index', compact('users', 'serviceCategory', 'home', 'feedbacks'));
+        return view('user.index', compact(
+            'users',
+            'recommendedUsers',
+            'newUsers',
+            'trendingUsers',
+            'serviceCategory',
+            'home',
+            'feedbacks',
+            'plans'
+        ));
     }
 
     /**
@@ -256,74 +286,52 @@ class HomeController extends Controller
         if (!empty($data['location'])) {
             // Apply location filter if provided
             $userQuery->whereHas('businessUser', function ($query) use ($data) {
-                $query->where('location', 'like', '%' . $data['location'] . '%');
-            });
-            $ip = $request->ip();
-            $response = Http::get("http://ipinfo.io/{$ip}/json");
-            $locationData = $response->json();
-
-            $country = $locationData['country'] ?? 'AE'; // Default to United Arab Emirates (AE) if country not found
-            $city = $locationData['city'] ?? 'Dubai'; // Default to Dubai if city not found
-
-        } else {
-            // If location is not provided, use IP address to get geolocation
-            $ip = $request->ip();
-            $response = Http::get("http://ipinfo.io/{$ip}/json");
-            $locationData = $response->json();
-
-            $country = $locationData['country'] ?? 'AE'; // Default to United Arab Emirates (AE) if country not found
-            $city = $locationData['city'] ?? 'Dubai'; // Default to Dubai if city not found
-            
-
-            // First, try to find users in the same city
-            $userQuery = User::whereHas('roles', function ($query) {
-                $query->where('name', 'Business User');
-            })->whereHas('businessUser', function ($query) use ($country, $city) {
-                $query->where('country_code', $country)
-                      ->where('city', $city);
+                $query->where('location', 'like', '%' . $data['location'] . '%')
+                      ->orWhere('city', 'like', '%' . $data['location'] . '%')
+                      ->orWhere('country', 'like', '%' . $data['location'] . '%');
             });
         }
 
         // Fetch users based on the query
         $users = $userQuery->get();
-        // If no users found in the same city, then try to find users in the same country
-        if ($users->isEmpty()) {
-            $userQuery = User::whereHas('roles', function ($query) {
+
+        // If no users found with exact filter, fallback to all business users
+        if ($users->isEmpty() && empty($data['service']) && empty($data['location'])) {
+            $users = User::whereHas('roles', function ($query) {
                 $query->where('name', 'Business User');
-            })->whereHas('businessUser', function ($query) use ($country) {
-                $query->where('country_code', $country);
-            });
-
-            // Execute the query and get the results
-            $users = $userQuery->get();
+            })->whereHas('businessUser', function ($query) {
+                $query->where('business_name', '!=', null);
+            })->get();
         }
-        // Load related data
-        $users->load('businessUser','feedback');
-        // dd($users);
 
-        // Map the results
+        // Load related data
+        $users->load('businessUser', 'feedback', 'services', 'serviceCategory');
+
+        // Map the results for map pins
         $shopLocations = $users->map(function ($user) {
-            $images = $user->businessUser->images;
-            $firstImage = 'https://via.placeholder.com/150';
+            if (!$user->businessUser) return null;
+            $images = $user->businessUser->images ?? collect();
+            $firstImage = asset('assets/images/shope.png');
 
             if (is_array($images) && isset($images[0])) {
                 $firstImage = asset('storage/' . $images[0]['image']);
-            } elseif ($images instanceof Illuminate\Support\Collection && $images->isNotEmpty()) {
+            } elseif ($images instanceof \Illuminate\Support\Collection && $images->isNotEmpty()) {
                 $firstImage = asset('storage/' . $images->first()['image']);
             }
 
             return [
                 'shop' => $user->businessUser,
                 'shop_image' => $firstImage,
-                'latitude' => $user->businessUser->latitude,
-                'longitude' => $user->businessUser->longitude,
+                'latitude' => $user->businessUser->latitude ?? '25.2048',
+                'longitude' => $user->businessUser->longitude ?? '55.2708',
                 'feedback' => $user->feedback->count(),
             ];
-        });
+        })->filter();
 
-        // dd($shopLocations);
+        $serviceCategory = ServiceCategory::all();
 
         // Return view
-        return view('user.shop.search', compact('users', 'shopLocations'));
+        return view('user.shop.search', compact('users', 'shopLocations', 'serviceCategory'));
     }
+
 }
