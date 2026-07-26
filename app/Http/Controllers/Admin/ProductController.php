@@ -135,7 +135,12 @@ class ProductController extends Controller
      */
     public function edit(string $id)
     {
-        $product = Product::with('images', 'barcodes')->find($id);
+        $query = Product::with('images', 'barcodes');
+        if (!auth()->user()->hasRole('Admin')) {
+            $query->where('created_by', auth()->id());
+        }
+        $product = $query->findOrFail($id);
+
         $categories = ProductCategory::where('created_by', auth()->id())->get();
         $brands = ProductBrand::where('created_by', auth()->id())->get();
         $suppliers = Supplier::where('created_by', auth()->id())->get();
@@ -147,8 +152,7 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        // dd($request->all());
-        $request->validate([
+        $validatedData = $request->validate([
             'name' => 'required',
             'category_id' => 'required',
             'brand_id' => 'required',
@@ -159,40 +163,38 @@ class ProductController extends Controller
             'supply_price' => 'required',
         ]);
 
-        $data = $request->all();
+        $query = Product::query();
+        if (!auth()->user()->hasRole('Admin')) {
+            $query->where('created_by', auth()->id());
+        }
+        $product = $query->findOrFail($id);
+
+        $data = $request->except(['_token', '_method', 'img']);
         $data['updated_by'] = auth()->id();
-        $product = Product::find($id);
-        if ($product) {
+        
+        $product->update($data);
+
+        if ($request->hasFile('img')) {
             $product->images()->delete();
+            $this->handleImageUpload($request, $product->id);
+        }
+
+        if ($request->has('barcodeSymbology0') || $request->has('productCode0')) {
             $product->barcodes()->delete();
-            $product->delete();
-
-
-            $productData = array_merge(['id' => $id], $data);
-            $product  = Product::create($productData);
-
-            if ($request->has('img')) {
-                $this->handleImageUpload($request, $product->id);
-            }
-
-            $productId = $product->id; // or however you get your product ID
-
             foreach ($request->all() as $key => $value) {
                 if (strpos($key, 'barcodeSymbology') === 0 && $value) {
-                    // Extract the index to match with product code
                     $index = substr($key, -1);
-
                     $barcode = new Barcode();
-                    $barcode->product_id = $productId;
+                    $barcode->product_id = $product->id;
                     $barcode->symbology = $value;
                     $barcode->code = $request->input('productCode' . $index);
                     $barcode->save();
                 }
             }
-
-            return redirect()->route('products.index')
-                ->with('success', 'Product created successfully.');
         }
+
+        return redirect()->route('products.index')
+            ->with('success', 'Product updated successfully.');
     }
 
     /**
@@ -200,16 +202,17 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        $product = Product::find($id);
-        if ($product) {
-            $product->images()->delete();
-            $product->barcodes()->delete();
-            $product->delete();
-            // return redirect()->route('products.index')
-            //     ->with('success', 'Product deleted successfully.');
-            return response()->json(['status' => 200 , 'message' => 'Product deleted successfully']);
-
+        $query = Product::query();
+        if (!auth()->user()->hasRole('Admin')) {
+            $query->where('created_by', auth()->id());
         }
+        $product = $query->findOrFail($id);
+
+        $product->images()->delete();
+        $product->barcodes()->delete();
+        $product->delete();
+
+        return response()->json(['status' => 200 , 'message' => 'Product deleted successfully']);
     }
 
 

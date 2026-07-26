@@ -1,12 +1,74 @@
 @extends('admin.layout.app')
 
 @section('styles')
-    {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <style>
         .ui-auticomplete {
             width: 440px !important;
             z-index: 999999999999;
+        }
+        /* PWA Mobile Optimization for Profile Page */
+        @media (max-width: 768px) {
+            .profile-wid-bg {
+                height: 160px !important;
+            }
+            .profile-wid-img {
+                height: 160px !important;
+                object-fit: cover !important;
+            }
+            .card.mt-n5 {
+                margin-top: -3rem !important;
+            }
+            .nav-tabs-custom {
+                display: flex !important;
+                flex-wrap: nowrap !important;
+                overflow-x: auto !important;
+                -webkit-overflow-scrolling: touch;
+                border-bottom: 2px solid #e2e8f0 !important;
+                padding-bottom: 4px !important;
+            }
+            .nav-tabs-custom .nav-item {
+                flex: 0 0 auto !important;
+            }
+            .nav-tabs-custom .nav-link {
+                white-space: nowrap !important;
+                padding: 10px 14px !important;
+                font-size: 14px !important;
+            }
+            .card-body.p-4 {
+                padding: 1rem !important;
+            }
+            #existingImagesGrid, #imagePreviewContainer {
+                display: flex !important;
+                flex-wrap: wrap !important;
+                gap: 10px !important;
+            }
+            .existing-img-card, .preview-img-card {
+                width: 95px !important;
+                height: 95px !important;
+            }
+            .drag-drop-zone {
+                padding: 1.25rem 0.75rem !important;
+            }
+            .drag-drop-zone i {
+                font-size: 32px !important;
+            }
+            .drag-drop-zone h5 {
+                font-size: 15px !important;
+            }
+            .gmap_iframe {
+                height: 240px !important;
+            }
+            .mapouter {
+                height: 240px !important;
+            }
+            .btn-primary, .default-btn {
+                width: 100% !important;
+                display: block !important;
+                text-align: center !important;
+                margin-bottom: 0.5rem !important;
+            }
         }
     </style>
 @endsection
@@ -433,30 +495,65 @@
                                                 <div id="newlink">
                                                     <div id="1">
                                                         <div class="row">
-                                                            <div class="col-lg-12">
-                                                                <div class="mb-3">
-                                                                    <label for="jobTitle" class="form-label">Business
-                                                                        Name</label>
-                                                                    <input type="text" class="form-control" id="jobTitle"
-                                                                        placeholder="Job title" name="business_name"
-                                                                        value="{{ auth()->user()->businessUser->business_name ?? '' }}">
-                                                                </div>
-                                                            </div>
-                                                            <!--end col-->
-                                                            <div class="col-lg-12">
-                                                                <div class="mb-3">
-                                                                    <label for="companyName" class="form-label">Business
-                                                                        Images</label>
-                                                                    <input type="file"
-                                                                        class="form-control @error('image*') is-invalid @enderror"
-                                                                        name="image[]" multiple id="companyName"
-                                                                        placeholder="Company name">
-                                                                    <span class="text-danger">
-                                                                        @error('image*')
-                                                                            {{ $message }}
-                                                                        @enderror
-                                                                    </span>
-                                                                </div>
+                                                             <div class="col-lg-12">
+                                                                 <div class="mb-3">
+                                                                     <label for="jobTitle" class="form-label">Business Name</label>
+                                                                     <input type="text" class="form-control" id="jobTitle"
+                                                                         placeholder="Business Name" name="business_name"
+                                                                         value="{{ auth()->user()->businessUser->business_name ?? '' }}">
+                                                                 </div>
+                                                             </div>
+
+                                                             <!-- Business Gallery Photos Component -->
+                                                             <div class="col-lg-12">
+                                                                 <div class="mb-4">
+                                                                     <label class="form-label fw-bold fs-15">Business Gallery Photos</label>
+                                                                     <p class="text-muted small">Upload up to 15 photos of your salon, interior, and work.</p>
+
+                                                                     {{-- Existing Saved Images Gallery --}}
+                                                                     @if(auth()->user()->businessUser && auth()->user()->businessUser->images->count() > 0)
+                                                                         <div class="mb-4">
+                                                                             <label class="form-label small fw-semibold text-muted">Current Business Photos</label>
+                                                                             <div class="d-flex flex-wrap gap-3" id="existingImagesGrid">
+                                                                                 @foreach(auth()->user()->businessUser->images as $imgObj)
+                                                                                     <div class="position-relative existing-img-card" id="business-img-{{ $imgObj->id }}" style="width: 110px; height: 110px; border-radius: 12px; overflow: hidden; border: 1px solid #cbd5e1; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+                                                                                         <img src="{{ asset('storage/' . $imgObj->image) }}" class="w-100 h-100" alt="Business Image" style="object-fit: cover;">
+                                                                                         <button type="button" 
+                                                                                                 class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 rounded-circle p-0 shadow-sm btn-delete-existing-img" 
+                                                                                                 data-id="{{ $imgObj->id }}"
+                                                                                                 onclick="deleteExistingImage({{ $imgObj->id }}, event)"
+                                                                                                 style="width: 26px; height: 26px; line-height: 24px; font-weight: bold; z-index: 100;" 
+                                                                                                 title="Remove Photo">&times;</button>
+                                                                                     </div>
+                                                                                 @endforeach
+                                                                             </div>
+                                                                         </div>
+                                                                     @endif
+
+                                                                     {{-- Drag & Drop Upload Zone --}}
+                                                                     <div class="drag-drop-zone p-4 text-center border-2 border-dashed rounded-4 position-relative" 
+                                                                          id="dropZone" 
+                                                                          style="background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 16px; transition: all 0.2s ease; cursor: pointer;">
+                                                                         <input type="file" name="image[]" id="businessImageInput" multiple accept="image/*,.avif" class="d-none">
+                                                                         <div class="py-3 pointer-events-none" id="dropZoneContent">
+                                                                             <i class="ri-upload-cloud-2-line display-5 text-purple" style="font-size: 42px; color: #4b1fa8;"></i>
+                                                                             <h5 class="fw-bold mt-2 text-dark">Drag & Drop images here</h5>
+                                                                             <p class="text-muted small mb-2">or click to browse from your computer</p>
+                                                                             <span class="badge bg-light text-dark border">Supports PNG, JPG, JPEG, WEBP, AVIF (Max 10MB each)</span>
+                                                                         </div>
+                                                                     </div>
+
+                                                                     {{-- Live New Previews Container --}}
+                                                                     <div class="d-flex flex-wrap gap-3 mt-3" id="imagePreviewContainer"></div>
+
+                                                                     @error('image')
+                                                                         <div class="text-danger small mt-2">{{ $message }}</div>
+                                                                     @enderror
+                                                                     @error('image.*')
+                                                                         <div class="text-danger small mt-2">{{ $message }}</div>
+                                                                     @enderror
+                                                                 </div>
+                                                             </div></div>
                                                             </div>
                                                             <div class="col-lg-12">
                                                                 <div class="mb-3">
@@ -705,6 +802,160 @@
             //         $('#longitude').val(longitude);
             //     }
             // });
+
+            // Drag & Drop Image Upload JS
+            let uploadedFiles = [];
+            const dropZone = document.getElementById('dropZone');
+            const fileInput = document.getElementById('businessImageInput');
+            const previewContainer = document.getElementById('imagePreviewContainer');
+
+            if (dropZone && fileInput) {
+                dropZone.addEventListener('click', (e) => {
+                    if (e.target.closest('button')) return;
+                    fileInput.click();
+                });
+
+                ['dragenter', 'dragover'].forEach(eventName => {
+                    dropZone.addEventListener(eventName, (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        dropZone.style.borderColor = '#4b1fa8';
+                        dropZone.style.background = 'rgba(75, 31, 168, 0.05)';
+                    }, false);
+                });
+
+                ['dragleave', 'drop'].forEach(eventName => {
+                    dropZone.addEventListener(eventName, (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        dropZone.style.borderColor = '#cbd5e1';
+                        dropZone.style.background = '#f8fafc';
+                    }, false);
+                });
+
+                dropZone.addEventListener('drop', (e) => {
+                    const dt = e.dataTransfer;
+                    const files = dt.files;
+                    handleFiles(files);
+                });
+
+                fileInput.addEventListener('change', function() {
+                    handleFiles(this.files);
+                });
+            }
+
+            function handleFiles(files) {
+                const fileList = Array.from(files);
+                fileList.forEach(file => {
+                    const isImage = file.type.startsWith('image/') || file.name.toLowerCase().endsWith('.avif');
+                    if (isImage) {
+                        uploadedFiles.push(file);
+                    }
+                });
+                updateFileInput();
+                renderPreviews();
+            }
+
+            window.removeNewFile = function(index, e) {
+                if (e) { e.preventDefault(); e.stopPropagation(); }
+                uploadedFiles.splice(index, 1);
+                updateFileInput();
+                renderPreviews();
+            };
+
+            function updateFileInput() {
+                const dt = new DataTransfer();
+                uploadedFiles.forEach(file => dt.items.add(file));
+                if (fileInput) fileInput.files = dt.files;
+            }
+
+            function renderPreviews() {
+                if (!previewContainer) return;
+                previewContainer.innerHTML = '';
+                uploadedFiles.forEach((file, idx) => {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const card = document.createElement('div');
+                        card.className = 'position-relative preview-img-card';
+                        card.style.cssText = 'width: 110px; height: 110px; border-radius: 12px; overflow: hidden; border: 2px solid #4b1fa8; box-shadow: 0 2px 8px rgba(0,0,0,0.1);';
+                        card.innerHTML = `
+                            <img src="${e.target.result}" class="w-100 h-100" style="object-fit: cover;" alt="Preview">
+                            <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 rounded-circle p-0" 
+                                    style="width: 24px; height: 24px; line-height: 22px; font-weight: bold; z-index: 10;" 
+                                    onclick="removeNewFile(${idx}, event)" title="Remove">&times;</button>
+                        `;
+                        previewContainer.appendChild(card);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            window.deleteExistingImage = function(id, e) {
+                if (e) { e.preventDefault(); e.stopPropagation(); }
+                
+                const performDelete = function() {
+                    const $card = $('#business-img-' + id);
+                    $card.css('opacity', '0.4');
+
+                    const token = $('meta[name="csrf-token"]').attr('content');
+                    $.ajax({
+                        url: '/business-image/' + id + '/delete',
+                        type: 'POST',
+                        data: {
+                            _method: 'DELETE',
+                            _token: token
+                        },
+                        success: function(res) {
+                            $card.fadeOut(300, function() {
+                                $(this).remove();
+                            });
+                            if (typeof Swal !== 'undefined') {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Deleted!',
+                                    text: 'Photo removed successfully.',
+                                    timer: 1500,
+                                    showConfirmButton: false
+                                });
+                            }
+                        },
+                        error: function(err) {
+                            $card.fadeOut(300, function() {
+                                $(this).remove();
+                            });
+                        }
+                    });
+                };
+
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        title: 'Delete Photo?',
+                        text: 'Are you sure you want to remove this photo from your gallery?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#ef4444',
+                        cancelButtonColor: '#64748b',
+                        confirmButtonText: 'Yes, delete it!',
+                        cancelButtonText: 'Cancel'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            performDelete();
+                        }
+                    });
+                } else {
+                    if (confirm('Are you sure you want to delete this photo?')) {
+                        performDelete();
+                    }
+                }
+            };
+
+            // Delegated click handler for existing photo delete buttons
+            $(document).on('click', '.btn-delete-existing-img', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                const id = $(this).data('id');
+                deleteExistingImage(id, e);
+            });
 
         });
     </script>

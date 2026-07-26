@@ -19,8 +19,8 @@ Route::middleware('guest',)->group(function () {
 
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
         ->name('login');
-    Route::post('user-account-check', [AuthenticatedSessionController::class, 'emailCheck'])->name('user-account');
-    Route::post('login-user', [AuthenticatedSessionController::class, 'loginUser'])->name('login-user');
+    Route::post('user-account-check', [AuthenticatedSessionController::class, 'emailCheck'])->name('user-account')->middleware('throttle:10,1');
+    Route::post('login-user', [AuthenticatedSessionController::class, 'loginUser'])->name('login-user')->middleware('throttle:5,1');
 
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
 

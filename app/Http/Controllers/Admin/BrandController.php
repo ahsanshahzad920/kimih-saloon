@@ -66,12 +66,16 @@ class BrandController extends Controller
             'name' => 'required|string',
             'description' => 'required|string'
         ]);
+        $query = ProductBrand::query();
+        if (!auth()->user()->hasRole('Admin')) {
+            $query->where('created_by', auth()->id());
+        }
+        $brand = $query->findOrFail($id);
+
+        $data = $request->except(['_token', '_method']);
         $data['updated_by'] = auth()->id();
-        $data = $request->all();
-        $brand = ProductBrand::find($id);
         $brand->update($data);
         return redirect()->back()->with('success','Brand updated successfully!');
-
     }
 
     /**
@@ -79,10 +83,12 @@ class BrandController extends Controller
      */
     public function destroy(string $id)
     {
-        $brand = ProductBrand::find($id);
+        $query = ProductBrand::query();
+        if (!auth()->user()->hasRole('Admin')) {
+            $query->where('created_by', auth()->id());
+        }
+        $brand = $query->findOrFail($id);
         $brand->delete();
-        // return redirect()->back()->with('success','Brand delete successfully!');
         return response()->json(['status' => 200 , 'message' => 'Brand deleted successfully']);
-
     }
 }

@@ -7,9 +7,13 @@
     <meta charset="utf-8" />
     <title>@yield('title')</title>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- App favicon -->
-    {{-- <link rel="shortcut icon" href="{{asset('dash-assets/images/')}}"> --}}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="theme-color" content="#ef4444">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="{{ asset('manifest.json') }}">
+    <link href="{{ asset('assets/css/pwa-responsive.css') }}" rel="stylesheet" type="text/css" />
     @yield('upper-styles')
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- jsvectormap css -->
@@ -656,6 +660,17 @@
     </script> --}}
 
     @yield('bottom-scripts')
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js').then(function(registration) {
+                    console.log('PWA ServiceWorker registered successfully with scope:', registration.scope);
+                }, function(err) {
+                    console.log('PWA ServiceWorker registration failed:', err);
+                });
+            });
+        }
+    </script>
 </body>
 
 </html>

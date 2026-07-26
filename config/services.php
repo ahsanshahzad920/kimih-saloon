@@ -36,7 +36,9 @@ return [
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         // 'redirect' => 'http://localhost:8000/auth/google/login',
         'redirect' => env('GOOGLE_REDIRECT_URL'),
+        'places_api_key' => env('GOOGLE_PLACES_API_KEY', 'AIzaSyCv7T8wOWYwc4vCgkiF60CZ_WM9b0nzdQA'),
     ],
+
 
     'github' => [
         'client_id' => env('GITHUB_CLIENT_ID'),

@@ -30,7 +30,7 @@ class AuthenticatedSessionController extends Controller
 
         if($user){
             $role = $user->getRoleNames()->first();
-            return response()->json(['status' => 200, 'message' => 'User found','email' => $user->email,'name' => $user->name,'id' => $user->id,'role' => $role]);
+            return response()->json(['status' => 200, 'message' => 'User found','email' => $user->email,'name' => $user->name,'role' => $role]);
         }else{
             return response()->json(['status' => 402, 'message' => 'User not found']);
         }

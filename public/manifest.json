@@ -1,0 +1,25 @@
+{
+  "name": "KIMIH Saloon & Booking Platform",
+  "short_name": "KIMIH",
+  "description": "Book appointments, discover beauty parlors, and manage salon services seamlessly.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#ffffff",
+  "theme_color": "#ef4444",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/assets/images/pwa/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/images/pwa/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

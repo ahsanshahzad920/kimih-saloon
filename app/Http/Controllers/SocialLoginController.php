@@ -105,7 +105,7 @@ class SocialLoginController extends Controller
                 'email' => $user->getEmail(),
                 'email_verified_at' => now(),
                 'remember_token' => Str::random(10),
-                'password' => Hash::make($user->getEmail()),
+                'password' => Hash::make(Str::random(40)),
             ]);
 
             // Assign the role based on the URL parameter

@@ -286,8 +286,8 @@ Route::get('auth/for-business', [AuthBusinessController::class, 'index'])->name(
 Route::get('auth/sign-up/for-business/{email?}', [AuthBusinessController::class, 'signUpIndex'])->name('auth-business-sign-up');
 Route::post('auth/sign-up/for-business/{email?}', [AuthBusinessController::class, 'signUp'])->name('auth-business-sign-up');
 Route::get('/setup-business-account', [AuthBusinessController::class, 'setupAccountIndex'])->name('business.setup')->middleware(['auth']);
-Route::post('/setup-business-account', [AuthBusinessController::class, 'setupAccount'])->name('business.setup');
 Route::resource('businesses', BusinessController::class);
+Route::delete('business-image/{id}/delete', [\App\Http\Controllers\Admin\BusinessController::class, 'deleteImage'])->name('business.image.delete')->middleware(['auth']);
 
 
 

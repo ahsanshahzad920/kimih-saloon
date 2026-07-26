@@ -97,13 +97,17 @@ class ServiceController extends Controller
      */
     public function edit(string $id)
     {
-        $service = Service::find($id);
-        // dd($service);
+        $query = Service::query();
+        if (!auth()->user()->hasRole('Admin')) {
+            $query->where('created_by', auth()->id());
+        }
+        $service = $query->findOrFail($id);
+
         $categories = ServiceCategory::where('created_by', auth()->id())->get();
-        $team_members = TeamMember::where('created_by',auth()->id())->get();
+        $team_members = TeamMember::where('created_by', auth()->id())->get();
         $plans = Plan::all();
 
-        return view('admin.services.edit',compact('service','categories','team_members', 'plans'));
+        return view('admin.services.edit', compact('service', 'categories', 'team_members', 'plans'));
     }
 
     /**
@@ -122,12 +126,18 @@ class ServiceController extends Controller
             'team_member' => 'required|array',
         ]);
 
-        $data = $request->all();
+        $query = Service::query();
+        if (!auth()->user()->hasRole('Admin')) {
+            $query->where('created_by', auth()->id());
+        }
+        $service = $query->findOrFail($id);
+
+        $data = $request->except(['_token', '_method']);
         $data['online_bookings'] = $request->has('online_bookings') ? 1 : 0;
         $data['notify'] = $request->has('notify') ? 1 : 0;
-        $data['team_member'] = implode(',',$data['team_member']);
+        $data['team_member'] = implode(',', $data['team_member']);
         $data['updated_by'] = auth()->id();
-        $service = Service::find($id);
+
         $service->update($data);
         return redirect()->route('services.index')->with('success', 'Service updated successfully');
     }
@@ -137,18 +147,25 @@ class ServiceController extends Controller
      */
     public function destroy(string $id)
     {
-        // return "yes";
-        $service = Service::find($id);
+        $query = Service::query();
+        if (!auth()->user()->hasRole('Admin')) {
+            $query->where('created_by', auth()->id());
+        }
+        $service = $query->findOrFail($id);
         $service->delete();
-        return response()->json(['status' => 200 , 'message' => 'Services deleted successfully']);
 
-        // return redirect()->route('services.index')->with('success', 'Service deleted successfully');
+        return response()->json(['status' => 200, 'message' => 'Service deleted successfully']);
     }
 
     public function deleteCategory(string $id)
     {
-        $category = ServiceCategory::find($id);
+        $query = ServiceCategory::query();
+        if (!auth()->user()->hasRole('Admin')) {
+            $query->where('created_by', auth()->id());
+        }
+        $category = $query->findOrFail($id);
         $category->delete();
+
         return redirect()->route('services.index')->with('success', 'Category deleted successfully');
     }
 
@@ -159,14 +176,21 @@ class ServiceController extends Controller
             'description' => 'required|string',
             'icon' => 'nullable|file|mimes:svg|max:4048',
         ]);
-        $data = $request->all();
+
+        $query = ServiceCategory::query();
+        if (!auth()->user()->hasRole('Admin')) {
+            $query->where('created_by', auth()->id());
+        }
+        $category = $query->findOrFail($id);
+
+        $data = $request->except(['_token', '_method', 'icon']);
         if ($request->hasFile('icon')) {
             $file = $request->file('icon');
-            $fileName = time() . '_' .'.'. $file->extension();
+            $fileName = time() . '_' . '.' . $file->extension();
             $file->move(public_path('uploads/icons'), $fileName);
             $data['icon'] = 'uploads/icons/' . $fileName;
         }
-        $category = ServiceCategory::find($id);
+
         $category->update($data);
         return redirect()->route('services.index')->with('success', 'Category updated successfully');
     }

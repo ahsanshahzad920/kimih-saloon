@@ -15,18 +15,30 @@
             background: white;
             border: none;
         }
-    </style>
-    <style>
-        .dataTables_paginate {
+        .dataTables_paginate, .dataTables_length, .dataTables_info {
             display: none;
         }
-
-        .dataTables_length {
-            display: none;
-        }
-
-        .dataTables_info {
-            display: none;
+        /* PWA Mobile Responsiveness for Dashboard */
+        @media (max-width: 767.98px) {
+            .page-content {
+                padding: 10px 8px !important;
+            }
+            .card-animate {
+                margin-bottom: 12px !important;
+            }
+            .card-body {
+                padding: 12px !important;
+            }
+            .fs-22 {
+                font-size: 18px !important;
+            }
+            .table-responsive {
+                -webkit-overflow-scrolling: touch;
+            }
+            .table th, .table td {
+                padding: 8px 10px !important;
+                font-size: 13px !important;
+            }
         }
     </style>
 @endsection
@@ -46,157 +58,129 @@
                                 <div class="col-12">
                                     <div class="d-flex align-items-lg-center flex-lg-row flex-column">
                                         <div class="flex-grow-1">
-                                            <h4 class="fs-16 mb-1">Good Morning, Anna!</h4>
-                                            <p class="text-muted mb-0">Here's what's happening with your store
-                                                today.</p>
+                                            <h4 class="fs-18 mb-1 fw-bold">Good {{ Carbon::now()->hour < 12 ? 'Morning' : (Carbon::now()->hour < 18 ? 'Afternoon' : 'Evening') }}, {{ auth()->user()->name }}! 👋</h4>
+                                            <p class="text-muted mb-0">Here's what's happening with your business today.</p>
                                         </div>
-
                                     </div><!-- end card header -->
                                 </div>
                                 <!--end col-->
                             </div>
                             <!--end row-->
 
-                            <div class="row">
-                                {{-- <div class="col-xl-3 col-md-6">
-                                    <!-- card -->
-                                    <div class="card card-animate">
+                            @php
+                                $totalSalesVal = \App\Models\Sale::where('created_by', auth()->id())->sum('grand_total') + \App\Models\Appointment::where('created_by', auth()->id())->sum('grand_total');
+                                $appointmentsCount = \App\Models\Appointment::where('created_by', auth()->id())->count();
+                                $customersCount = auth()->user()->clients ? auth()->user()->clients->count() : 0;
+                                $servicesCount = \App\Models\Service::where('created_by', auth()->id())->count();
+                            @endphp
+
+                            <div class="row g-3">
+                                <!-- Total Revenue Card -->
+                                <div class="col-6 col-xl-3">
+                                    <div class="card card-animate h-100">
                                         <div class="card-body">
                                             <div class="d-flex align-items-center">
                                                 <div class="flex-grow-1 overflow-hidden">
-                                                    <p class="text-uppercase fw-medium text-muted text-truncate mb-0">
-                                                        Total Earnings</p>
-                                                </div>
-                                                <div class="flex-shrink-0">
-                                                    <h5 class="text-brand fs-14 mb-0">
-                                                        <i class="ri-arrow-right-up-line fs-13 align-middle"></i>
-                                                        +16.24 %
-                                                    </h5>
+                                                    <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Total Revenue</p>
                                                 </div>
                                             </div>
-                                            <div class="d-flex align-items-center justify-content-between mt-4">
+                                            <div class="d-flex align-items-center justify-content-between mt-3">
                                                 <div>
-                                                    <h4 class="fs-22 fw-semibold ff-secondary mb-4 mb-lg-0">$<span
-                                                            class="counter-value" data-target="559.25">0</span>k
+                                                    <h4 class="fs-22 fw-semibold ff-secondary mb-0">
+                                                        $<span class="counter-value" data-target="{{ number_format($totalSalesVal, 2) }}">{{ number_format($totalSalesVal, 2) }}</span>
                                                     </h4>
-
                                                 </div>
                                                 <div class="avatar-sm flex-shrink-0">
-                                                    <span class="avatar-title bg-success-subtle rounded fs-3">
+                                                    <span class="avatar-title bg-success-subtle rounded-3 fs-3">
                                                         <i class="bx bx-dollar-circle text-success"></i>
                                                     </span>
                                                 </div>
                                             </div>
-                                        </div><!-- end card body -->
-                                    </div><!-- end card -->
-                                </div><!-- end col --> --}}
+                                        </div>
+                                    </div>
+                                </div>
 
-                                <div class="col-xl-6 col-md-6">
-                                    <!-- card -->
-                                    <div class="card card-animate">
+                                <!-- Appointments Card -->
+                                <div class="col-6 col-xl-3">
+                                    <div class="card card-animate h-100">
                                         <div class="card-body">
                                             <div class="d-flex align-items-center">
                                                 <div class="flex-grow-1 overflow-hidden">
-                                                    <p class="text-uppercase fw-medium text-muted text-truncate mb-0">
-                                                        Appointments </p>
+                                                    <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Appointments</p>
                                                 </div>
-                                                {{-- <div class="flex-shrink-0">
-                                                    <h5 class="text-brand fs-14 mb-0">
-                                                        <i class="ri-arrow-right-down-line fs-13 align-middle"></i>
-                                                        -3.57 %
-                                                    </h5>
-                                                </div> --}}
                                             </div>
-                                            <div class="d-flex align-items-center justify-content-between mt-4">
+                                            <div class="d-flex align-items-center justify-content-between mt-3">
                                                 <div>
-                                                    <h4 class="fs-22 fw-semibold ff-secondary mb-4 mb-lg-0"><span
-                                                            class="counter-value"
-                                                            data-target="{{ \App\Models\Appointment::where('created_by', auth()->id())->count() }}">0</span>
+                                                    <h4 class="fs-22 fw-semibold ff-secondary mb-0">
+                                                        <span class="counter-value" data-target="{{ $appointmentsCount }}">{{ $appointmentsCount }}</span>
                                                     </h4>
-
                                                 </div>
                                                 <div class="avatar-sm flex-shrink-0">
-                                                    <span class="avatar-title bg-info-subtle rounded fs-3">
+                                                    <span class="avatar-title bg-info-subtle rounded-3 fs-3">
                                                         <i class="bx bx-shopping-bag text-info"></i>
                                                     </span>
                                                 </div>
                                             </div>
-                                        </div><!-- end card body -->
-                                    </div><!-- end card -->
-                                </div><!-- end col -->
+                                        </div>
+                                    </div>
+                                </div>
 
-                                <div class="col-xl-6 col-md-6">
-                                    <!-- card -->
-                                    <div class="card card-animate">
+                                <!-- Customers Card -->
+                                <div class="col-6 col-xl-3">
+                                    <div class="card card-animate h-100">
                                         <div class="card-body">
                                             <div class="d-flex align-items-center">
                                                 <div class="flex-grow-1 overflow-hidden">
-                                                    <p class="text-uppercase fw-medium text-muted text-truncate mb-0">
-                                                        Customers</p>
+                                                    <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Customers</p>
                                                 </div>
-                                                {{-- <div class="flex-shrink-0">
-                                                    <h5 class="text-brand fs-14 mb-0">
-                                                        <i class="ri-arrow-right-up-line fs-13 align-middle"></i>
-                                                        +29.08 %
-                                                    </h5>
-                                                </div> --}}
                                             </div>
-                                            <div class="d-flex align-items-center justify-content-between mt-4">
+                                            <div class="d-flex align-items-center justify-content-between mt-3">
                                                 <div>
-                                                    <h4 class="fs-22 fw-semibold ff-secondary mb-4 mb-lg-0"><span
-                                                            class="counter-value"
-                                                            data-target="{{ auth()->user()->clients->count() }}">0</span>
+                                                    <h4 class="fs-22 fw-semibold ff-secondary mb-0">
+                                                        <span class="counter-value" data-target="{{ $customersCount }}">{{ $customersCount }}</span>
                                                     </h4>
-
                                                 </div>
                                                 <div class="avatar-sm flex-shrink-0">
-                                                    <span class="avatar-title bg-warning-subtle rounded fs-3">
+                                                    <span class="avatar-title bg-warning-subtle rounded-3 fs-3">
                                                         <i class="bx bx-user-circle text-warning"></i>
                                                     </span>
                                                 </div>
                                             </div>
-                                        </div><!-- end card body -->
-                                    </div><!-- end card -->
-                                </div><!-- end col -->
+                                        </div>
+                                    </div>
+                                </div>
 
-                                {{-- <div class="col-xl-3 col-md-6">
-                                    <!-- card -->
-                                    <div class="card card-animate">
+                                <!-- Services Offered Card -->
+                                <div class="col-6 col-xl-3">
+                                    <div class="card card-animate h-100">
                                         <div class="card-body">
                                             <div class="d-flex align-items-center">
                                                 <div class="flex-grow-1 overflow-hidden">
-                                                    <p class="text-uppercase fw-medium text-muted text-truncate mb-0">
-                                                        My Balance</p>
-                                                </div>
-                                                <div class="flex-shrink-0">
-                                                    <h5 class="text-brand fs-14 mb-0">
-                                                        +0.00 %
-                                                    </h5>
+                                                    <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Services</p>
                                                 </div>
                                             </div>
-                                            <div class="d-flex align-items-center justify-content-between mt-4">
+                                            <div class="d-flex align-items-center justify-content-between mt-3">
                                                 <div>
-                                                    <h4 class="fs-22 fw-semibold ff-secondary mb-4 mb-lg-0">$<span
-                                                            class="counter-value" data-target="165.89">0</span>k
+                                                    <h4 class="fs-22 fw-semibold ff-secondary mb-0">
+                                                        <span class="counter-value" data-target="{{ $servicesCount }}">{{ $servicesCount }}</span>
                                                     </h4>
-
                                                 </div>
                                                 <div class="avatar-sm flex-shrink-0">
-                                                    <span class="avatar-title bg-primary-subtle rounded fs-3">
-                                                        <i class="bx bx-wallet text-primary"></i>
+                                                    <span class="avatar-title bg-primary-subtle rounded-3 fs-3">
+                                                        <i class="bx bx-cut text-primary"></i>
                                                     </span>
                                                 </div>
                                             </div>
-                                        </div><!-- end card body -->
-                                    </div><!-- end card -->
-                                </div><!-- end col --> --}}
+                                        </div>
+                                    </div>
+                                </div>
                             </div> <!-- end row-->
 
-                            <div class="row">
+                            <div class="row mt-3">
                                 <div class="col-xl-6">
                                     <div class="card">
                                         <div class="card-header border-0 align-items-center d-flex">
-                                            <h4 class="card-title mb-0 flex-grow-1">Recent sales</h4>
+                                            <h4 class="card-title mb-0 flex-grow-1">Sales & Appointments Performance</h4>
                                         </div><!-- end card header -->
 
                                         {{-- <div class="card-header p-0 border-0 bg-light-subtle">
@@ -308,13 +292,13 @@
                                             <div class="row g-0 text-center">
                                                 <div class="col-6 col-sm-3">
                                                     <div class="p-3 border border-dashed border-start-0">
-                                                        <h5 class="mb-1">AED{{ number_format(array_sum($sales), 2) }}</h5>
-                                                        <p class="text-muted mb-0">Sales</p>
+                                                        <h5 class="mb-1 text-success fw-bold">${{ number_format(array_sum($sales), 2) }}</h5>
+                                                        <p class="text-muted mb-0">Total Sales</p>
                                                     </div>
                                                 </div>
                                                 <div class="col-6 col-sm-3">
                                                     <div class="p-3 border border-dashed border-start-0">
-                                                        <h5 class="mb-1">{{ array_sum($appointments) }}</h5>
+                                                        <h5 class="mb-1 text-primary fw-bold">{{ array_sum($appointments) }}</h5>
                                                         <p class="text-muted mb-0">Appointments</p>
                                                     </div>
                                                 </div>
@@ -364,7 +348,7 @@
                                                         ->orWhereBetween('start', [$tomorrowStart, $tomorrowEnd]);
                                                 })
                                                     ->where('created_by', Auth::id())
-                                                    ->with('services.service')
+                                                    ->with(['client', 'services.service'])
                                                     ->get();
 
                                                 // dd($bookings);
@@ -409,14 +393,14 @@
                                                                     @endif
                                                                 </td>
                                                                 <td>
-                                                                    <span class="text-muted">
-                                                                        AED{{ $booking->grand_total ?? '' }}
+                                                                    <span class="fw-semibold text-dark">
+                                                                        ${{ number_format($booking->grand_total ?? 0, 2) }}
                                                                     </span>
                                                                 </td>
                                                             </tr>
                                                         @empty
                                                             <tr>
-                                                                <td colspan="4" class="text-center">No Record found.</td>
+                                                                <td colspan="4" class="text-center py-3 text-muted">No upcoming appointments found.</td>
                                                             </tr>
                                                         @endforelse
 
@@ -652,7 +636,10 @@
                 },
                 tooltip: {
                     y: {
-                        formatter: function(val) {
+                        formatter: function(val, opts) {
+                            if (opts && opts.seriesIndex === 0) {
+                                return '$' + parseFloat(val).toFixed(2);
+                            }
                             return val;
                         }
                     }

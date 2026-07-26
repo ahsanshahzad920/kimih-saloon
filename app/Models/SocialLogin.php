@@ -9,8 +9,6 @@ class SocialLogin extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
-
     protected $fillable = ['provider', 'provider_id', 'user_id', 'email'];
 
     public function user()

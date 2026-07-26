@@ -29,36 +29,22 @@ class CustomerCartController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->all();
-        // dd($data);
+        $validated = $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'quantity' => 'nullable|integer|min:1',
+            'shop_id' => 'nullable|integer',
+        ]);
+
+        $data = [
+            'user_id' => auth()->id(),
+            'product_id' => $validated['product_id'],
+            'quantity' => $validated['quantity'] ?? 1,
+            'shop_id' => $validated['shop_id'] ?? null,
+        ];
+
         $cart = AddToCart::create($data);
-        $cart = AddToCart::find($cart->id);
         $cart->load('product.images');
-        return response()->json(['status' => 200,'message' => 'Product added to cart successfully','cart' => $cart]);
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
+        return response()->json(['status' => 200, 'message' => 'Product added to cart successfully', 'cart' => $cart]);
     }
 
     /**
@@ -66,8 +52,11 @@ class CustomerCartController extends Controller
      */
     public function destroy(string $id)
     {
-        $cart = AddToCart::find($id);
-        $cart->delete();
-        return response()->json(['status' => 200,'message' => 'Product removed from cart successfully']);
+        $cart = AddToCart::where('id', $id)->where('user_id', auth()->id())->first();
+        if ($cart) {
+            $cart->delete();
+            return response()->json(['status' => 200, 'message' => 'Product removed from cart successfully']);
+        }
+        return response()->json(['status' => 404, 'message' => 'Cart item not found'], 404);
     }
 }

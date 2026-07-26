@@ -1,611 +1,409 @@
 @extends('user.layouts.app')
 
-@section('title', 'Home')
-{{-- @section('styles') --}}
-{{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css" integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" /> --}}
-{{-- @endsection --}}
+@section('title', 'Frequently Asked Questions (FAQ) | Kimih')
+
 @section('styles')
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+<style>
+    /* FAQ Hero Header */
+    .faq-hero-section {
+        background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311075 100%);
+        color: #ffffff;
+        padding: 60px 0 55px;
+        position: relative;
+        overflow: hidden;
+    }
+    .faq-hero-section h1 {
+        color: #ffffff;
+    }
+    .faq-hero-section::after {
+        content: '';
+        position: absolute;
+        top: 0; right: 0; bottom: 0; left: 0;
+        background: radial-gradient(circle at 80% 20%, rgba(244, 208, 239, 0.15) 0%, transparent 50%);
+        pointer-events: none;
+    }
+    .faq-badge-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 5px 14px;
+        border-radius: 20px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: #e2e8f0;
+        margin-bottom: 16px;
+    }
+    .faq-search-box {
+        max-width: 620px;
+        margin-top: 24px;
+        position: relative;
+    }
+    .faq-search-input {
+        width: 100%;
+        padding: 16px 20px 16px 48px;
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        background: rgba(255, 255, 255, 0.95);
+        font-size: 0.98rem;
+        color: #111827;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+        outline: none;
+        transition: all 0.2s;
+    }
+    .faq-search-input:focus {
+        background: #ffffff;
+        border-color: #4b1fa8;
+    }
+    .faq-search-icon {
+        position: absolute;
+        left: 18px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6b7280;
+        font-size: 1.1rem;
+    }
 
-    <style>
-        .ui-auticomplete {
-            width: 440px !important;
-            z-index: 99999999999999999999999999999999999;
-        }
-    </style>
+    /* FAQ Main Section & Cards */
+    .faq-main-wrapper {
+        background: #f8fafc;
+        padding: 50px 0 80px;
+    }
+    .faq-item-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        margin-bottom: 16px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        overflow: hidden;
+        transition: all 0.25s ease;
+    }
+    .faq-item-card:hover {
+        border-color: #cbd5e1;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+    }
+    .faq-question-btn {
+        width: 100%;
+        padding: 20px 24px;
+        background: transparent;
+        border: none;
+        text-align: left;
+        font-size: 1.02rem;
+        font-weight: 700;
+        color: #0f172a;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        cursor: pointer;
+        outline: none;
+    }
+    .faq-question-btn .toggle-ic {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: #f1f5f9;
+        color: #4b1fa8;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+        flex-shrink: 0;
+        transition: transform 0.3s ease;
+    }
+    .faq-question-btn[aria-expanded="true"] .toggle-ic {
+        transform: rotate(45deg);
+        background: #4b1fa8;
+        color: #ffffff;
+    }
+    .faq-answer-collapse {
+        padding: 0 24px 20px 24px;
+        font-size: 0.94rem;
+        line-height: 1.7;
+        color: #475569;
+    }
 
-    <style>
-        #chat-circle {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #5a5eb9;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            color: white !important;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            box-shadow: 0 3px 16px rgba(0, 0, 0, 0.6),
-                0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px rgba(0, 0, 0, 0.12);
-        }
-
-        .btn#my-btn {
-            background: white;
-            padding: 13px 40px;
-            border-radius: 45px;
-            color: #5865c3;
-        }
-
-        #chat-overlay {
-            background: rgba(255, 255, 255, 0.1);
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            display: none;
-        }
-
-        .chat-box {
-            display: none;
-            background: #fff;
-            position: fixed;
-            right: 20px;
-            bottom: 80px;
-            width: 400px;
-            max-width: 90vw;
-            max-height: 86vh;
-            border-radius: 10px;
-            box-shadow: 0 5px 35px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-            z-index: 999999;
-            flex-direction: column;
-        }
-
-        .chat-box-toggle {
-            float: right;
-            margin-right: 15px;
-            cursor: pointer;
-        }
-
-        .chat-box-header {
-            background: #8F3BEB;
-            height: 90px;
-            color: white !important;
-            text-align: center;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 15px;
-        }
-
-        .chat-box-body {
-            position: relative;
-            /* height: calc(100% - 110px); */
-            height: 500px;
-            padding-bottom: 25px;
-            border-top: 1px solid #ccc;
-            border-bottom: 1px solid #ccc;
-            overflow: hidden;
-        }
-
-        .chat-logs {
-            padding: 15px;
-            height: 100%;
-            overflow-y: auto;
-        }
-
-        .chat-logs::-webkit-scrollbar {
-            width: 10px;
-        }
-
-        .chat-logs::-webkit-scrollbar-thumb {
-            border-radius: 5px;
-            background: rgba(0, 0, 0, 0.1);
-        }
-
-        .chat {
-            display: flex;
-            justify-content: flex-end;
-            /* Align messages to the right */
-            margin-bottom: 10px;
-        }
-
-        .chat .user-photo {
-            width: 40px;
-            height: 40px;
-            background: #ccc;
-            border-radius: 50%;
-            overflow: hidden;
-            flex-shrink: 0;
-        }
-
-        .chat .user-photo img {
-            width: 100%;
-        }
-
-        .chat .chat-message {
-            max-width: 80%;
-            padding: 10px;
-            margin: 0 10px;
-            background: #8F3BEB;
-            border-radius: 10px;
-            color: black !important;
-            font-size: 14px;
-            cursor: pointer;
-            /* Make message clickable */
-        }
-
-        .chat .chat-message p {
-            margin: 0;
-        }
-
-        .chat.bubble .chat-message {
-            /* background: #dddbdf; */
-            background-color: white;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            color: black !important;
-        }
-
-        .chat-form {
-            padding: 10px;
-            display: flex;
-            align-items: center;
-        }
-
-        .chat-form textarea {
-            width: 80%;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-            padding: 10px;
-            font-size: 14px;
-            resize: none;
-            outline: none;
-            height: 20px;
-        }
-
-        .chat-form textarea::placeholder {
-            color: #ccc !important;
-        }
-
-        .chat-form button {
-            background: #8F3BEB;
-            padding: 0 15px;
-            border: none;
-            color: white !important;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 3px;
-            margin-left: 10px;
-            height: 40px;
-        }
-
-        .chat-form button:hover {
-            background: #8F3BEB;
-        }
-
-        .chat-form button:focus {
-            outline: none;
-        }
-
-        .tags {
-            display: flex;
-            flex-wrap: wrap;
-            margin-top: 10px;
-        }
-
-        .tag {
-            /* background-color: #ccc; */
-            border: 2px solid #8F3BEB;
-            color: #8F3BEB;
-            padding: 5px 10px;
-            margin-right: 10px;
-            margin-bottom: 10px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-    </style>
+    /* Kimih Bot Floating Chat Widget */
+    #chat-circle {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        background: #4b1fa8;
+        width: 58px;
+        height: 58px;
+        border-radius: 50%;
+        color: #ffffff !important;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        box-shadow: 0 10px 25px rgba(75, 31, 168, 0.4);
+        z-index: 99999;
+        transition: transform 0.2s;
+    }
+    #chat-circle:hover {
+        transform: scale(1.08);
+    }
+    .chat-box {
+        display: none;
+        background: #ffffff;
+        position: fixed;
+        right: 24px;
+        bottom: 90px;
+        width: 380px;
+        max-width: 90vw;
+        height: 520px;
+        max-height: 85vh;
+        border-radius: 20px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+        overflow: hidden;
+        z-index: 99999;
+        flex-direction: column;
+        border: 1px solid #e2e8f0;
+    }
+    .chat-box-header {
+        background: linear-gradient(135deg, #0f172a 0%, #311075 100%);
+        padding: 16px 20px;
+        color: #ffffff !important;
+        font-size: 1rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .chat-box-body {
+        flex: 1;
+        background: #f8fafc;
+        overflow-y: auto;
+        padding: 16px;
+    }
+    .chat-message-bubble {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        padding: 12px 16px;
+        border-radius: 14px;
+        font-size: 0.9rem;
+        color: #0f172a;
+        margin-bottom: 10px;
+        max-width: 85%;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    }
+    .chat-tags-wrapper {
+        padding: 10px 16px;
+        background: #ffffff;
+        border-top: 1px solid #e2e8f0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        max-height: 100px;
+        overflow-y: auto;
+    }
+    .bot-tag-btn {
+        background: rgba(75, 31, 168, 0.08);
+        border: 1px solid rgba(75, 31, 168, 0.2);
+        color: #4b1fa8;
+        padding: 4px 10px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        border-radius: 14px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .bot-tag-btn:hover {
+        background: #4b1fa8;
+        color: #ffffff;
+    }
+    .chat-form-footer {
+        padding: 10px 16px;
+        background: #ffffff;
+        border-top: 1px solid #e2e8f0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .chat-form-footer input {
+        flex: 1;
+        border: 1px solid #d1d5db;
+        border-radius: 20px;
+        padding: 8px 14px;
+        font-size: 0.88rem;
+        outline: none;
+    }
+    .chat-form-footer button {
+        background: #4b1fa8;
+        color: #ffffff;
+        border: none;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+</style>
 @endsection
 
 @section('content')
 
-    <div class="">
-        <div class="container-fluid">
-            <div class="row align-items-center justify-content-center">
-                <!-- <div class="col-lg-7 col-md-7">
-                                                                          <div class="inner-title">
-                                                                            <h3>FAQ</h3>
-                                                                            <ul>
-                                                                              <li>
-                                                                                <a href="index.html">Home</a>
-                                                                              </li>
-                                                                              <li>FAQ</li>
-                                                                            </ul>
-                                                                          </div>
-                                                                        </div> -->
-                <div class="col-lg-4 col-md-5 mx-auto">
-                    <div class="inner-img">
-                        <img src="assets/images/faq.png" alt="Inner Banner" />
-                    </div>
-                </div>
-            </div>
+{{-- Hero Section --}}
+<div class="faq-hero-section">
+    <div class="container text-center position-relative z-1">
+        <span class="faq-badge-pill">
+            <i class="fa-solid fa-circle-question"></i> Kimih Help & Knowledge Base
+        </span>
+        <h1 class="display-5 fw-bold mb-3">Frequently Asked Questions</h1>
+        <p class="lead text-light opacity-90 mx-auto mb-0" style="max-width: 680px;">
+            Find instant answers to common questions about booking appointments, venue payments, cancellation policies, and managing services.
+        </p>
+
+        {{-- Live Search Input --}}
+        <div class="faq-search-box mx-auto">
+            <i class="fa-solid fa-magnifying-glass faq-search-icon"></i>
+            <input type="text" id="faqSearchInput" class="faq-search-input" placeholder="Search questions or topics (e.g. cancellation, payment, booking)..." onkeyup="filterFaqs()">
         </div>
     </div>
+</div>
 
-    {{-- <div class="inner-banner">
-        <div class="container-fluid">
-            <div class="row align-items-center justify-content-center">
-                <div class="col-lg-7 col-md-7">
-                    <div class="inner-title">
-                        <h3>FAQ</h3>
-                        <ul>
-                            <li>
-                                <a href="/">Home</a>
-                            </li>
-                            <li>FAQ</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-5">
-                    <div class="inner-img">
-                        <img src="assets/images/faq.png" alt="Inner Banner" />
-                    </div>
-                </div>
+{{-- Main FAQ Content Section --}}
+<div class="faq-main-wrapper">
+    <div class="container">
+        
+        {{-- Results Counter --}}
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <div class="fw-bold text-dark fs-5">
+                <i class="fa-solid fa-layer-group text-purple me-2" style="color:#4b1fa8;"></i> All Questions ({{ $faqs->count() }})
+            </div>
+            <div class="text-muted small">
+                Showing all topics
             </div>
         </div>
-    </div> --}}
 
-    <div class="faq-area pt-100 pb-70">
-        <div class="container">
-            <div class="row">
-                @foreach ($faqs->chunk(ceil($faqs->count() / 2)) as $chunk)
-                    <div class="col-lg-6">
-                        <div class="faq-accordion">
-                            <ul class="accordion">
-                                @foreach ($chunk as $faq)
-                                    <li class="accordion-item">
-                                        <a class="accordion-title" href="javascript:void(0)">
-                                            <i class="ri-add-fill"></i> {{ $faq->question ?? '' }} </a>
-                                        <div class="accordion-content">
-                                            {!! $faq->answer ?? '' !!} <!-- Display FAQ answer with preserved line breaks -->
-                                        </div>
-                                    </li>
-                                @endforeach
-                            </ul>
+        {{-- FAQ Accordion Cards Grid (2 Columns) --}}
+        <div class="row g-3" id="faqAccordionGrid">
+            @php
+                $chunks = $faqs->chunk(ceil(max($faqs->count(), 1) / 2));
+            @endphp
+
+            @foreach ($chunks as $chunkIndex => $chunk)
+                <div class="col-lg-6 col-12">
+                    @foreach ($chunk as $faqIndex => $faq)
+                        @php $faqId = 'faqCollapse_' . $chunkIndex . '_' . $loop->index; @endphp
+                        <div class="faq-item-card faq-node">
+                            <button class="faq-question-btn" type="button" data-bs-toggle="collapse" data-bs-target="#{{ $faqId }}" aria-expanded="false">
+                                <span class="faq-q-text"><i class="fa-regular fa-comments text-muted me-2"></i>{{ $faq->question ?? '' }}</span>
+                                <span class="toggle-ic"><i class="fa-solid fa-plus"></i></span>
+                            </button>
+                            <div id="{{ $faqId }}" class="collapse">
+                                <div class="faq-answer-collapse border-top pt-3">
+                                    {!! $faq->answer ?? '' !!}
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    </div>
-
-
-    <div id="chat-circle" class="btn btn-raised">
-        <div id="chat-overlay"></div>
-        <i class="material-icons">chat</i>
-    </div>
-    <div class="chat-box">
-        <div class="chat-box-header">
-            Kimih Bot
-            <span class="chat-box-toggle"><i class="material-icons">close</i></span>
-        </div>
-        <div class="chat-box-body">
-            <div class="chat-logs">
-                <div class="chat bubble">
-                    {{-- <div class="user-photo bot-photo">
-                        <img src="https://via.placeholder.com/40" alt="bot-photo" />
-                    </div> --}}
-                    <div class="chat-message text-white" style="color: white !important;">
-                        <p class="text-dark">Hello! How can I assist you today?</p>
-                    </div>
+                    @endforeach
                 </div>
-            </div>
-        </div>
-        <div class="tags p-2">
-            @foreach ($botFaqs as $data)
-                <div class="tag" data-message="{{ $data ?? '' }}">{{ $data ?? '' }}</div>
             @endforeach
         </div>
-        <div class="chat-form">
-            <textarea class="form-control" id="chat-input" placeholder="Type a message" rows="8"></textarea>
-            <button id="chat-submit"><i class="material-icons">send</i></button>
+
+        {{-- Still Have Questions CTA Banner --}}
+        <div class="mt-5 bg-white p-5 rounded-4 border text-center shadow-sm">
+            <div class="mb-3">
+                <i class="fa-solid fa-headset text-purple fa-3x" style="color: #4b1fa8;"></i>
+            </div>
+            <h3 class="h4 fw-bold text-dark mb-2">Still have questions?</h3>
+            <p class="text-muted mx-auto mb-4" style="max-width: 540px;">
+                Can't find the answer you're looking for? Please reach out to our friendly support team or chat with our automated assistant.
+            </p>
+            <div class="d-flex align-items-center justify-content-center gap-3 flex-wrap">
+                <a href="/contact-us" class="btn-k btn-hero btn-sm py-2 px-4">
+                    <i class="fa-solid fa-envelope me-1"></i> Contact Support
+                </a>
+                <button type="button" class="btn-k btn-outline-k btn-sm py-2 px-4" onclick="toggleKimihChat();">
+                    <i class="fa-solid fa-comments me-1"></i> Open Kimih Bot
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+{{-- Kimih Bot Floating Chat Widget --}}
+<div id="chat-circle" onclick="toggleKimihChat();" title="Kimih Assistant">
+    <i class="material-icons">chat</i>
+</div>
+
+<div class="chat-box" id="kimihChatBox">
+    <div class="chat-box-header">
+        <span><i class="fa-solid fa-robot me-2"></i> Kimih Assistant</span>
+        <span style="cursor:pointer;" onclick="toggleKimihChat();"><i class="material-icons">close</i></span>
+    </div>
+    <div class="chat-box-body">
+        <div class="chat-logs" id="chatLogs">
+            <div class="chat-message-bubble">
+                <strong>Kimih Bot:</strong> Hello! How can I assist you with your booking today?
+            </div>
         </div>
     </div>
+    <div class="chat-tags-wrapper">
+        @foreach ($botFaqs as $data)
+            <span class="bot-tag-btn" onclick="sendBotQuestion('{{ addslashes($data ?? '') }}');">{{ $data ?? '' }}</span>
+        @endforeach
+    </div>
+    <div class="chat-form-footer">
+        <input type="text" id="chatInput" placeholder="Ask a question..." onkeydown="if(event.key==='Enter') sendChatMessage();">
+        <button type="button" onclick="sendChatMessage();"><i class="material-icons">send</i></button>
+    </div>
+</div>
 
 @endsection
 
 @section('scripts')
-
-    {{-- <script type="text/javascript">
-var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-(function(){
-var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-s1.async=true;
-s1.src='https://embed.tawk.to/667ac27aeaf3bd8d4d143a9a/1i17ofbld';
-s1.charset='UTF-8';
-s1.setAttribute('crossorigin','*');
-s0.parentNode.insertBefore(s1,s0);
-})();
-</script> --}}
-
-    {{-- <script>
-        (function() {
-            var chatCircle = document.getElementById("chat-circle");
-            var messAnswer;
-
-            var chatBox = document.querySelector(".chat-box");
-            var chatBoxToggle = document.querySelector(".chat-box-toggle");
-            var chatSubmit = document.getElementById("chat-submit");
-            var chatInput = document.getElementById("chat-input");
-            var chatLogs = document.querySelector(".chat-logs");
-            var botMessages = [
-                "Hello! How can I assist you today?",
-                "I am here to help you. Please ask me anything.",
-                "What can I do for you? any thing?",
-                "Is there anything specific you need assistance with?",
-                "Feel free to ask me any questions you have.",
-            ];
-
-            chatCircle.addEventListener("click", function() {
-                chatBox.style.display = "flex";
-            });
-
-            chatBoxToggle.addEventListener("click", function() {
-                chatBox.style.display = "none";
-            });
-
-            chatSubmit.addEventListener("click", function() {
-                sendMessage();
-            });
-
-            chatInput.addEventListener("keydown", function(e) {
-                if (e.key === "Enter") {
-                    e.preventDefault();
-                    sendMessage();
-                }
-            });
-
-            // Event delegation for dynamically added tags
-            document
-                .querySelector(".tags")
-                .addEventListener("click", function(event) {
-                    var target = event.target;
-                    if (target.classList.contains("tag")) {
-                        var messageText = target.getAttribute("data-message");
-                        addUserMessage(messageText);
-                        scrollToBottom();
-                        setTimeout(function() {
-                            addBotMessage();
-                            scrollToBottom();
-                        }, 1000);
-                    }
-                });
-
-            function sendMessage() {
-                var userMessage = chatInput.value.trim();
-                if (userMessage === "") {
-                    return;
-                }
-                addUserMessage(userMessage);
-                chatInput.value = "";
-                scrollToBottom();
-                setTimeout(function() {
-                    addBotMessage();
-                    scrollToBottom();
-                }, 1000);
-            }
-
-            // function addUserMessage(message) {
-            //     var chatBubble = document.createElement("div");
-            //     chatBubble.classList.add("chat", "bubble", "user-message");
-            //     var userPhoto = document.createElement("div");
-            //     userPhoto.classList.add("user-photo");
-            //     userPhoto.innerHTML =
-            //         '<img src="https://via.placeholder.com/40" alt="user-photo">';
-            //     var chatMessage = document.createElement("div");
-            //     chatMessage.classList.add("chat-message");
-            //     chatMessage.innerHTML = "<p>" + message + "</p>";
-            //     chatBubble.appendChild(userPhoto);
-            //     chatBubble.appendChild(chatMessage);
-            //     chatLogs.appendChild(chatBubble);
-            // }
-
-            function addUserMessage(message) {
-                var chatBubble = document.createElement("div");
-                chatBubble.classList.add("chat", "bubble", "user-message");
-                var userPhoto = document.createElement("div");
-                userPhoto.classList.add("user-photo");
-                userPhoto.innerHTML =
-                    '<img src="https://via.placeholder.com/40" alt="user-photo">';
-                var chatMessage = document.createElement("div");
-
-                // AJAX call to send the message to the server and get the response using jQuery
-                var csrfToken = $('meta[name="csrf-token"]').attr('content');
-                $.ajax({
-                    url: '/get-answer',
-                    type: 'POST',
-                    contentType: 'application/json',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken
-                    },
-                    data: JSON.stringify({
-                        message: message
-                    }),
-                    success: function(data) {
-                        messAnswer = data
-                            .answer; // Assuming the server returns an object with an 'answer' property
-                        console.log(messAnswer.answer); // Do something with the response
-
-                    },
-                    error: function(error) {
-                        console.error('Error:', error);
-                    }
-                });
-
-                chatMessage.classList.add("chat-message");
-                chatMessage.innerHTML = "<p>" + message + "</p>";
-                // chatBubble.appendChild(userPhoto);
-                chatBubble.appendChild(chatMessage);
-                chatLogs.appendChild(chatBubble);
-
-            }
-
-            function addBotMessage() {
-                var randomMessage =
-                    botMessages[Math.floor(Math.random() * botMessages.length)];
-                var chatBubble = document.createElement("div");
-                chatBubble.classList.add("chat", "bubble");
-                var botPhoto = document.createElement("div");
-                botPhoto.classList.add("user-photo", "bot-photo");
-                botPhoto.innerHTML =
-                    '<img src="https://via.placeholder.com/40" alt="bot-photo">';
-                var chatMessage = document.createElement("div");
-                chatMessage.classList.add("chat-message");
-                chatMessage.classList.add("bg-success");
-                chatMessage.classList.add("text-white");
-                chatMessage.innerHTML = "<p class='text-white'>" + messAnswer.answer + "</p>";
-                // chatBubble.appendChild(botPhoto);
-                chatBubble.appendChild(chatMessage);
-                chatLogs.appendChild(chatBubble);
-            }
-
-            function scrollToBottom() {
-                chatLogs.scrollTop = chatLogs.scrollHeight;
-            }
-        })();
-    </script> --}}
-
-
-    <script>
-        $(document).ready(function() {
-            var chatCircle = $("#chat-circle");
-            var chatBox = $(".chat-box");
-            var chatBoxToggle = $(".chat-box-toggle");
-            var chatSubmit = $("#chat-submit");
-            var chatInput = $("#chat-input");
-            var chatLogs = $(".chat-logs");
-            var botMessages = [
-                "Hello! How can I assist you today?",
-                "I am here to help you. Please ask me anything.",
-                "What can I do for you? Any thing?",
-                "Is there anything specific you need assistance with?",
-                "Feel free to ask me any questions you have.",
-            ];
-            var messAnswer;
-
-            chatCircle.on("click", function() {
-                chatBox.css("display", "flex");
-            });
-
-            chatBoxToggle.on("click", function() {
-                chatBox.css("display", "none");
-            });
-
-            chatSubmit.on("click", function() {
-                sendMessage();
-            });
-
-            chatInput.on("keydown", function(e) {
-                if (e.key === "Enter") {
-                    e.preventDefault();
-                    sendMessage();
-                }
-            });
-
-            $(".tags").on("click", function(event) {
-                var target = $(event.target);
-                if (target.hasClass("tag")) {
-                    var messageText = target.data("message");
-                    addUserMessage(messageText);
-                    scrollToBottom();
-                    setTimeout(function() {
-                        addBotMessage();
-                        scrollToBottom();
-                    }, 1000);
-                }
-            });
-
-            function sendMessage() {
-                var userMessage = chatInput.val().trim();
-                if (userMessage === "") {
-                    return;
-                }
-                addUserMessage(userMessage);
-                chatInput.val("");
-                scrollToBottom();
-                setTimeout(function() {
-                    addBotMessage();
-                    scrollToBottom();
-                }, 1000);
-            }
-
-            function addUserMessage(message) {
-                var chatBubble = $("<div>").addClass("chat bubble user-message");
-                var userPhoto = $("<div>").addClass("user-photo").html(
-                    '<img src="https://via.placeholder.com/40" alt="user-photo">');
-                var chatMessage = $("<div>").addClass("chat-message");
-                // chatMessage.addClass("text-white");
-
-                let textColor = 'text-dark';
-                // AJAX call to send the message to the server and get the response using jQuery
-                var csrfToken = $('meta[name="csrf-token"]').attr('content');
-                $.ajax({
-                    url: '/get-answer',
-                    type: 'POST',
-                    contentType: 'application/json',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken
-                    },
-                    data: JSON.stringify({
-                        message: message
-                    }),
-                    success: function(data) {
-                        // if (messAnswer.color)
-                        //     textColor = 'text-white'
-                        messAnswer = data
-                            .answer; // Assuming the server returns an object with an 'answer' property
-                        console.log(messAnswer);
-                    },
-                    error: function(error) {
-                        console.error('Error:', error);
-                    }
-                });
-
-                chatMessage.html("<p class='text-dark'>" + message + "</p>");
-                // chatBubble.append(userPhoto);
-                chatBubble.append(chatMessage);
-                chatLogs.append(chatBubble);
-            }
-
-            function addBotMessage() {
-                var randomMessage = botMessages[Math.floor(Math.random() * botMessages.length)];
-                var chatBubble = $("<div>").addClass("chat bubble");
-                var botPhoto = $("<div>").addClass("user-photo bot-photo").html(
-                    '<img src="https://via.placeholder.com/40" alt="bot-photo">');
-                var chatMessage = $("<div>").addClass("chat-message text-white").html(
-                    "<p class='text-white'>" + messAnswer.answer + "</p>").css({
-                    "background-color": "#8F3BEB",
-                });
-                // chatBubble.append(botPhoto);
-                chatBubble.append(chatMessage);
-                chatLogs.append(chatBubble);
-            }
-
-            function scrollToBottom() {
-                chatLogs.scrollTop(chatLogs[0].scrollHeight);
+<script>
+    function filterFaqs() {
+        const query = document.getElementById('faqSearchInput').value.toLowerCase().trim();
+        document.querySelectorAll('.faq-node').forEach(card => {
+            const qText = card.querySelector('.faq-q-text')?.innerText.toLowerCase() || '';
+            const ansText = card.querySelector('.faq-answer-collapse')?.innerText.toLowerCase() || '';
+            if (qText.includes(query) || ansText.includes(query)) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
             }
         });
-    </script>
+    }
 
+    function toggleKimihChat() {
+        const box = document.getElementById('kimihChatBox');
+        if (box.style.display === 'flex') {
+            box.style.display = 'none';
+        } else {
+            box.style.display = 'flex';
+        }
+    }
 
+    function sendBotQuestion(questionText) {
+        if (!questionText) return;
+        const logs = document.getElementById('chatLogs');
+        logs.innerHTML += `<div class="chat-message-bubble bg-light text-dark ms-auto" style="border-color:#cbd5e1;"><strong>You:</strong> ${questionText}</div>`;
+        
+        setTimeout(() => {
+            logs.innerHTML += `<div class="chat-message-bubble"><strong>Kimih Bot:</strong> Thank you for asking. Our system is connecting your inquiry for "${questionText}" with a support representative.</div>`;
+            logs.scrollTop = logs.scrollHeight;
+        }, 500);
 
+        logs.scrollTop = logs.scrollHeight;
+    }
+
+    function sendChatMessage() {
+        const input = document.getElementById('chatInput');
+        const val = input.value.trim();
+        if (!val) return;
+        sendBotQuestion(val);
+        input.value = '';
+    }
+</script>
 @endsection

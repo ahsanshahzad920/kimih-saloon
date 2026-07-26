@@ -51,9 +51,9 @@ class ClientController extends Controller
             'pronouns' => 'required',
         ]);
 
-        $data = $request->all();
-        $data['password'] = bcrypt('12345678');
-        $data['created_by'] = $data['updated_by'] =  auth()->id();
+        $data = $request->except(['_token', 'image']);
+        $data['password'] = \Illuminate\Support\Facades\Hash::make(\Illuminate\Support\Str::random(16));
+        $data['created_by'] = $data['updated_by'] = auth()->id();
         if($request->hasFile('image')){
             $image = $request->file('image');
             $image_name = "profile_".time().$image->getClientOriginalName();

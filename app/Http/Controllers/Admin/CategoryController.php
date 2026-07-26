@@ -66,12 +66,16 @@ class CategoryController extends Controller
             'name' => 'required|string',
             'description' => 'required|string'
         ]);
-        $data = $request->all();
+        $query = ProductCategory::query();
+        if (!auth()->user()->hasRole('Admin')) {
+            $query->where('created_by', auth()->id());
+        }
+        $category = $query->findOrFail($id);
+
+        $data = $request->except(['_token', '_method']);
         $data['updated_by'] = auth()->id();
-        $category = ProductCategory::find($id);
         $category->update($data);
         return redirect()->back()->with('success','Category updated successfully!');
-
     }
 
     /**
@@ -79,9 +83,12 @@ class CategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        $category = ProductCategory::find($id);
+        $query = ProductCategory::query();
+        if (!auth()->user()->hasRole('Admin')) {
+            $query->where('created_by', auth()->id());
+        }
+        $category = $query->findOrFail($id);
         $category->delete();
-        // return redirect()->back()->with('success','Category delete successfully!');
         return response()->json(['status' => 200 , 'message' => 'Category deleted successfully']);
     }
 }

@@ -59,12 +59,14 @@ class BusinessController extends Controller
         $request->validate([
             'business_name' => 'required',
             'location' => 'required',
-            'image' => 'nullable|array|max:3',
-            'image.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'image' => 'nullable|array|max:15',
+            'image.*' => 'nullable|file|mimes:jpeg,png,jpg,gif,webp,avif|max:10240'
         ], [
-            'image.max' => 'You can only upload 3 images.'
+            'image.max' => 'You can upload up to 15 images.',
+            'image.*.file' => 'Each uploaded file must be a valid file.',
+            'image.*.mimes' => 'Allowed image formats: JPEG, PNG, JPG, GIF, WEBP, AVIF.'
         ]);
-        // dd($data);
+
         if($request->latitude && $request->longitude){
             $latitude = $request->latitude;
             $longitude = $request->longitude;
@@ -72,7 +74,6 @@ class BusinessController extends Controller
                 $client = new \GuzzleHttp\Client();
                 $response = $client->request('GET', 'https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat='.$latitude.'&lon='.$longitude);
                 $data = json_decode($response->getBody());
-                // dd($data);
                 $request['city'] = $data->address->city ?? null;
                 $request['country'] = $data->address->country ?? null;
                 $request['country_code'] = $data->address->country_code ?? null;
@@ -83,18 +84,16 @@ class BusinessController extends Controller
             }
         }
         $data = $request->all();
-        // dd($data);
         $business = Business::where('user_id', $id)->first();
         if($request->hasFile('image'))
         {
-            $business->images()->delete();
             foreach ($request->file('image') as $image)
             {
-                // if(file_exists(public_path($image)))
-                // {
-                //     unlink(public_path($image));
-                // }
-                $image_name = rand(111111,999999).'-'.time().'.'.$image->extension();
+                $ext = strtolower($image->getClientOriginalExtension());
+                if (empty($ext)) {
+                    $ext = $image->extension() ?: 'jpg';
+                }
+                $image_name = rand(111111,999999).'-'.time().'.'.$ext;
                 $image->storeAs('public/business/image',$image_name);
                 $image_path = 'business/image/'.$image_name;
                 BusinessImage::create([
@@ -108,6 +107,23 @@ class BusinessController extends Controller
         $data['slug'] = Str::slug($data['business_name']);
         $business->update($data);
         return redirect()->route('profile.index')->with('success', 'Business account updated successfully!');
+    }
+
+    /**
+     * Delete an individual business image.
+     */
+    public function deleteImage($id)
+    {
+        $img = BusinessImage::find($id);
+        if ($img) {
+            $path = storage_path('app/public/' . $img->image);
+            if (file_exists($path)) {
+                @unlink($path);
+            }
+            $img->delete();
+            return response()->json(['status' => true, 'message' => 'Image deleted successfully']);
+        }
+        return response()->json(['status' => false, 'message' => 'Image not found'], 404);
     }
 
     /**

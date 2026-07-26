@@ -4,7 +4,6 @@
 @section('styles')
     <!-- App Css-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <link href="{{ asset('dash-assets/css/app.min.css') }}" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="{{ asset('virtual-select-master/dist/virtual-select.min.css') }}" />
@@ -13,10 +12,8 @@
     <style>
         .nav-tabs .nav-item.show .nav-link,
         .nav-tabs .nav-link.active {
-            background-color: #9a2c47;
-            /* Change this color to your desired color */
-            border-bottom: 2px solid white;
-            /* Optional: Add a border at the bottom */
+            background-color: #4b1fa8 !important;
+            border-radius: 12px;
             color: white !important;
         }
 

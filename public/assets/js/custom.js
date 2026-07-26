@@ -6,13 +6,13 @@
         meanScreenWidth: "991"
     });
 
-    // Navbar Area
+    // Navbar Sticky Scroll
     $(window).on('scroll', function() {
-        if ($(this).scrollTop() >150){  
-            $('.navbar-area').addClass("is-sticky");
+        if ($(this).scrollTop() > 50){  
+            $('.kimih-header, .navbar-area, .nav-k').addClass("is-sticky");
         }
         else{
-            $('.navbar-area').removeClass("is-sticky");
+            $('.kimih-header, .navbar-area, .nav-k').removeClass("is-sticky");
         }
     });
 
@@ -519,11 +519,464 @@ function toggleTheme() {
 
 // Immediately invoked function to set the theme on initial load
 (function () {
+    var slider = document.getElementById('slider');
     if (localStorage.getItem('naon_theme') === 'theme-dark') {
         setTheme('theme-dark');
-        document.getElementById('slider').checked = false;
+        if (slider) slider.checked = false;
     } else {
         setTheme('theme-light');
-      document.getElementById('slider').checked = true;
+        if (slider) slider.checked = true;
     }
 })();
+
+/* ==========================================================
+   FRESHA CAROUSEL JQUERY SMOOTH SCROLL & WISHLIST AJAX
+   ========================================================== */
+jQuery(document).ready(function ($) {
+    // 1. Smooth Scroll Controls (.js-carousel-prev / .js-carousel-next)
+    $(document).on('click', '.js-carousel-next', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $btn = $(this).closest('.js-carousel-next');
+        var targetId = $btn.attr('data-target') || $btn.data('target');
+        if (!targetId) return;
+        var trackEl = document.querySelector(targetId);
+        if (trackEl) {
+            var cardWidth = trackEl.querySelector('.fresha-card-wrap')?.offsetWidth || 280;
+            var scrollDist = (cardWidth + 16) * 2;
+            trackEl.scrollBy({ left: scrollDist, behavior: 'smooth' });
+        }
+    });
+
+    $(document).on('click', '.js-carousel-prev', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $btn = $(this).closest('.js-carousel-prev');
+        var targetId = $btn.attr('data-target') || $btn.data('target');
+        if (!targetId) return;
+        var trackEl = document.querySelector(targetId);
+        if (trackEl) {
+            var cardWidth = trackEl.querySelector('.fresha-card-wrap')?.offsetWidth || 280;
+            var scrollDist = (cardWidth + 16) * 2;
+            trackEl.scrollBy({ left: -scrollDist, behavior: 'smooth' });
+        }
+    });
+
+    // 2. Desktop Mouse Drag-to-Scroll Support
+    document.querySelectorAll('.fresha-carousel-track-wrap').forEach(function (slider) {
+        var isDown = false;
+        var startX;
+        var scrollLeft;
+
+        slider.addEventListener('mousedown', function (e) {
+            isDown = true;
+            slider.classList.add('active-drag');
+            startX = e.pageX - slider.offsetLeft;
+            scrollLeft = slider.scrollLeft;
+        });
+        slider.addEventListener('mouseleave', function () {
+            isDown = false;
+            slider.classList.remove('active-drag');
+        });
+        slider.addEventListener('mouseup', function () {
+            isDown = false;
+            slider.classList.remove('active-drag');
+        });
+        slider.addEventListener('mousemove', function (e) {
+            if (!isDown) return;
+            e.preventDefault();
+            var x = e.pageX - slider.offsetLeft;
+            var walk = (x - startX) * 1.5;
+            slider.scrollLeft = scrollLeft - walk;
+        });
+    });
+
+    // 3. Wishlist Heart Toggle + AJAX Call with Toast Notification
+    $(document).on('click', '.js-fav-btn', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $btn = $(this);
+        var salonId = $btn.data('salon-id');
+
+        var isNowActive = !$btn.hasClass('is-active');
+        $btn.toggleClass('is-active');
+
+        if (typeof Swal !== 'undefined') {
+            const toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true
+            });
+            toast.fire({
+                icon: 'success',
+                title: isNowActive ? 'Added to favorites' : 'Removed from favorites'
+            });
+        }
+
+        var csrf = $('meta[name="csrf-token"]').attr('content');
+        if (csrf && salonId) {
+            $.ajax({
+                url: '/wishlist/toggle',
+                type: 'POST',
+                data: {
+                    _token: csrf,
+                    salon_id: salonId
+                },
+                error: function () {
+                    // Fail silently so UI experience remains smooth
+                }
+            });
+        }
+    });
+
+    // 4. Google Places API Autocomplete for Location Inputs
+    function initGooglePlacesAutocomplete() {
+        if (typeof google === 'object' && typeof google.maps === 'object' && google.maps.places) {
+            var inputs = document.querySelectorAll('input[name="location"], #addressInput, .js-location-autocomplete');
+            inputs.forEach(function (input) {
+                if (input.getAttribute('data-places-initialized')) return;
+                input.setAttribute('data-places-initialized', 'true');
+
+                var autocomplete = new google.maps.places.Autocomplete(input, {
+                    types: ['geocode', '(cities)']
+                });
+
+                autocomplete.addListener('place_changed', function () {
+                    var place = autocomplete.getPlace();
+                    if (place && place.geometry && place.geometry.location) {
+                        var form = input.closest('form');
+                        if (form) {
+                            var latInput = form.querySelector('input[name="lat"], input[name="latitude"]');
+                            var lngInput = form.querySelector('input[name="lng"], input[name="longitude"]');
+                            if (latInput) latInput.value = place.geometry.location.lat();
+                            if (lngInput) lngInput.value = place.geometry.location.lng();
+                        }
+                    }
+                });
+            });
+        }
+    }
+
+    if (typeof google === 'object' && typeof google.maps === 'object') {
+        initGooglePlacesAutocomplete();
+    } else {
+        window.addEventListener('load', initGooglePlacesAutocomplete);
+    }
+
+    /* ==========================================================
+       5. LOCATION FIELD — "Current location" (browser geolocation)
+       ========================================================== */
+    var locationField = document.getElementById('locationField');
+    var locationInput = document.getElementById('userLocationInput');
+    var useCurrentLocationBtn = document.getElementById('useCurrentLocationBtn');
+    var userLocationLat = document.getElementById('userLocationLat');
+    var userLocationLng = document.getElementById('userLocationLng');
+
+    function closeAllSearchDropdowns(except) {
+        document.querySelectorAll('.search-card .sf.open').forEach(function (sf) {
+            if (sf !== except) sf.classList.remove('open');
+        });
+    }
+
+    if (locationField && locationInput) {
+        locationInput.addEventListener('focus', function () {
+            closeAllSearchDropdowns(locationField);
+            locationField.classList.add('open');
+        });
+        locationInput.addEventListener('input', function () {
+            locationField.classList.remove('open');
+        });
+    }
+
+    if (useCurrentLocationBtn) {
+        useCurrentLocationBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            var textEl = useCurrentLocationBtn.querySelector('.dd-geo-text');
+            var originalText = textEl.textContent;
+
+            function showToast(icon, title) {
+                if (typeof Swal !== 'undefined') {
+                    Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 2500,
+                        timerProgressBar: true
+                    }).fire({ icon: icon, title: title });
+                } else {
+                    alert(title);
+                }
+            }
+
+            if (!navigator.geolocation) {
+                showToast('error', 'Geolocation is not supported by your browser');
+                return;
+            }
+
+            useCurrentLocationBtn.classList.add('is-loading');
+            textEl.textContent = 'Fetching your location…';
+
+            navigator.geolocation.getCurrentPosition(function (position) {
+                var lat = position.coords.latitude;
+                var lng = position.coords.longitude;
+                if (userLocationLat) userLocationLat.value = lat;
+                if (userLocationLng) userLocationLng.value = lng;
+
+                function finish(text) {
+                    if (locationInput) locationInput.value = text;
+                    useCurrentLocationBtn.classList.remove('is-loading');
+                    textEl.textContent = originalText;
+                    if (locationField) locationField.classList.remove('open');
+                }
+
+                if (typeof google === 'object' && google.maps && google.maps.Geocoder) {
+                    var geocoder = new google.maps.Geocoder();
+                    geocoder.geocode({ location: { lat: lat, lng: lng } }, function (results, status) {
+                        if (status === 'OK' && results && results[0]) {
+                            finish(results[0].formatted_address);
+                        } else {
+                            finish('Current location');
+                        }
+                    });
+                } else {
+                    finish('Current location');
+                }
+            }, function (error) {
+                useCurrentLocationBtn.classList.remove('is-loading');
+                textEl.textContent = originalText;
+                var msg = 'Unable to fetch your location.';
+                if (error.code === 1) msg = 'Location permission denied. Please allow location access and try again.';
+                else if (error.code === 3) msg = 'Fetching location timed out. Please try again.';
+                showToast('error', msg);
+            }, { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 });
+        });
+    }
+
+    /* ==========================================================
+       6. DATE & TIME PICKER — Fresha-style calendar dropdown
+       ========================================================== */
+    var dateTimeField = document.getElementById('dateTimeField');
+    if (dateTimeField) {
+        var dtpDisplay = document.getElementById('dateTimeDisplay');
+        var dtpDateInput = document.getElementById('dateTimeDateInput');
+        var dtpTimeInput = document.getElementById('dateTimeTimeInput');
+        var dtpCalTitle = document.getElementById('dtpCalTitle');
+        var dtpDaysGrid = document.getElementById('dtpDaysGrid');
+        var dtpPrevMonth = document.getElementById('dtpPrevMonth');
+        var dtpNextMonth = document.getElementById('dtpNextMonth');
+        var dtpTodaySub = document.getElementById('dtpTodaySub');
+        var dtpTomorrowSub = document.getElementById('dtpTomorrowSub');
+        var dtpTimeOpts = document.getElementById('dtpTimeOpts');
+        var dtpCustomTimeRow = document.getElementById('dtpCustomTimeRow');
+        var dtpCustomTimeInput = document.getElementById('dtpCustomTimeInput');
+        var dtpQuickBtns = dateTimeField.querySelectorAll('.dtp-quick-btn');
+
+        var TIME_LABELS = { any: 'Any time', morning: 'Morning', afternoon: 'Afternoon', evening: 'Evening', custom: 'Custom' };
+        var WEEKDAY_SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        var MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+        var today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        var selectedDate = new Date(today);
+        var selectedTime = 'any';
+        var hasCustomSelection = false;
+        var viewYear = today.getFullYear();
+        var viewMonth = today.getMonth();
+
+        function toISODate(d) {
+            var y = d.getFullYear();
+            var m = String(d.getMonth() + 1).padStart(2, '0');
+            var day = String(d.getDate()).padStart(2, '0');
+            return y + '-' + m + '-' + day;
+        }
+
+        function isSameDay(a, b) {
+            return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+        }
+
+        function formatShortDate(d) {
+            return WEEKDAY_SHORT[d.getDay()] + ', ' + MONTH_NAMES[d.getMonth()].slice(0, 3) + ' ' + d.getDate();
+        }
+
+        function dateLabelFor(d) {
+            var tomorrow = new Date(today); tomorrow.setDate(tomorrow.getDate() + 1);
+            if (isSameDay(d, today)) return 'Today';
+            if (isSameDay(d, tomorrow)) return 'Tomorrow';
+            return formatShortDate(d);
+        }
+
+        function updateTriggerLabel() {
+            if (!hasCustomSelection) {
+                dtpDisplay.textContent = 'Any time';
+                return;
+            }
+            var parts = [dateLabelFor(selectedDate)];
+            if (selectedTime !== 'any') {
+                if (selectedTime === 'custom' && dtpCustomTimeInput.value) {
+                    parts.push(dtpCustomTimeInput.value);
+                } else {
+                    parts.push(TIME_LABELS[selectedTime]);
+                }
+            }
+            dtpDisplay.textContent = parts.join(' · ');
+        }
+
+        function syncHiddenInputs() {
+            dtpDateInput.value = toISODate(selectedDate);
+            dtpTimeInput.value = selectedTime === 'custom' ? (dtpCustomTimeInput.value || 'custom') : selectedTime;
+        }
+
+        function renderQuickSubs() {
+            var tomorrow = new Date(today); tomorrow.setDate(tomorrow.getDate() + 1);
+            dtpTodaySub.textContent = formatShortDate(today).split(', ')[1];
+            dtpTomorrowSub.textContent = formatShortDate(tomorrow).split(', ')[1];
+        }
+
+        function renderQuickActiveState() {
+            var tomorrow = new Date(today); tomorrow.setDate(tomorrow.getDate() + 1);
+            dtpQuickBtns.forEach(function (btn) {
+                var offset = parseInt(btn.getAttribute('data-offset'), 10);
+                var target = offset === 0 ? today : tomorrow;
+                btn.classList.toggle('is-active', hasCustomSelection && isSameDay(selectedDate, target));
+            });
+        }
+
+        function renderCalendar() {
+            dtpCalTitle.textContent = MONTH_NAMES[viewMonth] + ' ' + viewYear;
+            dtpDaysGrid.innerHTML = '';
+
+            var firstOfMonth = new Date(viewYear, viewMonth, 1);
+            // Monday-first offset (0 = Monday ... 6 = Sunday)
+            var startOffset = (firstOfMonth.getDay() + 6) % 7;
+            var daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+
+            for (var i = 0; i < startOffset; i++) {
+                var empty = document.createElement('span');
+                empty.className = 'dtp-day is-empty';
+                dtpDaysGrid.appendChild(empty);
+            }
+
+            for (var day = 1; day <= daysInMonth; day++) {
+                var cellDate = new Date(viewYear, viewMonth, day);
+                var btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'dtp-day';
+                btn.textContent = day;
+
+                if (cellDate < today) {
+                    btn.classList.add('is-disabled');
+                    btn.disabled = true;
+                } else {
+                    if (isSameDay(cellDate, today)) btn.classList.add('is-today');
+                    if (hasCustomSelection && isSameDay(cellDate, selectedDate)) btn.classList.add('is-selected');
+                    else if (!hasCustomSelection && isSameDay(cellDate, today)) btn.classList.add('is-selected');
+
+                    btn.addEventListener('click', function () {
+                        var clicked = this;
+                        var y = viewYear, m = viewMonth, d = parseInt(clicked.textContent, 10);
+                        selectedDate = new Date(y, m, d);
+                        hasCustomSelection = true;
+                        renderCalendar();
+                        renderQuickActiveState();
+                        updateTriggerLabel();
+                        syncHiddenInputs();
+                    });
+                }
+
+                dtpDaysGrid.appendChild(btn);
+            }
+
+            var isCurrentMonth = (viewYear === today.getFullYear() && viewMonth === today.getMonth());
+            dtpPrevMonth.disabled = isCurrentMonth;
+        }
+
+        dtpPrevMonth.addEventListener('click', function () {
+            viewMonth -= 1;
+            if (viewMonth < 0) { viewMonth = 11; viewYear -= 1; }
+            renderCalendar();
+        });
+        dtpNextMonth.addEventListener('click', function () {
+            viewMonth += 1;
+            if (viewMonth > 11) { viewMonth = 0; viewYear += 1; }
+            renderCalendar();
+        });
+
+        dtpQuickBtns.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var offset = parseInt(btn.getAttribute('data-offset'), 10);
+                var target = new Date(today);
+                target.setDate(target.getDate() + offset);
+                selectedDate = target;
+                hasCustomSelection = true;
+                viewYear = target.getFullYear();
+                viewMonth = target.getMonth();
+                renderCalendar();
+                renderQuickActiveState();
+                updateTriggerLabel();
+                syncHiddenInputs();
+            });
+        });
+
+        dtpTimeOpts.querySelectorAll('.dtp-time-chip').forEach(function (chip) {
+            chip.addEventListener('click', function () {
+                dtpTimeOpts.querySelectorAll('.dtp-time-chip').forEach(function (c) { c.classList.remove('is-active'); });
+                chip.classList.add('is-active');
+                selectedTime = chip.getAttribute('data-time');
+                hasCustomSelection = true;
+                dtpCustomTimeRow.classList.toggle('is-visible', selectedTime === 'custom');
+                updateTriggerLabel();
+                syncHiddenInputs();
+            });
+        });
+
+        dtpCustomTimeInput.addEventListener('change', function () {
+            updateTriggerLabel();
+            syncHiddenInputs();
+        });
+
+        dateTimeField.querySelector('.sf-value').addEventListener('click', function (e) {
+            e.stopPropagation();
+            var willOpen = !dateTimeField.classList.contains('open');
+            closeAllSearchDropdowns(dateTimeField);
+            dateTimeField.classList.toggle('open', willOpen);
+        });
+
+        dateTimeField.querySelector('.dtp-panel').addEventListener('click', function (e) {
+            e.stopPropagation();
+        });
+
+        renderQuickSubs();
+        renderCalendar();
+        renderQuickActiveState();
+        syncHiddenInputs();
+    }
+
+    if (locationField) {
+        locationField.querySelector('.sf-value').addEventListener('click', function (e) {
+            e.stopPropagation();
+            closeAllSearchDropdowns(locationField);
+            locationField.classList.add('open');
+        });
+        var locDdPanel = document.getElementById('locationDropdownPanel');
+        if (locDdPanel) {
+            locDdPanel.addEventListener('click', function (e) { e.stopPropagation(); });
+        }
+    }
+
+    document.addEventListener('click', function (e) {
+        document.querySelectorAll('.search-card .sf.open').forEach(function (sf) {
+            if (!sf.contains(e.target)) sf.classList.remove('open');
+        });
+    });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            closeAllSearchDropdowns(null);
+        }
+    });
+});

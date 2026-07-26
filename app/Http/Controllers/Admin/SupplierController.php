@@ -57,8 +57,12 @@ class SupplierController extends Controller
      */
     public function edit(string $id)
     {
-        $supplier = Supplier::find($id);
-        return view('admin.suppliers.edit',compact('supplier'));
+        $query = Supplier::query();
+        if (!auth()->user()->hasRole('Admin')) {
+            $query->where('created_by', auth()->id());
+        }
+        $supplier = $query->findOrFail($id);
+        return view('admin.suppliers.edit', compact('supplier'));
     }
 
     /**
@@ -71,9 +75,14 @@ class SupplierController extends Controller
             'description' => 'required',
         ]);
 
-        $data = $request->all();
+        $query = Supplier::query();
+        if (!auth()->user()->hasRole('Admin')) {
+            $query->where('created_by', auth()->id());
+        }
+        $supplier = $query->findOrFail($id);
+
+        $data = $request->except(['_token', '_method']);
         $data['updated_by'] = auth()->id();
-        $supplier = Supplier::find($id);
         $supplier->update($data);
         return redirect()->route('suppliers.index')->with('success','Supplier updated successfully');
     }
@@ -83,10 +92,12 @@ class SupplierController extends Controller
      */
     public function destroy(string $id)
     {
-        $supplier = Supplier::find($id);
+        $query = Supplier::query();
+        if (!auth()->user()->hasRole('Admin')) {
+            $query->where('created_by', auth()->id());
+        }
+        $supplier = $query->findOrFail($id);
         $supplier->delete();
-        // return redirect()->route('suppliers.index')->with('success','Supplier deleted successfully');
         return response()->json(['status' => 200 , 'message' => 'Supplier deleted successfully']);
-
     }
 }
