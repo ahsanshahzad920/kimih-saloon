@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Kimih - Project Technical Documentation</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 20mm;
+        }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            color: #1e293b;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background: #ffffff;
+        }
+        .header {
+            border-bottom: 3px solid #6366f1;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #0f172a;
+            font-size: 32px;
+            margin: 0 0 10px 0;
+            font-weight: 700;
+        }
+        .header p {
+            color: #64748b;
+            font-size: 16px;
+            margin: 0;
+        }
+        .badge {
+            display: inline-block;
+            background: #e0e7ff;
+            color: #4338ca;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        .section {
+            margin-bottom: 35px;
+            page-break-inside: avoid;
+        }
+        h2 {
+            color: #1e1b4b;
+            font-size: 20px;
+            border-left: 4px solid #6366f1;
+            padding-left: 12px;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        h3 {
+            color: #334155;
+            font-size: 16px;
+            margin-top: 15px;
+            margin-bottom: 8px;
+        }
+        p, li {
+            font-size: 14px;
+            color: #334155;
+        }
+        ul {
+            margin-top: 5px;
+            padding-left: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            margin-bottom: 15px;
+            font-size: 13px;
+        }
+        th, td {
+            text-align: left;
+            padding: 10px 14px;
+            border: 1px solid #e2e8f0;
+        }
+        th {
+            background-color: #f8fafc;
+            color: #0f172a;
+            font-weight: 600;
+        }
+        tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+        .code-box {
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 12px 16px;
+            border-radius: 6px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .card {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            background: #fafafa;
+        }
+        .card h4 {
+            margin: 0 0 8px 0;
+            color: #4f46e5;
+            font-size: 15px;
+        }
+        .footer {
+            margin-top: 50px;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 15px;
+            text-align: center;
+            font-size: 12px;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Kimih Saloon & Beauty Platform</h1>
+        <p>Comprehensive System Architecture & Technical Documentation</p>
+        <span class="badge">Version 2.0 • Production Ready</span>
+    </div>
+
+    <div class="section">
+        <h2>1. Executive Summary</h2>
+        <p>
+            <strong>Kimih</strong> is a modern, high-performance beauty, wellness, and salon booking marketplace platform. 
+            It connects customers seeking premium beauty services with top-rated salons, spas, and independent beauty professionals. 
+            The system provides a seamless experience for end-users to discover, compare, and book appointments online while empowering salon partners with management software for staff, schedules, bookings, and inventory.
+        </p>
+    </div>
+
+    <div class="section">
+        <h2>2. Technology Stack & Frameworks</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Layer</th>
+                    <th>Technology Used</th>
+                    <th>Purpose / Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Backend Framework</strong></td>
+                    <td>Laravel 10.x (PHP 8.2+)</td>
+                    <td>Core MVC architecture, authentication, routing, Eloquent ORM.</td>
+                </tr>
+                <tr>
+                    <td><strong>Database</strong></td>
+                    <td>MySQL / MariaDB</td>
+                    <td>Relational database with optimized indexing for fast search and booking queries.</td>
+                </tr>
+                <tr>
+                    <td><strong>Frontend Templating</strong></td>
+                    <td>Blade & Bootstrap 5</td>
+                    <td>Server-side rendering with reactive UI components.</td>
+                </tr>
+                <tr>
+                    <td><strong>Custom Design System</strong></td>
+                    <td>Kimih CSS & Vanilla JS</td>
+                    <td>Custom responsive layouts, dark/light aesthetics, mobile PWA optimization.</td>
+                </tr>
+                <tr>
+                    <td><strong>Authentication & Roles</strong></td>
+                    <td>Spatie Laravel Permission</td>
+                    <td>Role-Based Access Control (Admin, Business User, Customer).</td>
+                </tr>
+                <tr>
+                    <td><strong>Hosting & Deployment</strong></td>
+                    <td>Hostinger Cloud / Nginx / SSH</td>
+                    <td>Automated SSH deployments with asset caching & migration triggers.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>3. Core System Modules</h2>
+        
+        <div class="card-grid">
+            <div class="card">
+                <h4>1. Customer Marketplace</h4>
+                <ul>
+                    <li>Dynamic Salon & Service Search</li>
+                    <li>Interactive Location & Map Filters</li>
+                    <li>Real-Time Service Cart & Booking</li>
+                    <li>Customer Dashboard & History</li>
+                    <li>PWA Mobile-optimized UI</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h4>2. Salon Partner Dashboard</h4>
+                <ul>
+                    <li>Service & Pricing Management</li>
+                    <li>Interactive Appointment Calendar</li>
+                    <li>Staff / Stylist Schedule Allocation</li>
+                    <li>Client Database & Booking History</li>
+                    <li>Business Profile Customization</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h4>3. Super Admin Panel</h4>
+                <ul>
+                    <li>Partner Business Verification</li>
+                    <li>Category & Brand Controls</li>
+                    <li>System Performance Monitoring</li>
+                    <li>Global Booking & Transaction Logs</li>
+                    <li>Role & Access Configuration</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h4>4. Core Database Architecture</h4>
+                <ul>
+                    <li>Optimized Composite Indexes</li>
+                    <li>Normalized Relational Models</li>
+                    <li>Performance-tuned Search Queries</li>
+                    <li>Automated Seeder & Migration Pipeline</li>
+                    <li>Secure Password & Data Encryption</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>4. Live Production Environment</h2>
+        <div class="code-box">
+URL: https://kimih.goodsessentialsllc.com/
+Server IP: 145.79.28.124
+SSH Port: 65002
+Document Root: /home/u263847933/domains/goodsessentialsllc.com/public_html/kimih
+App Directory: /home/u263847933/kimih_app
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>5. Recent Enhancements & Optimization</h2>
+        <ul>
+            <li><strong>Database Performance Indexing:</strong> Added specialized indexes on core database tables (bookings, services, businesses, users) for sub-10ms response times.</li>
+            <li><strong>Redesigned UI/UX:</strong> Enhanced landing page, shop details, search interface, and responsive footer for mobile users.</li>
+            <li><strong>PWA Integration:</strong> Added Manifest.json and Service Worker support for app-like mobile experience.</li>
+            <li><strong>Automated Deployment Pipeline:</strong> Configured SSH automated sync for code, public assets, and database migrations.</li>
+        </ul>
+    </div>
+
+    <div class="footer">
+        Kimih Saloon & Beauty Platform — Confidential Project Documentation • Generated July 2026
+    </div>
+
+</body>
+</html>

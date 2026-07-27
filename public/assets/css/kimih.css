@@ -1428,3 +1428,223 @@ body.mnav-open .mnav-foot{opacity:1;transform:none;}
   margin: 0 4px;
 }
 
+/* ==========================================================
+   FRESHA CAROUSEL & CARD 100% RESPONSIVE GRID OVERRIDES
+   ========================================================== */
+
+/* Section & Header */
+.fresha-discovery-wrapper {
+  position: relative;
+  background: radial-gradient(circle at 15% 10%, rgba(244, 208, 239, 0.55) 0%, rgba(252, 232, 249, 0.25) 35%, rgba(255, 255, 255, 0) 70%);
+  padding: 16px 0 8px;
+}
+.fresha-carousel-section {
+  padding: clamp(20px, 3.5vw, 40px) 0 !important;
+  position: relative;
+}
+.fresha-carousel-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin-bottom: 14px !important;
+}
+.fresha-screenshot-heading {
+  font-size: clamp(1.2rem, 3.5vw, 1.7rem) !important;
+  font-weight: 700 !important;
+  color: #111827 !important;
+  letter-spacing: -0.025em !important;
+  margin-bottom: 0 !important;
+}
+
+/* Outer & Track */
+.fresha-carousel-outer {
+  overflow: hidden !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  position: relative !important;
+}
+.fresha-carousel-track-wrap {
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scroll-behavior: smooth !important;
+  -webkit-overflow-scrolling: touch !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+  padding: 6px 0 16px !important;
+  width: 100% !important;
+}
+.fresha-carousel-track-wrap::-webkit-scrollbar {
+  display: none !important;
+}
+
+/* Rail */
+.fresha-carousel-rail {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  gap: 16px !important;
+  width: max-content !important;
+}
+
+/* Base Card Sizing in Carousel */
+.fresha-carousel-rail .fresha-card-wrap {
+  box-sizing: border-box !important;
+  flex-shrink: 0 !important;
+}
+
+/* Desktop Large (>= 1200px): 4 Columns */
+@media (min-width: 1200px) {
+  .fresha-carousel-rail .fresha-card-wrap {
+    width: calc((100% - 48px) / 4) !important;
+    flex: 0 0 calc((100% - 48px) / 4) !important;
+    max-width: calc((100% - 48px) / 4) !important;
+  }
+  .fresha-floating-next { right: -18px !important; }
+  .fresha-floating-prev { left: -18px !important; }
+}
+
+/* Desktop Medium / Laptop (992px - 1199px): 3.5 Columns */
+@media (min-width: 992px) and (max-width: 1199px) {
+  .fresha-carousel-rail .fresha-card-wrap {
+    width: 270px !important;
+    flex: 0 0 270px !important;
+    max-width: 270px !important;
+  }
+  .fresha-floating-next { right: -12px !important; }
+  .fresha-floating-prev { left: -12px !important; }
+}
+
+/* Tablet (768px - 991px): 2.5 Columns */
+@media (min-width: 768px) and (max-width: 991px) {
+  .fresha-carousel-rail .fresha-card-wrap {
+    width: 250px !important;
+    flex: 0 0 250px !important;
+    max-width: 250px !important;
+  }
+  .fresha-floating-next { right: -6px !important; }
+  .fresha-floating-prev { left: -6px !important; }
+}
+
+/* Small Tablet / Mobile Large (576px - 767px): 1.8 Columns */
+@media (min-width: 576px) and (max-width: 767px) {
+  .fresha-carousel-track-wrap {
+    scroll-snap-type: x mandatory !important;
+  }
+  .fresha-carousel-rail {
+    gap: 14px !important;
+  }
+  .fresha-carousel-rail .fresha-card-wrap {
+    width: 260px !important;
+    flex: 0 0 260px !important;
+    max-width: 260px !important;
+    scroll-snap-align: start !important;
+  }
+  .fresha-floating-btn {
+    display: none !important;
+  }
+}
+
+/* Mobile (max-width: 575px): 1.15 Columns with crisp sizing */
+@media (max-width: 575px) {
+  .fresha-carousel-track-wrap {
+    scroll-snap-type: x mandatory !important;
+  }
+  .fresha-carousel-rail {
+    gap: 12px !important;
+  }
+  .fresha-carousel-rail .fresha-card-wrap {
+    width: min(290px, 82vw) !important;
+    flex: 0 0 min(290px, 82vw) !important;
+    max-width: min(290px, 82vw) !important;
+    scroll-snap-align: start !important;
+  }
+  .fresha-floating-btn {
+    display: none !important;
+  }
+  .fresha-card-thumb {
+    aspect-ratio: 16 / 10 !important;
+    height: auto !important;
+    max-height: 160px !important;
+    border-radius: 14px !important;
+    margin-bottom: 8px !important;
+  }
+  .fresha-card-title-screenshot {
+    font-size: 0.95rem !important;
+  }
+  .fresha-location-screenshot,
+  .fresha-meta-screenshot {
+    font-size: 0.8rem !important;
+  }
+}
+
+/* ==========================================================
+   RESPONSIVE CHECKLIST ENHANCEMENTS (375px, 768px, 1024px, 1440px)
+   ========================================================== */
+
+/* 1. Hero Search Form Mobile Stacking (no horizontal scroll) */
+@media (max-width: 991.98px) {
+  .search-wrap {
+    margin-top: 20px !important;
+  }
+  .search-card {
+    padding: 10px !important;
+    border-radius: 20px !important;
+  }
+  .search-grid {
+    flex-direction: column !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+  .sf {
+    width: 100% !important;
+    flex: 0 0 100% !important;
+    border-right: none !important;
+    border-bottom: 1px solid var(--line) !important;
+    border-radius: 14px !important;
+    padding: 10px 14px !important;
+  }
+  .sf:last-of-type {
+    border-bottom: none !important;
+  }
+  .search-go {
+    width: 100% !important;
+    padding: 6px 0 0 !important;
+  }
+  .search-go .btn-k {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    padding: 14px 20px !important;
+  }
+  .dd-panel {
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+}
+
+/* 2. Footer Responsive Mobile Columns */
+@media (max-width: 575.98px) {
+  .kimih-footer-top .row > [class*="col-"] {
+    margin-bottom: 24px;
+  }
+  .kimih-footer-top .row > [class*="col-"]:last-child {
+    margin-bottom: 0;
+  }
+  .kimih-footer-brand p {
+    font-size: 13.5px !important;
+  }
+  .kimih-footer-col h4,
+  .kimih-footer-newsletter h4 {
+    margin-bottom: 12px !important;
+    font-size: 15px !important;
+  }
+  .kimih-footer-links li {
+    margin-bottom: 8px !important;
+  }
+}
+
+
+
