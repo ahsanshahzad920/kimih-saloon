@@ -1,0 +1,718 @@
+{
+  "currency": "PKR",
+  "note": "Prices are mid-range salon/spa estimates for 2026. price_min_pkr/price_max_pkr span the full national range (Tier 2/3 low end to Tier 1 high end). price_tier1_pkr covers Karachi/Lahore/Islamabad-style premium mid-range salons; price_tier2_3_pkr covers smaller cities (Faisalabad, Multan, Peshawar, Sialkot, Gujranwala, Hyderabad, etc).",
+  "categories": [
+    {
+      "category": "Beauty & Face",
+      "description": "Facial, bleach, threading, waxing and whitening treatments — the most frequently booked category in Pakistani salons.",
+      "services": [
+        {
+          "name": "Fruit Facial",
+          "name_ur": "Fruit Fecial",
+          "duration_min": 45,
+          "gender": "Women",
+          "price_min_pkr": 800,
+          "price_max_pkr": 3000,
+          "price_tier1_pkr": {"min": 1800, "max": 3000},
+          "price_tier2_3_pkr": {"min": 800, "max": 1800}
+        },
+        {
+          "name": "Whitening Facial",
+          "name_ur": "Whitening Fecial",
+          "duration_min": 60,
+          "gender": "Women",
+          "price_min_pkr": 1500,
+          "price_max_pkr": 6000,
+          "price_tier1_pkr": {"min": 3000, "max": 6000},
+          "price_tier2_3_pkr": {"min": 1500, "max": 3500}
+        },
+        {
+          "name": "Brightening Facial",
+          "name_ur": "Brightening Fecial",
+          "duration_min": 60,
+          "gender": "Women",
+          "price_min_pkr": 1500,
+          "price_max_pkr": 5500,
+          "price_tier1_pkr": {"min": 2800, "max": 5500},
+          "price_tier2_3_pkr": {"min": 1500, "max": 3200}
+        },
+        {
+          "name": "Gold Facial",
+          "name_ur": "Gold Fecial",
+          "duration_min": 75,
+          "gender": "Women",
+          "price_min_pkr": 2500,
+          "price_max_pkr": 8000,
+          "price_tier1_pkr": {"min": 4500, "max": 8000},
+          "price_tier2_3_pkr": {"min": 2500, "max": 4500}
+        },
+        {
+          "name": "Diamond Facial",
+          "name_ur": "Diamond Fecial",
+          "duration_min": 75,
+          "gender": "Women",
+          "price_min_pkr": 3000,
+          "price_max_pkr": 9000,
+          "price_tier1_pkr": {"min": 5000, "max": 9000},
+          "price_tier2_3_pkr": {"min": 3000, "max": 5000}
+        },
+        {
+          "name": "Oxygen Facial",
+          "name_ur": "Oxygen Fecial",
+          "duration_min": 60,
+          "gender": "Women",
+          "price_min_pkr": 2500,
+          "price_max_pkr": 7000,
+          "price_tier1_pkr": {"min": 4000, "max": 7000},
+          "price_tier2_3_pkr": {"min": 2500, "max": 4000}
+        },
+        {
+          "name": "Hydra Facial",
+          "name_ur": "Hydra Fecial",
+          "duration_min": 60,
+          "gender": "Unisex",
+          "price_min_pkr": 3000,
+          "price_max_pkr": 10000,
+          "price_tier1_pkr": {"min": 5000, "max": 10000},
+          "price_tier2_3_pkr": {"min": 3000, "max": 6000}
+        },
+        {
+          "name": "Face Bleach",
+          "name_ur": "Bleach (Chehra)",
+          "duration_min": 20,
+          "gender": "Unisex",
+          "price_min_pkr": 300,
+          "price_max_pkr": 1200,
+          "price_tier1_pkr": {"min": 600, "max": 1200},
+          "price_tier2_3_pkr": {"min": 300, "max": 700}
+        },
+        {
+          "name": "Body Bleach",
+          "name_ur": "Body Bleach",
+          "duration_min": 45,
+          "gender": "Women",
+          "price_min_pkr": 1500,
+          "price_max_pkr": 4500,
+          "price_tier1_pkr": {"min": 2500, "max": 4500},
+          "price_tier2_3_pkr": {"min": 1500, "max": 2800}
+        },
+        {
+          "name": "Eyebrows Threading",
+          "name_ur": "Abru Threading / Dhaga",
+          "duration_min": 10,
+          "gender": "Unisex",
+          "price_min_pkr": 100,
+          "price_max_pkr": 300,
+          "price_tier1_pkr": {"min": 150, "max": 300},
+          "price_tier2_3_pkr": {"min": 100, "max": 200}
+        },
+        {
+          "name": "Upper Lip Threading",
+          "name_ur": "Upper Lip Threading",
+          "duration_min": 5,
+          "gender": "Women",
+          "price_min_pkr": 50,
+          "price_max_pkr": 200,
+          "price_tier1_pkr": {"min": 100, "max": 200},
+          "price_tier2_3_pkr": {"min": 50, "max": 120}
+        },
+        {
+          "name": "Full Face Threading",
+          "name_ur": "Full Face Threading",
+          "duration_min": 20,
+          "gender": "Women",
+          "price_min_pkr": 250,
+          "price_max_pkr": 700,
+          "price_tier1_pkr": {"min": 400, "max": 700},
+          "price_tier2_3_pkr": {"min": 250, "max": 450}
+        },
+        {
+          "name": "Chin Threading",
+          "name_ur": "Chin Threading",
+          "duration_min": 5,
+          "gender": "Women",
+          "price_min_pkr": 50,
+          "price_max_pkr": 200,
+          "price_tier1_pkr": {"min": 100, "max": 200},
+          "price_tier2_3_pkr": {"min": 50, "max": 120}
+        },
+        {
+          "name": "Underarms Waxing",
+          "name_ur": "Underarms Wax",
+          "duration_min": 15,
+          "gender": "Women",
+          "price_min_pkr": 200,
+          "price_max_pkr": 600,
+          "price_tier1_pkr": {"min": 300, "max": 600},
+          "price_tier2_3_pkr": {"min": 200, "max": 400}
+        },
+        {
+          "name": "Half Arms Waxing",
+          "name_ur": "Half Bazu Wax",
+          "duration_min": 15,
+          "gender": "Women",
+          "price_min_pkr": 250,
+          "price_max_pkr": 700,
+          "price_tier1_pkr": {"min": 400, "max": 700},
+          "price_tier2_3_pkr": {"min": 250, "max": 450}
+        },
+        {
+          "name": "Full Arms Waxing",
+          "name_ur": "Full Bazu Wax",
+          "duration_min": 25,
+          "gender": "Women",
+          "price_min_pkr": 400,
+          "price_max_pkr": 1200,
+          "price_tier1_pkr": {"min": 600, "max": 1200},
+          "price_tier2_3_pkr": {"min": 400, "max": 800}
+        },
+        {
+          "name": "Half Legs Waxing",
+          "name_ur": "Half Tang Wax",
+          "duration_min": 20,
+          "gender": "Women",
+          "price_min_pkr": 350,
+          "price_max_pkr": 900,
+          "price_tier1_pkr": {"min": 500, "max": 900},
+          "price_tier2_3_pkr": {"min": 350, "max": 600}
+        },
+        {
+          "name": "Full Legs Waxing",
+          "name_ur": "Full Tang Wax",
+          "duration_min": 35,
+          "gender": "Women",
+          "price_min_pkr": 500,
+          "price_max_pkr": 1500,
+          "price_tier1_pkr": {"min": 800, "max": 1500},
+          "price_tier2_3_pkr": {"min": 500, "max": 1000}
+        },
+        {
+          "name": "Full Body Waxing",
+          "name_ur": "Full Body Wax",
+          "duration_min": 90,
+          "gender": "Women",
+          "price_min_pkr": 2000,
+          "price_max_pkr": 5000,
+          "price_tier1_pkr": {"min": 3000, "max": 5000},
+          "price_tier2_3_pkr": {"min": 2000, "max": 3500}
+        },
+        {
+          "name": "Bikini Waxing",
+          "name_ur": "Bikini Wax",
+          "duration_min": 20,
+          "gender": "Women",
+          "price_min_pkr": 500,
+          "price_max_pkr": 1500,
+          "price_tier1_pkr": {"min": 800, "max": 1500},
+          "price_tier2_3_pkr": {"min": 500, "max": 1000}
+        },
+        {
+          "name": "Whitening Treatment (Face)",
+          "name_ur": "Whitening Treatment",
+          "duration_min": 60,
+          "gender": "Women",
+          "price_min_pkr": 1500,
+          "price_max_pkr": 8000,
+          "price_tier1_pkr": {"min": 3500, "max": 8000},
+          "price_tier2_3_pkr": {"min": 1500, "max": 4000}
+        },
+        {
+          "name": "Whitening Treatment (Full Body)",
+          "name_ur": "Full Body Whitening",
+          "duration_min": 120,
+          "gender": "Women",
+          "price_min_pkr": 4000,
+          "price_max_pkr": 15000,
+          "price_tier1_pkr": {"min": 8000, "max": 15000},
+          "price_tier2_3_pkr": {"min": 4000, "max": 8000}
+        },
+        {
+          "name": "Face De-tan",
+          "name_ur": "D-Tan (Chehra)",
+          "duration_min": 30,
+          "gender": "Unisex",
+          "price_min_pkr": 500,
+          "price_max_pkr": 1500,
+          "price_tier1_pkr": {"min": 800, "max": 1500},
+          "price_tier2_3_pkr": {"min": 500, "max": 1000}
+        },
+        {
+          "name": "Body De-tan",
+          "name_ur": "D-Tan (Body)",
+          "duration_min": 60,
+          "gender": "Women",
+          "price_min_pkr": 1500,
+          "price_max_pkr": 4000,
+          "price_tier1_pkr": {"min": 2500, "max": 4000},
+          "price_tier2_3_pkr": {"min": 1500, "max": 2500}
+        }
+      ]
+    },
+    {
+      "category": "Hair & Styles",
+      "description": "Cutting, coloring and chemical treatments for hair.",
+      "services": [
+        {
+          "name": "Women's Haircut",
+          "name_ur": "Hair Cutting (Women)",
+          "duration_min": 30,
+          "gender": "Women",
+          "price_min_pkr": 400,
+          "price_max_pkr": 2000,
+          "price_tier1_pkr": {"min": 800, "max": 2000},
+          "price_tier2_3_pkr": {"min": 400, "max": 1000}
+        },
+        {
+          "name": "Layer Cut",
+          "name_ur": "Layer Cutting",
+          "duration_min": 40,
+          "gender": "Women",
+          "price_min_pkr": 500,
+          "price_max_pkr": 2500,
+          "price_tier1_pkr": {"min": 1000, "max": 2500},
+          "price_tier2_3_pkr": {"min": 500, "max": 1200}
+        },
+        {
+          "name": "Fringe / Bangs Cut",
+          "name_ur": "Fringe Cutting",
+          "duration_min": 15,
+          "gender": "Women",
+          "price_min_pkr": 150,
+          "price_max_pkr": 500,
+          "price_tier1_pkr": {"min": 300, "max": 500},
+          "price_tier2_3_pkr": {"min": 150, "max": 300}
+        },
+        {
+          "name": "Global Hair Color",
+          "name_ur": "Hair Color (Full)",
+          "duration_min": 90,
+          "gender": "Women",
+          "price_min_pkr": 2000,
+          "price_max_pkr": 8000,
+          "price_tier1_pkr": {"min": 3500, "max": 8000},
+          "price_tier2_3_pkr": {"min": 2000, "max": 4500}
+        },
+        {
+          "name": "Root Touch-up",
+          "name_ur": "Root Touch-up",
+          "duration_min": 45,
+          "gender": "Women",
+          "price_min_pkr": 1200,
+          "price_max_pkr": 4000,
+          "price_tier1_pkr": {"min": 2000, "max": 4000},
+          "price_tier2_3_pkr": {"min": 1200, "max": 2200}
+        },
+        {
+          "name": "Highlights",
+          "name_ur": "Highlights / Chamak",
+          "duration_min": 120,
+          "gender": "Women",
+          "price_min_pkr": 2500,
+          "price_max_pkr": 10000,
+          "price_tier1_pkr": {"min": 4500, "max": 10000},
+          "price_tier2_3_pkr": {"min": 2500, "max": 5000}
+        },
+        {
+          "name": "Balayage",
+          "name_ur": "Balayage",
+          "duration_min": 150,
+          "gender": "Women",
+          "price_min_pkr": 4000,
+          "price_max_pkr": 15000,
+          "price_tier1_pkr": {"min": 7000, "max": 15000},
+          "price_tier2_3_pkr": {"min": 4000, "max": 8000}
+        },
+        {
+          "name": "Henna Application",
+          "name_ur": "Mehndi / Henna Hair Color",
+          "duration_min": 60,
+          "gender": "Unisex",
+          "price_min_pkr": 600,
+          "price_max_pkr": 2000,
+          "price_tier1_pkr": {"min": 1000, "max": 2000},
+          "price_tier2_3_pkr": {"min": 600, "max": 1200}
+        },
+        {
+          "name": "Keratin Treatment",
+          "name_ur": "Keratin Treatment",
+          "duration_min": 150,
+          "gender": "Women",
+          "price_min_pkr": 4000,
+          "price_max_pkr": 15000,
+          "price_tier1_pkr": {"min": 6000, "max": 15000},
+          "price_tier2_3_pkr": {"min": 4000, "max": 9000}
+        },
+        {
+          "name": "Hair Spa",
+          "name_ur": "Hair Spa",
+          "duration_min": 45,
+          "gender": "Unisex",
+          "price_min_pkr": 1200,
+          "price_max_pkr": 4000,
+          "price_tier1_pkr": {"min": 2000, "max": 4000},
+          "price_tier2_3_pkr": {"min": 1200, "max": 2500}
+        },
+        {
+          "name": "Hair Rebonding",
+          "name_ur": "Rebonding",
+          "duration_min": 180,
+          "gender": "Women",
+          "price_min_pkr": 4000,
+          "price_max_pkr": 15000,
+          "price_tier1_pkr": {"min": 6000, "max": 15000},
+          "price_tier2_3_pkr": {"min": 4000, "max": 9000}
+        },
+        {
+          "name": "Hair Smoothening",
+          "name_ur": "Smoothening",
+          "duration_min": 150,
+          "gender": "Women",
+          "price_min_pkr": 4000,
+          "price_max_pkr": 14000,
+          "price_tier1_pkr": {"min": 6000, "max": 14000},
+          "price_tier2_3_pkr": {"min": 4000, "max": 8000}
+        },
+        {
+          "name": "Hair Perm / Curls",
+          "name_ur": "Perm",
+          "duration_min": 120,
+          "gender": "Women",
+          "price_min_pkr": 2500,
+          "price_max_pkr": 8000,
+          "price_tier1_pkr": {"min": 4000, "max": 8000},
+          "price_tier2_3_pkr": {"min": 2500, "max": 5000}
+        },
+        {
+          "name": "Blow Dry",
+          "name_ur": "Blow Dry / Hair Setting",
+          "duration_min": 30,
+          "gender": "Women",
+          "price_min_pkr": 500,
+          "price_max_pkr": 1500,
+          "price_tier1_pkr": {"min": 800, "max": 1500},
+          "price_tier2_3_pkr": {"min": 500, "max": 1000}
+        }
+      ]
+    },
+    {
+      "category": "Nails",
+      "description": "Manicure, pedicure and nail art/extensions.",
+      "services": [
+        {
+          "name": "Manicure",
+          "name_ur": "Manicure",
+          "duration_min": 30,
+          "gender": "Unisex",
+          "price_min_pkr": 500,
+          "price_max_pkr": 1500,
+          "price_tier1_pkr": {"min": 800, "max": 1500},
+          "price_tier2_3_pkr": {"min": 500, "max": 900}
+        },
+        {
+          "name": "Pedicure",
+          "name_ur": "Pedicure",
+          "duration_min": 40,
+          "gender": "Unisex",
+          "price_min_pkr": 600,
+          "price_max_pkr": 2000,
+          "price_tier1_pkr": {"min": 1000, "max": 2000},
+          "price_tier2_3_pkr": {"min": 600, "max": 1200}
+        },
+        {
+          "name": "Nail Extensions",
+          "name_ur": "Nail Extension",
+          "duration_min": 75,
+          "gender": "Women",
+          "price_min_pkr": 1500,
+          "price_max_pkr": 5000,
+          "price_tier1_pkr": {"min": 2500, "max": 5000},
+          "price_tier2_3_pkr": {"min": 1500, "max": 3000}
+        },
+        {
+          "name": "Nail Art",
+          "name_ur": "Nail Art",
+          "duration_min": 30,
+          "gender": "Women",
+          "price_min_pkr": 300,
+          "price_max_pkr": 1500,
+          "price_tier1_pkr": {"min": 500, "max": 1500},
+          "price_tier2_3_pkr": {"min": 300, "max": 800}
+        },
+        {
+          "name": "Gel Polish",
+          "name_ur": "Gel Polish",
+          "duration_min": 40,
+          "gender": "Women",
+          "price_min_pkr": 700,
+          "price_max_pkr": 2500,
+          "price_tier1_pkr": {"min": 1200, "max": 2500},
+          "price_tier2_3_pkr": {"min": 700, "max": 1500}
+        }
+      ]
+    },
+    {
+      "category": "Barber / Men's Grooming",
+      "description": "Haircut, beard and grooming services for men.",
+      "services": [
+        {
+          "name": "Men's Haircut",
+          "name_ur": "Hair Cutting (Mard)",
+          "duration_min": 25,
+          "gender": "Men",
+          "price_min_pkr": 300,
+          "price_max_pkr": 1200,
+          "price_tier1_pkr": {"min": 500, "max": 1200},
+          "price_tier2_3_pkr": {"min": 300, "max": 600}
+        },
+        {
+          "name": "Beard Trim",
+          "name_ur": "Beard Trim / Dahri Setting",
+          "duration_min": 15,
+          "gender": "Men",
+          "price_min_pkr": 150,
+          "price_max_pkr": 700,
+          "price_tier1_pkr": {"min": 300, "max": 700},
+          "price_tier2_3_pkr": {"min": 150, "max": 350}
+        },
+        {
+          "name": "Shaving",
+          "name_ur": "Shave / Ustra",
+          "duration_min": 15,
+          "gender": "Men",
+          "price_min_pkr": 150,
+          "price_max_pkr": 600,
+          "price_tier1_pkr": {"min": 300, "max": 600},
+          "price_tier2_3_pkr": {"min": 150, "max": 300}
+        },
+        {
+          "name": "Men's Facial",
+          "name_ur": "Men's Fecial",
+          "duration_min": 45,
+          "gender": "Men",
+          "price_min_pkr": 800,
+          "price_max_pkr": 3000,
+          "price_tier1_pkr": {"min": 1500, "max": 3000},
+          "price_tier2_3_pkr": {"min": 800, "max": 1800}
+        },
+        {
+          "name": "Head Massage",
+          "name_ur": "Head Massage / Champi",
+          "duration_min": 20,
+          "gender": "Men",
+          "price_min_pkr": 300,
+          "price_max_pkr": 1000,
+          "price_tier1_pkr": {"min": 500, "max": 1000},
+          "price_tier2_3_pkr": {"min": 300, "max": 600}
+        },
+        {
+          "name": "Men's Hair Color",
+          "name_ur": "Hair Color (Mard)",
+          "duration_min": 45,
+          "gender": "Men",
+          "price_min_pkr": 600,
+          "price_max_pkr": 2500,
+          "price_tier1_pkr": {"min": 1000, "max": 2500},
+          "price_tier2_3_pkr": {"min": 600, "max": 1500}
+        }
+      ]
+    },
+    {
+      "category": "Spa & Massage",
+      "description": "Relaxation and body-care treatments.",
+      "services": [
+        {
+          "name": "Full Body Massage",
+          "name_ur": "Full Body Massage",
+          "duration_min": 60,
+          "gender": "Unisex",
+          "price_min_pkr": 1800,
+          "price_max_pkr": 6000,
+          "price_tier1_pkr": {"min": 3000, "max": 6000},
+          "price_tier2_3_pkr": {"min": 1800, "max": 3500}
+        },
+        {
+          "name": "Body Scrub",
+          "name_ur": "Body Scrub",
+          "duration_min": 45,
+          "gender": "Women",
+          "price_min_pkr": 1500,
+          "price_max_pkr": 5000,
+          "price_tier1_pkr": {"min": 2500, "max": 5000},
+          "price_tier2_3_pkr": {"min": 1500, "max": 3000}
+        },
+        {
+          "name": "Body Polishing",
+          "name_ur": "Body Polish",
+          "duration_min": 60,
+          "gender": "Women",
+          "price_min_pkr": 2000,
+          "price_max_pkr": 7000,
+          "price_tier1_pkr": {"min": 3500, "max": 7000},
+          "price_tier2_3_pkr": {"min": 2000, "max": 4000}
+        },
+        {
+          "name": "Aromatherapy Massage",
+          "name_ur": "Aromatherapy Massage",
+          "duration_min": 60,
+          "gender": "Unisex",
+          "price_min_pkr": 2500,
+          "price_max_pkr": 8000,
+          "price_tier1_pkr": {"min": 4000, "max": 8000},
+          "price_tier2_3_pkr": {"min": 2500, "max": 4500}
+        },
+        {
+          "name": "Foot Reflexology Massage",
+          "name_ur": "Foot Massage",
+          "duration_min": 30,
+          "gender": "Unisex",
+          "price_min_pkr": 800,
+          "price_max_pkr": 2500,
+          "price_tier1_pkr": {"min": 1500, "max": 2500},
+          "price_tier2_3_pkr": {"min": 800, "max": 1500}
+        }
+      ]
+    },
+    {
+      "category": "Bridal & Makeup",
+      "description": "Bridal, party makeup, mehndi and event hairstyling — high-value seasonal bookings.",
+      "services": [
+        {
+          "name": "Bridal Makeup (HD/Airbrush)",
+          "name_ur": "Bridal Makeup",
+          "duration_min": 150,
+          "gender": "Women",
+          "price_min_pkr": 8000,
+          "price_max_pkr": 40000,
+          "price_tier1_pkr": {"min": 15000, "max": 40000},
+          "price_tier2_3_pkr": {"min": 8000, "max": 20000}
+        },
+        {
+          "name": "Bridal Makeup Trial",
+          "name_ur": "Trial Makeup",
+          "duration_min": 90,
+          "gender": "Women",
+          "price_min_pkr": 1500,
+          "price_max_pkr": 6000,
+          "price_tier1_pkr": {"min": 3000, "max": 6000},
+          "price_tier2_3_pkr": {"min": 1500, "max": 3500}
+        },
+        {
+          "name": "Party Makeup",
+          "name_ur": "Party Makeup",
+          "duration_min": 60,
+          "gender": "Women",
+          "price_min_pkr": 2000,
+          "price_max_pkr": 10000,
+          "price_tier1_pkr": {"min": 4000, "max": 10000},
+          "price_tier2_3_pkr": {"min": 2000, "max": 5000}
+        },
+        {
+          "name": "Bridal Mehndi",
+          "name_ur": "Bridal Mehndi",
+          "duration_min": 180,
+          "gender": "Women",
+          "price_min_pkr": 4000,
+          "price_max_pkr": 25000,
+          "price_tier1_pkr": {"min": 8000, "max": 25000},
+          "price_tier2_3_pkr": {"min": 4000, "max": 12000}
+        },
+        {
+          "name": "Guest Mehndi",
+          "name_ur": "Guest Mehndi",
+          "duration_min": 30,
+          "gender": "Women",
+          "price_min_pkr": 300,
+          "price_max_pkr": 1500,
+          "price_tier1_pkr": {"min": 500, "max": 1500},
+          "price_tier2_3_pkr": {"min": 300, "max": 800}
+        },
+        {
+          "name": "Bridal Hairstyling",
+          "name_ur": "Bridal Hair Styling",
+          "duration_min": 90,
+          "gender": "Women",
+          "price_min_pkr": 3000,
+          "price_max_pkr": 12000,
+          "price_tier1_pkr": {"min": 5000, "max": 12000},
+          "price_tier2_3_pkr": {"min": 3000, "max": 7000}
+        },
+        {
+          "name": "Event Hairstyling",
+          "name_ur": "Function Hair Styling",
+          "duration_min": 45,
+          "gender": "Women",
+          "price_min_pkr": 1000,
+          "price_max_pkr": 4000,
+          "price_tier1_pkr": {"min": 2000, "max": 4000},
+          "price_tier2_3_pkr": {"min": 1000, "max": 2200}
+        }
+      ]
+    },
+    {
+      "category": "Skin Care",
+      "description": "Clinical/advanced skin treatments — laser, acne and whitening are in high demand across Pakistan.",
+      "services": [
+        {
+          "name": "Laser Hair Removal - Underarms",
+          "name_ur": "Laser (Underarms)",
+          "duration_min": 20,
+          "gender": "Unisex",
+          "price_min_pkr": 1200,
+          "price_max_pkr": 4000,
+          "price_tier1_pkr": {"min": 2000, "max": 4000},
+          "price_tier2_3_pkr": {"min": 1200, "max": 2500}
+        },
+        {
+          "name": "Laser Hair Removal - Full Legs",
+          "name_ur": "Laser (Full Legs)",
+          "duration_min": 45,
+          "gender": "Unisex",
+          "price_min_pkr": 3000,
+          "price_max_pkr": 10000,
+          "price_tier1_pkr": {"min": 5000, "max": 10000},
+          "price_tier2_3_pkr": {"min": 3000, "max": 6000}
+        },
+        {
+          "name": "Laser Hair Removal - Full Body",
+          "name_ur": "Laser (Full Body)",
+          "duration_min": 90,
+          "gender": "Unisex",
+          "price_min_pkr": 7000,
+          "price_max_pkr": 25000,
+          "price_tier1_pkr": {"min": 12000, "max": 25000},
+          "price_tier2_3_pkr": {"min": 7000, "max": 15000}
+        },
+        {
+          "name": "Acne / Pimple Treatment",
+          "name_ur": "Acne Treatment (Kil Muhasay)",
+          "duration_min": 45,
+          "gender": "Unisex",
+          "price_min_pkr": 1800,
+          "price_max_pkr": 6000,
+          "price_tier1_pkr": {"min": 3000, "max": 6000},
+          "price_tier2_3_pkr": {"min": 1800, "max": 3500}
+        },
+        {
+          "name": "Skin Whitening Treatment",
+          "name_ur": "Skin Whitening / Glow Treatment",
+          "duration_min": 60,
+          "gender": "Women",
+          "price_min_pkr": 3000,
+          "price_max_pkr": 12000,
+          "price_tier1_pkr": {"min": 5000, "max": 12000},
+          "price_tier2_3_pkr": {"min": 3000, "max": 7000}
+        },
+        {
+          "name": "Dermaplaning",
+          "name_ur": "Dermaplaning",
+          "duration_min": 40,
+          "gender": "Women",
+          "price_min_pkr": 2000,
+          "price_max_pkr": 7000,
+          "price_tier1_pkr": {"min": 3500, "max": 7000},
+          "price_tier2_3_pkr": {"min": 2000, "max": 4000}
+        }
+      ]
+    }
+  ]
+}
