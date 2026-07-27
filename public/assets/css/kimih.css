@@ -370,7 +370,9 @@ body.mnav-open .mnav-foot{opacity:1;transform:none;}
 .chip:hover{border-color:var(--violet);background:var(--violet-soft);color:var(--violet);}
 
 /* categories rail */
-.cat-rail{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;}
+.cat-rail{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+@media (max-width:991.98px){.cat-rail{grid-template-columns:repeat(3,1fr);}}
+@media (max-width:767.98px){.cat-rail{grid-template-columns:repeat(2,1fr);}}
 .cat-card{display:flex;flex-direction:column;gap:16px;padding:24px 20px;border-radius:var(--r-card);
   background:#fff;border:1px solid var(--line);transition:transform .28s,box-shadow .28s,border-color .28s;}
 .cat-card:hover{transform:translateY(-4px);box-shadow:var(--sh-md);border-color:var(--violet-soft);}
