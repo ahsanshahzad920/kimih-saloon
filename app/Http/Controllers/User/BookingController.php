@@ -11,6 +11,8 @@ use App\Models\Appointment;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Sale;
+use App\Services\PushNotificationService;
+use Illuminate\Support\Facades\Log;
 
 class BookingController extends Controller
 {
@@ -187,6 +189,32 @@ class BookingController extends Controller
         // dd($data);
 
         $appointment = Appointment::create($data);
+
+        try {
+            $pushService = app(PushNotificationService::class);
+            $business = User::find($data['created_by']);
+            $customer = auth()->user();
+
+            if ($business) {
+                $pushService->sendToUser(
+                    $business,
+                    'New appointment booked',
+                    ($customer->name ?? 'A customer') . ' booked an appointment on ' . $data['start'],
+                    ['appointment_id' => (string) $appointment->id]
+                );
+            }
+
+            if ($customer) {
+                $pushService->sendToUser(
+                    $customer,
+                    'Appointment confirmed',
+                    'Your appointment on ' . $data['start'] . ' has been confirmed.',
+                    ['appointment_id' => (string) $appointment->id]
+                );
+            }
+        } catch (\Throwable $e) {
+            Log::warning('Push notification failed on booking: ' . $e->getMessage());
+        }
 
         $services = $data['services'];
         // dd($services);

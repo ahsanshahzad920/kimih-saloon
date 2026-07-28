@@ -10,6 +10,8 @@ class Service extends Model
     use HasFactory;
 
     protected $fillable = [
+        'default_service_id',
+        'is_active',
         'service_name',
         'service_type',
         'service_category',
@@ -35,6 +37,16 @@ class Service extends Model
     public function category()
     {
         return $this->belongsTo(ServiceCategory::class, 'service_category');
+    }
+
+    public function defaultService()
+    {
+        return $this->belongsTo(Service::class, 'default_service_id');
+    }
+
+    public function clones()
+    {
+        return $this->hasMany(Service::class, 'default_service_id');
     }
 
 

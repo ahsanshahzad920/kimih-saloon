@@ -6,6 +6,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use chillerlan\QRCode\{QRCode, QROptions};
+use chillerlan\QRCode\Output\QRGdImagePNG;
 
 class ProfileController extends Controller
 {
@@ -179,5 +181,59 @@ class ProfileController extends Controller
             $user->update(['image' => "/images/profile/" . $filename]);
             return response()->json(['status' => 200, 'success' => 'Profile image updated successfully!']);
         }
+    }
+
+    /**
+     * Build the shop URL that this business user's QR code should point to.
+     */
+    private function shopUrl(): ?string
+    {
+        $business = auth()->user()->businessUser;
+
+        if (!$business || !$business->slug) {
+            return null;
+        }
+
+        return route('shop.details', $business->slug);
+    }
+
+    /**
+     * Generate the QR code PNG for the logged-in business user's shop page.
+     */
+    private function generateQrPng(): string
+    {
+        $options = new QROptions([
+            'outputInterface' => QRGdImagePNG::class,
+            'outputBase64' => false,
+            'scale' => 10,
+        ]);
+
+        return (new QRCode($options))->render($this->shopUrl());
+    }
+
+    /**
+     * Stream the shop QR code inline (for <img src="...">).
+     */
+    public function qrCode()
+    {
+        if (!$this->shopUrl()) {
+            abort(404);
+        }
+
+        return response($this->generateQrPng())->header('Content-Type', 'image/png');
+    }
+
+    /**
+     * Same QR code, served as a downloadable file.
+     */
+    public function downloadQrCode()
+    {
+        if (!$this->shopUrl()) {
+            abort(404);
+        }
+
+        return response($this->generateQrPng())
+            ->header('Content-Type', 'image/png')
+            ->header('Content-Disposition', 'attachment; filename="shop-qr-code.png"');
     }
 }

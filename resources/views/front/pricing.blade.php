@@ -139,22 +139,34 @@
                                 <span class="price-period">per month</span>
                             </div>
 
-                            <ul class="plan-feature-list">
-                                <li class="plan-feature-item">
-                                    <svg class="ic"><use href="#i-check"/></svg> Unlimited Online Appointments
+                            <ul class="plan-feature-list" style="list-style:none !important; padding:0 !important; margin:24px 0 !important; display:flex !important; flex-direction:column !important; gap:10px !important;">
+                                <li class="plan-feature-item" style="display:flex !important; flex-direction:row !important; align-items:flex-start !important; gap:10px !important; line-height:1.4 !important; font-size:.92rem !important; color:var(--ink) !important;">
+                                    <span style="display:inline-flex !important; align-items:center !important; justify-content:center !important; width:18px !important; height:18px !important; min-width:18px !important; border-radius:50% !important; background:var(--violet-soft, #EDE6FB) !important; color:var(--violet, #6D28D9) !important; flex-shrink:0 !important; margin-top:2px !important;">
+                                        <svg class="ic" style="width:11px !important; height:11px !important; stroke-width:2.5 !important; display:block !important; margin:0 !important;"><use href="#i-check"/></svg>
+                                    </span>
+                                    <span style="flex:1 1 auto !important; display:block !important; text-align:left !important;">Unlimited Online Appointments</span>
                                 </li>
-                                <li class="plan-feature-item">
-                                    <svg class="ic"><use href="#i-check"/></svg> Client Reminders &amp; Notifications
+                                <li class="plan-feature-item" style="display:flex !important; flex-direction:row !important; align-items:flex-start !important; gap:10px !important; line-height:1.4 !important; font-size:.92rem !important; color:var(--ink) !important;">
+                                    <span style="display:inline-flex !important; align-items:center !important; justify-content:center !important; width:18px !important; height:18px !important; min-width:18px !important; border-radius:50% !important; background:var(--violet-soft, #EDE6FB) !important; color:var(--violet, #6D28D9) !important; flex-shrink:0 !important; margin-top:2px !important;">
+                                        <svg class="ic" style="width:11px !important; height:11px !important; stroke-width:2.5 !important; display:block !important; margin:0 !important;"><use href="#i-check"/></svg>
+                                    </span>
+                                    <span style="flex:1 1 auto !important; display:block !important; text-align:left !important;">Client Reminders &amp; Notifications</span>
                                 </li>
                                 @if(!empty($plan->planServices))
                                     @foreach ($plan->planServices as $planService)
-                                        <li class="plan-feature-item">
-                                            <svg class="ic"><use href="#i-check"/></svg> {{ $planService->name ?? '' }}
+                                        <li class="plan-feature-item" style="display:flex !important; flex-direction:row !important; align-items:flex-start !important; gap:10px !important; line-height:1.4 !important; font-size:.92rem !important; color:var(--ink) !important;">
+                                            <span style="display:inline-flex !important; align-items:center !important; justify-content:center !important; width:18px !important; height:18px !important; min-width:18px !important; border-radius:50% !important; background:var(--violet-soft, #EDE6FB) !important; color:var(--violet, #6D28D9) !important; flex-shrink:0 !important; margin-top:2px !important;">
+                                                <svg class="ic" style="width:11px !important; height:11px !important; stroke-width:2.5 !important; display:block !important; margin:0 !important;"><use href="#i-check"/></svg>
+                                            </span>
+                                            <span style="flex:1 1 auto !important; display:block !important; text-align:left !important;">{{ $planService->name ?? '' }}</span>
                                         </li>
                                     @endforeach
                                 @endif
-                                <li class="plan-feature-item">
-                                    <svg class="ic"><use href="#i-check"/></svg> Business Analytics Dashboard
+                                <li class="plan-feature-item" style="display:flex !important; flex-direction:row !important; align-items:flex-start !important; gap:10px !important; line-height:1.4 !important; font-size:.92rem !important; color:var(--ink) !important;">
+                                    <span style="display:inline-flex !important; align-items:center !important; justify-content:center !important; width:18px !important; height:18px !important; min-width:18px !important; border-radius:50% !important; background:var(--violet-soft, #EDE6FB) !important; color:var(--violet, #6D28D9) !important; flex-shrink:0 !important; margin-top:2px !important;">
+                                        <svg class="ic" style="width:11px !important; height:11px !important; stroke-width:2.5 !important; display:block !important; margin:0 !important;"><use href="#i-check"/></svg>
+                                    </span>
+                                    <span style="flex:1 1 auto !important; display:block !important; text-align:left !important;">Business Analytics Dashboard</span>
                                 </li>
                             </ul>
 

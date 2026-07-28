@@ -208,10 +208,19 @@
                                     <span data-key="t-dashboards">Email Marketing</span>
                                 </a>
                             </li>
+
+                            {{-- Push Notification / Discounts --}}
+                            @if(auth()->user()->hasRole('Business User'))
+                                <li class="nav-item">
+                                    <a class="nav-link " href="{{ route('broadcast-notification.index') }}">
+                                        <span data-key="t-dashboards">Send Notification</span>
+                                    </a>
+                                </li>
+                            @endif
                         </ul>
                     </div>
                 </li>
-               
+
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarTeam" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarTeam">

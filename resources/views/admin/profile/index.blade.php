@@ -266,6 +266,14 @@
                                                 Business Details
                                             </a>
                                         </li>
+                                        @if (auth()->user()->businessUser && auth()->user()->businessUser->slug)
+                                            <li class="nav-item">
+                                                <a class="nav-link" data-bs-toggle="tab" href="#shopQrCode" role="tab">
+                                                    <i class="fa fa-qrcode"></i>
+                                                    Shop QR Code
+                                                </a>
+                                            </li>
+                                        @endif
                                     @endrole
                                 </ul>
                             </div>
@@ -631,6 +639,40 @@
                                                 <!--end col-->
                                             </form>
                                         </div>
+
+                                        @if (auth()->user()->businessUser && auth()->user()->businessUser->slug)
+                                            <div class="tab-pane" id="shopQrCode" role="tabpanel">
+                                                <div class="text-center py-3">
+                                                    <h5 class="mb-1">Your Shop QR Code</h5>
+                                                    <p class="text-muted">
+                                                        Anyone who scans this code will land directly on your shop page.
+                                                    </p>
+
+                                                    <img src="{{ route('profile.qr-code') }}" alt="Shop QR Code"
+                                                        class="img-fluid border rounded-3 p-2 bg-white"
+                                                        style="max-width: 260px;">
+
+                                                    <div class="mt-3">
+                                                        <a href="{{ route('profile.qr-code.download') }}"
+                                                            class="default-btn py-2 px-4" download>
+                                                            <i class="fa fa-download me-1"></i>
+                                                            Download QR Code
+                                                        </a>
+                                                    </div>
+
+                                                    <div class="mt-3">
+                                                        <label class="text-muted small d-block mb-1">Shop link</label>
+                                                        <div class="input-group mx-auto" style="max-width: 420px;">
+                                                            <input type="text" class="form-control form-control-sm text-center"
+                                                                id="shopQrLink" value="{{ route('shop.details', auth()->user()->businessUser->slug) }}" readonly>
+                                                            <button class="btn btn-outline-secondary btn-sm" type="button" id="copyShopLinkBtn">
+                                                                <i class="fa fa-copy"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
                                     @endrole
 
                                 </div>
@@ -955,6 +997,20 @@
                 e.stopPropagation();
                 const id = $(this).data('id');
                 deleteExistingImage(id, e);
+            });
+
+            $('#copyShopLinkBtn').on('click', function() {
+                var $input = $('#shopQrLink');
+                $input.select();
+                navigator.clipboard.writeText($input.val()).then(function() {
+                    Swal.fire({
+                        title: 'Copied!',
+                        text: 'Shop link copied to clipboard',
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 1200
+                    });
+                });
             });
 
         });

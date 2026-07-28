@@ -71,6 +71,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasOne(Client::class);
     }
 
+    public function fcmTokens()
+    {
+        return $this->hasMany(FcmToken::class);
+    }
+
     public function businessUser()
     {
         return $this->hasOne(Business::class, 'user_id');

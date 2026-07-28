@@ -116,12 +116,19 @@
     var grid = $('#ucGrid');
     if (!grid) return;
     grid.innerHTML = USE_CASES.map(function (u) {
-      var bullets = u.bullets.map(function (b) { return '<li>' + icon('i-check') + ' ' + esc(b) + '</li>'; }).join('');
+      var bullets = u.bullets.map(function (b) {
+        return '<li style="display:flex !important; flex-direction:row !important; align-items:flex-start !important; gap:10px !important; margin-bottom:10px !important; line-height:1.4 !important; font-size:.88rem !important; color:var(--ink) !important;">' +
+                 '<span style="display:inline-flex !important; align-items:center !important; justify-content:center !important; width:18px !important; height:18px !important; min-width:18px !important; border-radius:50% !important; background:var(--violet-soft, #EDE6FB) !important; color:var(--violet, #6D28D9) !important; flex-shrink:0 !important; margin-top:2px !important;">' +
+                   '<svg class="ic" style="width:11px !important; height:11px !important; stroke-width:2.5 !important; display:block !important; margin:0 !important;"><use href="#i-check"/></svg>' +
+                 '</span>' +
+                 '<span style="flex:1 1 auto !important; display:block !important; text-align:left !important;">' + esc(b) + '</span>' +
+               '</li>';
+      }).join('');
       return '<div class="col-md-6 col-lg-3"><div class="uc-card">' +
         '<span class="uc-tag">' + esc(u.tag) + '</span>' +
         '<h3 style="font-size:1.25rem;">' + esc(u.title) + '</h3>' +
-        '<p style="font-size:.9rem;color:var(--body);margin:0;">' + esc(u.sub) + '</p>' +
-        '<ul style="list-style:none;padding:0;margin:12px 0 0;display:flex;flex-direction:column;gap:8px;font-size:.85rem;">' + bullets + '</ul>' +
+        '<p style="font-size:.9rem;color:var(--body);margin:0 0 6px 0;">' + esc(u.sub) + '</p>' +
+        '<ul style="list-style:none !important; padding:0 !important; margin:12px 0 0 !important; display:flex !important; flex-direction:column !important;">' + bullets + '</ul>' +
         '<a class="btn-k btn-outline-k mt-auto" href="#discover">' + esc(u.cta) + ' ' + icon('i-arrow') + '</a>' +
         '</div></div>';
     }).join('');

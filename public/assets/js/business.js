@@ -32,8 +32,13 @@
         (p.flag ? '<span class="price-flag">' + esc(p.flag) + '</span>' : '') +
         '<h3 class="h-card">' + esc(p.name) + '</h3>' +
         '<div class="price-amt">' + esc(p.price) + '<small>' + esc(p.period || '') + '</small></div>' +
-        '<ul>' + (p.features || []).map(function (f) {
-          return '<li>' + icon('i-check') + esc(f) + '</li>';
+        '<ul style="list-style:none !important; padding:0 !important; margin:0 0 28px !important; display:flex !important; flex-direction:column !important; flex-grow:1 !important;">' + (p.features || []).map(function (f) {
+          return '<li style="display:flex !important; flex-direction:row !important; align-items:flex-start !important; gap:10px !important; margin-bottom:10px !important; line-height:1.4 !important; font-size:.92rem !important; color:var(--ink) !important;">' +
+                   '<span style="display:inline-flex !important; align-items:center !important; justify-content:center !important; width:18px !important; height:18px !important; min-width:18px !important; border-radius:50% !important; background:var(--violet-soft, #EDE6FB) !important; color:var(--violet, #6D28D9) !important; flex-shrink:0 !important; margin-top:2px !important;">' +
+                     '<svg class="ic" style="width:11px !important; height:11px !important; stroke-width:2.5 !important; display:block !important; margin:0 !important;"><use href="#i-check"/></svg>' +
+                   '</span>' +
+                   '<span style="flex:1 1 auto !important; display:block !important; text-align:left !important;">' + esc(f) + '</span>' +
+                 '</li>';
         }).join('') + '</ul>' +
         '<a href="/register" class="btn-k ' + (p.featured ? 'btn-primary-k' : 'btn-outline-k') + ' mt-auto">' +
         esc(p.cta || 'Choose plan') + '</a></div></div>';

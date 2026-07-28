@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\ServiceCategory;
 use App\Http\Controllers\Controller;
 use App\Models\Plan;
+use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 
 class ServiceController extends Controller
@@ -20,7 +21,146 @@ class ServiceController extends Controller
         // $categories = ServiceCategory::all();
         $categories = ServiceCategory::where('created_by', auth()->id())->get();
         $categories->load('services');
-        return view('admin.services.index',compact('categories'));
+
+        $defaultCategories = collect();
+        $myCategoryClones = collect();
+        $myServiceClones = collect();
+
+        if (!auth()->user()->hasRole('Admin')) {
+            $admin = User::whereHas('roles', fn ($q) => $q->where('name', 'Admin'))->first();
+
+            if ($admin) {
+                $defaultCategories = ServiceCategory::where('created_by', $admin->id)
+                    ->whereNull('default_category_id')
+                    ->with(['services' => function ($q) {
+                        $q->whereNull('default_service_id');
+                    }])
+                    ->get();
+            }
+
+            $myCategoryClones = ServiceCategory::where('created_by', auth()->id())
+                ->whereNotNull('default_category_id')
+                ->with('services')
+                ->get()
+                ->keyBy('default_category_id');
+
+            $myServiceClones = Service::where('created_by', auth()->id())
+                ->whereNotNull('default_service_id')
+                ->get()
+                ->keyBy('default_service_id');
+        }
+
+        return view('admin.services.index', compact('categories', 'defaultCategories', 'myCategoryClones', 'myServiceClones'));
+    }
+
+    /**
+     * Enable/disable a default (admin-owned) service category for the
+     * logged-in business by cloning it into their own catalog.
+     */
+    public function toggleDefaultCategory(Request $request)
+    {
+        $request->validate([
+            'default_category_id' => 'required|integer|exists:service_categories,id',
+            'enabled' => 'required|boolean',
+        ]);
+
+        $default = ServiceCategory::whereNull('default_category_id')->findOrFail($request->default_category_id);
+
+        if ($request->boolean('enabled')) {
+            $clone = ServiceCategory::firstOrCreate(
+                ['default_category_id' => $default->id, 'created_by' => auth()->id()],
+                [
+                    'name' => $default->name,
+                    'description' => $default->description,
+                    'icon' => $default->icon,
+                    'updated_by' => auth()->id(),
+                    'is_active' => true,
+                ]
+            );
+
+            if (!$clone->is_active) {
+                $clone->update(['is_active' => true, 'updated_by' => auth()->id()]);
+            }
+
+            return response()->json(['status' => 200, 'message' => 'Category enabled successfully']);
+        }
+
+        $clone = ServiceCategory::where('default_category_id', $default->id)
+            ->where('created_by', auth()->id())
+            ->first();
+
+        if ($clone) {
+            $clone->update(['is_active' => false, 'updated_by' => auth()->id()]);
+            $clone->services()->update(['is_active' => false, 'updated_by' => auth()->id()]);
+        }
+
+        return response()->json(['status' => 200, 'message' => 'Category disabled successfully']);
+    }
+
+    /**
+     * Enable/disable a default (admin-owned) service for the logged-in
+     * business by cloning it into their own catalog. Requires the parent
+     * default category to already be enabled for this business.
+     */
+    public function toggleDefaultService(Request $request)
+    {
+        $request->validate([
+            'default_service_id' => 'required|integer|exists:services,id',
+            'enabled' => 'required|boolean',
+        ]);
+
+        $defaultService = Service::whereNull('default_service_id')->findOrFail($request->default_service_id);
+
+        $myCategory = ServiceCategory::where('default_category_id', $defaultService->service_category)
+            ->where('created_by', auth()->id())
+            ->where('is_active', true)
+            ->first();
+
+        if (!$myCategory) {
+            return response()->json(['status' => 422, 'message' => 'Enable the category first.'], 422);
+        }
+
+        if ($request->boolean('enabled')) {
+            $clone = Service::firstOrCreate(
+                ['default_service_id' => $defaultService->id, 'created_by' => auth()->id()],
+                [
+                    'service_name' => $defaultService->service_name,
+                    'service_type' => $defaultService->service_type,
+                    'service_category' => $myCategory->id,
+                    'available_for' => $defaultService->available_for,
+                    'aftercare_description' => $defaultService->aftercare_description,
+                    'service_description' => $defaultService->service_description,
+                    'online_bookings' => 0,
+                    'team_member' => null,
+                    'team_memeber_commission' => null,
+                    'duration' => $defaultService->duration,
+                    'price_type' => $defaultService->price_type,
+                    'price' => $defaultService->price,
+                    'notify' => 0,
+                    'notify_count' => 0,
+                    'notify_days' => 0,
+                    'sales_tax' => $defaultService->sales_tax,
+                    'updated_by' => auth()->id(),
+                    'is_active' => true,
+                ]
+            );
+
+            if (!$clone->is_active) {
+                $clone->update(['is_active' => true, 'updated_by' => auth()->id()]);
+            }
+
+            return response()->json(['status' => 200, 'message' => 'Service enabled successfully']);
+        }
+
+        $clone = Service::where('default_service_id', $defaultService->id)
+            ->where('created_by', auth()->id())
+            ->first();
+
+        if ($clone) {
+            $clone->update(['is_active' => false, 'updated_by' => auth()->id()]);
+        }
+
+        return response()->json(['status' => 200, 'message' => 'Service disabled successfully']);
     }
 
     /**
@@ -193,5 +333,56 @@ class ServiceController extends Controller
 
         $category->update($data);
         return redirect()->route('services.index')->with('success', 'Category updated successfully');
+    }
+
+    /**
+     * Enable/disable any category owned by the business (custom or a clone
+     * of a default) via the unified switch UI. Disabling cascades to its
+     * services since they can't stay active under a disabled category.
+     */
+    public function toggleCategoryStatus(Request $request, string $id)
+    {
+        $query = ServiceCategory::query();
+        if (!auth()->user()->hasRole('Admin')) {
+            $query->where('created_by', auth()->id());
+        }
+        $category = $query->findOrFail($id);
+
+        $category->is_active = !$category->is_active;
+        $category->updated_by = auth()->id();
+        $category->save();
+
+        if (!$category->is_active) {
+            $category->services()->update(['is_active' => false, 'updated_by' => auth()->id()]);
+        }
+
+        return response()->json([
+            'status' => 200,
+            'message' => $category->is_active ? 'Category enabled successfully' : 'Category disabled successfully',
+            'is_active' => $category->is_active,
+        ]);
+    }
+
+    /**
+     * Enable/disable any service owned by the business (custom or a clone
+     * of a default) via the unified switch UI.
+     */
+    public function toggleServiceStatus(Request $request, string $id)
+    {
+        $query = Service::query();
+        if (!auth()->user()->hasRole('Admin')) {
+            $query->where('created_by', auth()->id());
+        }
+        $service = $query->findOrFail($id);
+
+        $service->is_active = !$service->is_active;
+        $service->updated_by = auth()->id();
+        $service->save();
+
+        return response()->json([
+            'status' => 200,
+            'message' => $service->is_active ? 'Service enabled successfully' : 'Service disabled successfully',
+            'is_active' => $service->is_active,
+        ]);
     }
 }

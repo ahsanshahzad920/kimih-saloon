@@ -64,6 +64,8 @@ use App\Http\Controllers\StripeController;
 use App\Http\Controllers\User\AppointmentController as UserAppointmentController;
 use App\Http\Controllers\User\CustomerCartController;
 use App\Http\Controllers\User\ShopMembershipController;
+use App\Http\Controllers\FcmTokenController;
+use App\Http\Controllers\Admin\BroadcastNotificationController;
 use App\Models\User;
 
 Route::get('optimize', function () {
@@ -111,6 +113,9 @@ Route::get(
     }
 )->middleware(['auth', 'verified', BusinessAcountSetup::class])->name('dashboard');
 
+// FCM device token registration — reachable by both business users and clients
+Route::post('/fcm-token', [FcmTokenController::class, 'store'])->middleware('auth')->name('fcm-token.store');
+
 Route::middleware('auth', 'verified')->group(function () {
 
     // Comment and Replies
@@ -138,6 +143,9 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::get('profileImageDelete/{id}', [ProfileController::class, 'deleteImage'])->name('profileImage-delete');
     // Password Update Route
     Route::put('password/update', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
+    // Shop QR code
+    Route::get('profile/qr-code', [ProfileController::class, 'qrCode'])->name('profile.qr-code');
+    Route::get('profile/qr-code/download', [ProfileController::class, 'downloadQrCode'])->name('profile.qr-code.download');
     // Catalogue module routes
     Route::prefix('catalogues')->group(function () {
         // service routes
@@ -145,6 +153,10 @@ Route::middleware('auth', 'verified')->group(function () {
         Route::post('/services/category/add', [ServiceController::class, 'addCategory'])->name('services.category.store');
         Route::put('/services/category/{id}', [ServiceController::class, 'editCategory'])->name('services.category.update');
         Route::delete('/services/category/{id}/delete', [ServiceController::class, 'deleteCategory'])->name('services.category.destroy');
+        Route::post('/services/default-category/toggle', [ServiceController::class, 'toggleDefaultCategory'])->name('services.default-category.toggle');
+        Route::post('/services/default-service/toggle', [ServiceController::class, 'toggleDefaultService'])->name('services.default-service.toggle');
+        Route::post('/services/category/{id}/toggle-status', [ServiceController::class, 'toggleCategoryStatus'])->name('services.category.toggle-status');
+        Route::post('/services/{id}/toggle-status', [ServiceController::class, 'toggleServiceStatus'])->name('services.toggle-status');
 
         // product routes
 
@@ -237,6 +249,10 @@ Route::middleware('auth', 'verified')->group(function () {
 
     Route::get('send-mails', [EmailSubscriptionController::class, 'sendMailIndex'])->name('send.mails.index');
     Route::post('send-mails', [EmailSubscriptionController::class, 'sendMails'])->name('send.mails.send');
+
+    // Broadcast push notification to customers (e.g. discounts/offers)
+    Route::get('broadcast-notification', [BroadcastNotificationController::class, 'index'])->name('broadcast-notification.index');
+    Route::post('broadcast-notification', [BroadcastNotificationController::class, 'send'])->name('broadcast-notification.send');
 
     //Recharge amount
     Route::post('recharge-amount', [EmailSubscriptionController::class, 'recharge'])->name('recharge-amount');

@@ -87,7 +87,7 @@
                                             <div class="d-flex align-items-center justify-content-between mt-3">
                                                 <div>
                                                     <h4 class="fs-22 fw-semibold ff-secondary mb-0">
-                                                        $<span class="counter-value" data-target="{{ number_format($totalSalesVal, 2) }}">{{ number_format($totalSalesVal, 2) }}</span>
+                                                        $<span class="counter-value" data-target="{{ $totalSalesVal }}">{{ number_format($totalSalesVal, 2) }}</span>
                                                     </h4>
                                                 </div>
                                                 <div class="avatar-sm flex-shrink-0">

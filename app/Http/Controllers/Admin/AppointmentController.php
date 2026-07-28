@@ -29,7 +29,7 @@ class AppointmentController extends Controller
             // Fetch only the appointments, clients, services, and team members related to the authenticated user
             $appointments = Appointment::where('created_by', auth()->id())->get();
             $team_members = auth()->user()->teamMember;
-            $services = auth()->user()->services;
+            $services = auth()->user()->services()->where('is_active', true)->get();
             $clientRole = Role::where('name', 'Client')->first();
             $clients = $clientRole ? $clientRole->users : collect();
         }

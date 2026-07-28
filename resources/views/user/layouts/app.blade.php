@@ -426,6 +426,13 @@
             });
         }
     </script>
+
+    @auth
+        <script>window.firebaseConfig = @json(config('firebase-web'))</script>
+        <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js"></script>
+        <script src="{{ asset('assets/js/firebase-push.js') }}"></script>
+    @endauth
 </body>
 
 </html>

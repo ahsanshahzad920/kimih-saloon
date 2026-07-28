@@ -137,73 +137,244 @@
                                 </table>
                             </div>
                         </div> --}}
-                        <div class="card pb-5">
-                            <div class="card-body">
+                        @if (!auth()->user()->hasRole('Admin'))
+                            <div class="card pb-3 mb-4">
+                                <div class="card-header bg-transparent border-0">
+                                    <h5 class="mb-0">Services Catalog</h5>
+                                    <p class="text-muted mb-0 small">Turn on ready-made categories and services, or manage your own — all in one place.</p>
+                                </div>
+                                <div class="card-body">
+                                    <div class="accordion" id="defaultServicesAccordion">
+                                        @foreach ($defaultCategories as $defCat)
+                                            @php
+                                                $myCat = $myCategoryClones->get($defCat->id);
+                                                $catEnabled = (bool) ($myCat && $myCat->is_active);
+                                            @endphp
+                                            <div class="accordion-item mb-2 border rounded-3 overflow-hidden">
+                                                <h2 class="accordion-header d-flex align-items-center" id="heading{{ $defCat->id }}">
+                                                    <button class="accordion-button collapsed flex-grow-1" type="button"
+                                                        data-bs-toggle="collapse" data-bs-target="#collapse{{ $defCat->id }}">
+                                                        <span class="d-flex flex-column flex-sm-row align-items-sm-center w-100">
+                                                            <strong>{{ $defCat->name }}</strong>
+                                                            <span class="text-muted small ms-sm-2 d-none d-sm-inline">{{ $defCat->description }}</span>
+                                                        </span>
+                                                    </button>
+                                                    <div class="form-check form-switch mx-3 flex-shrink-0" onclick="event.stopPropagation()">
+                                                        <input type="checkbox" role="switch"
+                                                            class="form-check-input toggleDefaultCategory"
+                                                            data-default-category-id="{{ $defCat->id }}"
+                                                            {{ $catEnabled ? 'checked' : '' }}>
+                                                    </div>
+                                                </h2>
+                                                <div id="collapse{{ $defCat->id }}" class="accordion-collapse collapse"
+                                                    data-bs-parent="#defaultServicesAccordion">
+                                                    <div class="accordion-body p-0">
+                                                        <ul class="list-group list-group-flush">
+                                                            @forelse ($defCat->services as $defSvc)
+                                                                @php
+                                                                    $mySvc = $myServiceClones->get($defSvc->id);
+                                                                    $svcEnabled = (bool) ($mySvc && $mySvc->is_active);
+                                                                @endphp
+                                                                <li class="list-group-item d-flex align-items-center justify-content-between flex-wrap gap-2">
+                                                                    <div class="d-flex align-items-center gap-2">
+                                                                        <div class="form-check form-switch mb-0">
+                                                                            <input type="checkbox" role="switch"
+                                                                                class="form-check-input toggleDefaultService"
+                                                                                data-default-service-id="{{ $defSvc->id }}"
+                                                                                data-default-category-id="{{ $defCat->id }}"
+                                                                                {{ $svcEnabled ? 'checked' : '' }}
+                                                                                {{ $catEnabled ? '' : 'disabled' }}>
+                                                                        </div>
+                                                                        <span>{{ $defSvc->service_name }}</span>
+                                                                    </div>
+                                                                    <div class="d-none d-md-flex gap-3 text-muted small">
+                                                                        <span>{{ $defSvc->duration }} min</span>
+                                                                        <span>PKR {{ $defSvc->price }}</span>
+                                                                    </div>
+                                                                </li>
+                                                            @empty
+                                                                <li class="list-group-item text-muted small">No default services in this category yet.</li>
+                                                            @endforelse
+                                                        </ul>
 
-                                @forelse ($categories as $category)
-                                    <div class="category d-flex justify-content-between p-2 mt-3">
-                                        <div class="d-flex align-items-center">
-                                            <a href="#"
-                                                class=" text-decoration-none flex-shrink-0 align-items-center d-inline-flex text-danger">
-                                                <i class="fa fa-bars -seconadary"></i>
-                                            </a>
-                                            <strong class="ms-2 pb-1 fs-5">{{ $category->name }}</strong>
-                                        </div>
-                                        <div class="" style="overflow: visible">
-                                            <a class="btn btn-secondary bg-transparent border-0 text-dark" role="button"
-                                                id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false">
-                                                <i class="fa-solid fa-ellipsis-v"></i>
-                                            </a>
+                                                        @if ($myCat && $myCat->services && $myCat->services->count())
+                                                            <ul class="list-group list-group-flush border-top">
+                                                                <li class="list-group-item bg-light-subtle">
+                                                                    <strong class="fs-6">Created by You</strong>
+                                                                </li>
+                                                                @foreach ($myCat->services as $service)
+                                                                    <li class="list-group-item d-flex align-items-center justify-content-between flex-wrap gap-2">
+                                                                        <div class="d-flex align-items-center gap-2">
+                                                                            <div class="form-check form-switch mb-0">
+                                                                                <input type="checkbox" role="switch"
+                                                                                    class="form-check-input toggleServiceStatus"
+                                                                                    data-service-id="{{ $service->id }}"
+                                                                                    {{ $service->is_active ? 'checked' : '' }}>
+                                                                            </div>
+                                                                            <span>{{ $service->service_name }}</span>
+                                                                        </div>
+                                                                        <div class="d-flex align-items-center gap-3">
+                                                                            <div class="d-none d-md-flex gap-3 text-muted small">
+                                                                                <span>{{ $service->duration }} min</span>
+                                                                                <span>AED {{ $service->price }}</span>
+                                                                            </div>
+                                                                            <a href="{{ route('services.edit', $service->id) }}" class="text-muted">
+                                                                                <i class="fa fa-pencil"></i>
+                                                                            </a>
+                                                                        </div>
+                                                                    </li>
+                                                                @endforeach
+                                                            </ul>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
 
-                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                                <a href="#" class=" dropdown-item" style="cursor: pointer" data-bs-target="#exampleModalToggle{{$category->id}}"
-                                                data-bs-toggle="modal">
-                                                    <i class="fa fa-pencil text-warning me-2"></i>
-                                                    Edit Category
+                                        @forelse ($categories->whereNull('default_category_id') as $customCat)
+                                            <div class="accordion-item mb-2 border rounded-3 overflow-hidden">
+                                                <h2 class="accordion-header d-flex align-items-center" id="headingCustom{{ $customCat->id }}">
+                                                    <button class="accordion-button collapsed flex-grow-1" type="button"
+                                                        data-bs-toggle="collapse" data-bs-target="#collapseCustom{{ $customCat->id }}">
+                                                        <span class="d-flex flex-column flex-sm-row align-items-sm-center w-100">
+                                                            <strong>{{ $customCat->name }}</strong>
+                                                            <span class="text-muted small ms-sm-2 d-none d-sm-inline">{{ $customCat->description }}</span>
+                                                        </span>
+                                                    </button>
+                                                    <div class="dropdown mx-2" onclick="event.stopPropagation()">
+                                                        <a class="btn btn-secondary bg-transparent border-0 text-dark" role="button"
+                                                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            <i class="fa-solid fa-ellipsis-v"></i>
+                                                        </a>
+                                                        <div class="dropdown-menu">
+                                                            <a href="#" class="dropdown-item" style="cursor: pointer"
+                                                                data-bs-target="#exampleModalToggle{{ $customCat->id }}" data-bs-toggle="modal">
+                                                                <i class="fa fa-pencil text-warning me-2"></i>
+                                                                Edit Category
+                                                            </a>
+                                                            <a href="javascript:void(0);" class="dropdown-item">
+                                                                <form action="{{ route('services.category.destroy', $customCat->id) }}" method="post">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <i class="fa fa-trash text-danger"></i>
+                                                                    <button type="submit" class="btn btn-sm">Delete Category</button>
+                                                                </form>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-check form-switch mx-3 flex-shrink-0" onclick="event.stopPropagation()">
+                                                        <input type="checkbox" role="switch"
+                                                            class="form-check-input toggleCategoryStatus"
+                                                            data-category-id="{{ $customCat->id }}"
+                                                            {{ $customCat->is_active ? 'checked' : '' }}>
+                                                    </div>
+                                                </h2>
+                                                <div id="collapseCustom{{ $customCat->id }}" class="accordion-collapse collapse"
+                                                    data-bs-parent="#defaultServicesAccordion">
+                                                    <div class="accordion-body p-0">
+                                                        <ul class="list-group list-group-flush">
+                                                            @forelse ($customCat->services as $service)
+                                                                <li class="list-group-item d-flex align-items-center justify-content-between flex-wrap gap-2">
+                                                                    <div class="d-flex align-items-center gap-2">
+                                                                        <div class="form-check form-switch mb-0">
+                                                                            <input type="checkbox" role="switch"
+                                                                                class="form-check-input toggleServiceStatus"
+                                                                                data-service-id="{{ $service->id }}"
+                                                                                {{ $service->is_active ? 'checked' : '' }}>
+                                                                        </div>
+                                                                        <span>{{ $service->service_name }}</span>
+                                                                    </div>
+                                                                    <div class="d-flex align-items-center gap-3">
+                                                                        <div class="d-none d-md-flex gap-3 text-muted small">
+                                                                            <span>{{ $service->duration }} min</span>
+                                                                            <span>AED {{ $service->price }}</span>
+                                                                        </div>
+                                                                        <a href="{{ route('services.edit', $service->id) }}" class="text-muted">
+                                                                            <i class="fa fa-pencil"></i>
+                                                                        </a>
+                                                                    </div>
+                                                                </li>
+                                                            @empty
+                                                                <li class="list-group-item text-muted small">No services in this category yet.</li>
+                                                            @endforelse
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @empty
+                                        @endforelse
+                                    </div>
+                                </div>
+                            </div>
+                        @else
+                            <div class="card pb-5">
+                                <div class="card-body">
+
+                                    @forelse ($categories as $category)
+                                        <div class="category d-flex justify-content-between p-2 mt-3">
+                                            <div class="d-flex align-items-center">
+                                                <a href="#"
+                                                    class=" text-decoration-none flex-shrink-0 align-items-center d-inline-flex text-danger">
+                                                    <i class="fa fa-bars -seconadary"></i>
                                                 </a>
-                                                <a href="javascript:void(0);" class="dropdown-item">
-                                                    <form action="{{ route('services.category.destroy', $category->id) }}"
-                                                        method="post">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <i class="fa fa-trash text-danger"></i>
-
-                                                        <button type="submit" class="btn btn-sm">
-                                                            Delete Category
-                                                        </button>
-                                                    </form>
+                                                <strong class="ms-2 pb-1 fs-5">{{ $category->name }}</strong>
+                                            </div>
+                                            <div class="" style="overflow: visible">
+                                                <a class="btn btn-secondary bg-transparent border-0 text-dark" role="button"
+                                                    id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
+                                                    aria-expanded="false">
+                                                    <i class="fa-solid fa-ellipsis-v"></i>
                                                 </a>
+
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                    <a href="#" class=" dropdown-item" style="cursor: pointer" data-bs-target="#exampleModalToggle{{$category->id}}"
+                                                    data-bs-toggle="modal">
+                                                        <i class="fa fa-pencil text-warning me-2"></i>
+                                                        Edit Category
+                                                    </a>
+                                                    <a href="javascript:void(0);" class="dropdown-item">
+                                                        <form action="{{ route('services.category.destroy', $category->id) }}"
+                                                            method="post">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <i class="fa fa-trash text-danger"></i>
+
+                                                            <button type="submit" class="btn btn-sm">
+                                                                Delete Category
+                                                            </button>
+                                                        </form>
+                                                    </a>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    @if ($category->services)
-                                        @foreach ($category->services as $service)
-                                            <a href="{{ route('services.edit', $service->id) }}" class="text-decoration-none text-dark">
-                                                <div class="services d-flex justify-content-between p-2 mb-1"
-                                                    style="border: 1px solid black">
-                                                    <div class="d-flex align-items-center">
-                                                        <span
-                                                            class=" text-decoration-none flex-shrink-0 align-items-center d-inline-flex text-secondary">
-                                                            <i class="fa fa-bars"></i>
-                                                        </span>
-                                                        <strong class="ms-2 pb-1 fs-6">{{ $service->service_name }}</strong>
+                                        @if ($category->services)
+                                            @foreach ($category->services as $service)
+                                                <a href="{{ route('services.edit', $service->id) }}" class="text-decoration-none text-dark">
+                                                    <div class="services d-flex justify-content-between p-2 mb-1"
+                                                        style="border: 1px solid black">
+                                                        <div class="d-flex align-items-center">
+                                                            <span
+                                                                class=" text-decoration-none flex-shrink-0 align-items-center d-inline-flex text-secondary">
+                                                                <i class="fa fa-bars"></i>
+                                                            </span>
+                                                            <strong class="ms-2 pb-1 fs-6">{{ $service->service_name }}</strong>
+                                                        </div>
+                                                        <div>{{ $service->duration }}</div>
+                                                        <div>AED {{ $service->price }}</div>
                                                     </div>
-                                                    <div>{{ $service->duration }}</div>
-                                                    <div>AED {{ $service->price }}</div>
-                                                </div>
-                                            </a>
-                                        @endforeach
-                                    @endif
-                                @empty
-                                    <div class="text-center p-5">
-                                        <h3>No Services Found</h3>
-                                    </div>
-                                @endforelse
+                                                </a>
+                                            @endforeach
+                                        @endif
+                                    @empty
+                                        <div class="text-center p-5">
+                                            <h3>No Services Found</h3>
+                                        </div>
+                                    @endforelse
 
 
+                                </div>
                             </div>
-                        </div>
+                        @endif
 
 
                     </div>
@@ -537,6 +708,167 @@
             //         }
             //     });
             // });
+
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+
+            // Default category toggle
+            $('.toggleDefaultCategory').on('change', function() {
+                var $this = $(this);
+                var categoryId = $this.data('default-category-id');
+                var enabled = $this.prop('checked');
+                var $childSwitches = $('.toggleDefaultService[data-default-category-id="' + categoryId + '"]');
+
+                if (enabled) {
+                    $childSwitches.prop('disabled', false);
+                } else {
+                    $childSwitches.prop('disabled', true).prop('checked', false);
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'JSON',
+                    url: '{{ route('services.default-category.toggle') }}',
+                    data: {
+                        default_category_id: categoryId,
+                        enabled: enabled ? 1 : 0,
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        Swal.fire({
+                            title: 'Success!',
+                            text: response.message,
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 1200
+                        });
+                    },
+                    error: function(err) {
+                        $this.prop('checked', !enabled);
+                        if (!enabled) {
+                            $childSwitches.prop('disabled', false);
+                        } else {
+                            $childSwitches.prop('disabled', true).prop('checked', false);
+                        }
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Something went wrong',
+                            icon: 'error'
+                        });
+                    }
+                });
+            });
+
+            // Default service toggle
+            $('.toggleDefaultService').on('change', function() {
+                var $this = $(this);
+                var serviceId = $this.data('default-service-id');
+                var enabled = $this.prop('checked');
+
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'JSON',
+                    url: '{{ route('services.default-service.toggle') }}',
+                    data: {
+                        default_service_id: serviceId,
+                        enabled: enabled ? 1 : 0,
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        Swal.fire({
+                            title: 'Success!',
+                            text: response.message,
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 1200
+                        });
+                    },
+                    error: function(err) {
+                        $this.prop('checked', !enabled);
+                        var msg = (err.responseJSON && err.responseJSON.message) ? err.responseJSON.message : 'Something went wrong';
+                        Swal.fire({
+                            title: 'Error!',
+                            text: msg,
+                            icon: 'error'
+                        });
+                    }
+                });
+            });
+
+            // Plain category status toggle (custom categories + already-enabled default clones)
+            $('.toggleCategoryStatus').on('change', function() {
+                var $this = $(this);
+                var categoryId = $this.data('category-id');
+                var enabled = $this.prop('checked');
+                var $accordionItem = $this.closest('.accordion-item');
+                var $childSwitches = $accordionItem.find('.toggleServiceStatus');
+
+                if (!enabled) {
+                    $childSwitches.prop('checked', false);
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'JSON',
+                    url: '{{ url('catalogues/services/category') }}/' + categoryId + '/toggle-status',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        Swal.fire({
+                            title: 'Success!',
+                            text: response.message,
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 1200
+                        });
+                    },
+                    error: function(err) {
+                        $this.prop('checked', !enabled);
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Something went wrong',
+                            icon: 'error'
+                        });
+                    }
+                });
+            });
+
+            // Plain service status toggle (custom services + already-enabled default clones)
+            $('.toggleServiceStatus').on('change', function() {
+                var $this = $(this);
+                var serviceId = $this.data('service-id');
+                var enabled = $this.prop('checked');
+
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'JSON',
+                    url: '{{ url('catalogues/services') }}/' + serviceId + '/toggle-status',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        Swal.fire({
+                            title: 'Success!',
+                            text: response.message,
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 1200
+                        });
+                    },
+                    error: function(err) {
+                        $this.prop('checked', !enabled);
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Something went wrong',
+                            icon: 'error'
+                        });
+                    }
+                });
+            });
 
         });
     </script>
