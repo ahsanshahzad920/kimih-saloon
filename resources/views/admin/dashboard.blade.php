@@ -177,7 +177,7 @@
                             </div> <!-- end row-->
 
                             <div class="row mt-3">
-                                <div class="col-xl-6">
+                                <div class="col-12 col-xl-6">
                                     <div class="card">
                                         <div class="card-header border-0 align-items-center d-flex">
                                             <h4 class="card-title mb-0 flex-grow-1">Sales & Appointments Performance</h4>
@@ -317,7 +317,7 @@
 
                                     </div><!-- end card -->
                                 </div><!-- end col -->
-                                <div class="col-xl-6">
+                                <div class="col-12 col-xl-6">
                                     <div class="card card-height-100">
                                         <div class="card-header align-items-center d-flex">
                                             <h4 class="card-title mb-0 flex-grow-1">Upcoming appointments</h4>
@@ -446,7 +446,7 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-xl-6">
+                                <div class="col-12 col-xl-6">
                                     <div class="card card-height-100">
                                         <div class="card-header align-items-center d-flex">
                                             <h4 class="card-title mb-0 flex-grow-1">Top services</h4>
@@ -501,7 +501,7 @@
                                         </div> <!-- .card-body-->
                                     </div> <!-- .card-->
                                 </div>
-                                <div class="col-xl-6">
+                                <div class="col-12 col-xl-6">
                                     <div class="card">
                                         <div class="card-header align-items-center d-flex">
                                             <h4 class="card-title mb-0 flex-grow-1">Team Member</h4>

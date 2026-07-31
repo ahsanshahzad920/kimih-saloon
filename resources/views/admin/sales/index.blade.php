@@ -86,81 +86,6 @@
                                         </tr>
                                     </thead>
                                     <tbody class="list form-check-all">
-                                        @foreach ($sales as $sale)
-                                            <tr>
-                                                <th scope="row">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" name="chk_child">
-                                                    </div>
-                                                </th>
-                                                <td class="align-middle">{{ $sale->date }}</td>
-                                                <td class="align-middle">{{ $sale->client->name ?? 'N/A' }}</td>
-                                                {{-- <td class="align-middle">{{ $sale->payment_method ?? 'N/A' }}</td> --}}
-                                                <td class="align-middle">{{ $sale->cash_received ?? '0.00' }}</td>
-                                                <td class="align-middle">{{ $sale->due_amount ?? '0.00' }}</td>
-                                                <td class="align-middle">{{ $sale->grand_total ?? '0.00' }}</td>
-                                                <td class="align-middle">
-                                                    <span
-                                                        class="badges green-border text-center">{{ $sale->status ?? '' }}</span>
-                                                </td>
-
-                                                <td>
-                                                    {{-- <div class="d-flex gap-2">
-                                                        <div class="edit">
-                                                            <a href="{{ route('sales.edit', $sale->id) }}"
-                                                                class="btn btn-sm btn-success edit-item-btn">Edit</a>
-                                                        </div>
-
-                                                        <button type="button"
-                                                            class="btn btn-sm btn-danger remove-item-btn delSubBtn"
-                                                            data-id="{{ $sale->id }}">
-                                                            Remove
-                                                        </button>
-
-                                                    </div> --}}
-                                                    <div class="" style="overflow: visible">
-                                                        <a class="btn btn-secondary bg-transparent border-0 text-dark" role="button"
-                                                            id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
-                                                            aria-expanded="false">
-                                                            <i class="fa-solid fa-ellipsis-v"></i>
-                                                        </a>
-
-                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                                            @if ($sale->due_amount != 0 && ($sale->status == 'Unpaid' || $sale->status == 'Part Paid'))
-                                                                <a href="#" class=" dropdown-item payNowbtn" style="cursor: pointer" data-bs-target="#exampleModalToggle5"
-                                                                data-bs-toggle="modal" id="payNowbtn" data-sale="{{$sale}}">
-                                                                    <i class="fa fa-doller text-warning me-2"></i>
-                                                                    Pay now
-                                                                </a>
-
-                                                            @endif
-                                                            <a href="#" class=" dropdown-item" style="cursor: pointer" >
-                                                                <i class="fa fa-doller text-warning me-2"></i>
-                                                                Refund items
-                                                            </a>
-                                                            <a href="javascript:void(0);" class="dropdown-item">
-
-                                                                    <i class="fa fa-pencil text-danger"></i>
-
-                                                                    <button type="submit" class="btn btn-sm">
-                                                                        Edit sale Details
-                                                                    </button>
-                                                                </form>
-                                                            </a>
-                                                            <a href="{{route('sales.show',$sale->id)}}" class="dropdown-item">
-                                                                    <i class="fa fa-eye text-danger"></i>
-
-                                                                    <button type="submit" class="btn btn-sm">
-                                                                        Invoice
-                                                                    </button>
-                                                                </form>
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-
                                     </tbody>
                                 </table>
                                 <div class="noresult" style="display: none">
@@ -337,26 +262,27 @@
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajaxy/1.6.1/scripts/jquery.ajaxy.min.js"></script> --}}
 
     <script>
+        var table;
         $(document).ready(function() {
-            // $('#example').DataTable();
-
-            // // Custom pagination events
-            // $('.prev-page').on('click', function() {
-            //     table.page('previous').draw('page');
-            // });
-
-            // $('.next-page').on('click', function() {
-            //     table.page('next').draw('page');
-            // });
-
-
-
-            var table = $('#example').DataTable({
+            table = $('#example').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: '{{ route('sales.data') }}',
+                pageLength: 10,
                 dom: 'Bfrtip',
-                select: true,
                 select: {
                     style: 'multi'
                 },
+                columns: [
+                    { data: 'checkbox', name: 'checkbox', orderable: false, searchable: false },
+                    { data: 'date', name: 'date' },
+                    { data: 'client_name', name: 'client.name' },
+                    { data: 'paid', name: 'cash_received' },
+                    { data: 'due', name: 'due_amount' },
+                    { data: 'gross_total', name: 'grand_total' },
+                    { data: 'status_badge', name: 'status' },
+                    { data: 'action', name: 'action', orderable: false, searchable: false }
+                ],
                 buttons: [{
                         extend: 'pdf',
                         footer: true,
@@ -382,8 +308,13 @@
                 ]
             });
 
-            $('#custom-filter').keyup(function() {
-                table.search(this.value).draw();
+            var searchTimer;
+            $('#custom-filter').on('keyup', function() {
+                clearTimeout(searchTimer);
+                var value = this.value;
+                searchTimer = setTimeout(function() {
+                    table.search(value).draw();
+                }, 300);
             });
 
             $('#download-pdf').on('click', function() {
@@ -573,7 +504,7 @@
                                 });
 
                                 // Refresh Data Table
-                                $("#example").load(window.location + " #example");
+                                table.ajax.reload(null, false);
                             }
                         },
                         error: function(xhr, status, error) {

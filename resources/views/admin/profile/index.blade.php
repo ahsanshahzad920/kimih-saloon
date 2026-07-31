@@ -2,10 +2,8 @@
 
 @section('styles')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <style>
-        .ui-auticomplete {
-            width: 440px !important;
+        .pac-container {
             z-index: 999999999999;
         }
         /* PWA Mobile Optimization for Profile Page */
@@ -561,8 +559,7 @@
                                                                          <div class="text-danger small mt-2">{{ $message }}</div>
                                                                      @enderror
                                                                  </div>
-                                                             </div></div>
-                                                            </div>
+                                                             </div>
                                                             <div class="col-lg-12">
                                                                 <div class="mb-3">
                                                                     <label for="companyName" class="form-label">About
@@ -759,74 +756,35 @@
         });
     </script>
 
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.places_api_key') }}&libraries=places"></script>
     <script>
         $(document).ready(function() {
-            var suggestionsContainer = $("#suggestionsContainer");
-            $("#addressInput").autocomplete({
-                source: function(request, response) {
-                    var searchTerm = request.term;
-                    performAddressSearch(searchTerm, response);
-                },
-                minLength: 1,
-                select: function(event, ui) {
-                    $("#addressInput").val(ui.item.value);
-                    var selectedAddress = ui.item.value;
-                    console.log("location:" + ui.item.latitude + " long:" + ui.item.longitude);
-                    // getCoordinates(selectedAddress);
+            var addressInput = document.getElementById('addressInput');
 
-                    event.preventDefault();
-                },
-                appendTo: "#suggestionsContainer"
-            }).autocomplete("instance")._renderItem = function(ul, item) {
-                return $("<li>").append("<div>" + item.label + "</div>").appendTo(ul);
-            };
+            if (addressInput && window.google && google.maps && google.maps.places) {
+                var autocomplete = new google.maps.places.Autocomplete(addressInput, {
+                    fields: ['formatted_address', 'geometry']
+                });
 
+                autocomplete.addListener('place_changed', function() {
+                    var place = autocomplete.getPlace();
 
-            function performAddressSearch(searchTerm, response) {
-                console.log("perfome");
-                var apiUrl = "https://nominatim.openstreetmap.org/search?format=json&limit=10&q=" +
-                    encodeURIComponent(
-                        searchTerm);
-                $.ajax({
-                    url: apiUrl,
-                    dataType: "json",
-                    success: function(data) {
-                        console.log(data);
-                        var suggestions = [];
-                        for (var i = 0; i < data.length; i++) {
-                            suggestions.push({
-                                value: data[i].display_name,
-                                label: data[i].display_name,
-                                latitude: parseFloat(data[i].lat),
-                                longitude: parseFloat(data[i].lon),
-                            });
-                            // console.log(data[1])
-                        }
+                    if (!place.geometry || !place.geometry.location) {
+                        return;
+                    }
 
-                        response(suggestions);
-                    },
-                    error: function() {}
+                    var latitude = place.geometry.location.lat();
+                    var longitude = place.geometry.location.lng();
+
+                    $('#addressInput').val(place.formatted_address);
+                    $('#latitude').val(latitude);
+                    $('#longitude').val(longitude);
+
+                    // Update map iframe
+                    $('.gmap_iframe').attr('src', 'https://maps.google.com/maps?q=' + latitude + ',' +
+                        longitude + '&t=k&z=16&ie=UTF8&iwloc=&output=embed');
                 });
             }
-
-            var latitude;
-            var longitude;
-
-            $("#addressInput").on('autocompleteselect', function(event, ui) {
-                latitude = ui.item.latitude;
-                longitude = ui.item.longitude;
-                city = ui.item.city;
-                state = ui.item.state;
-                country = ui.item.country;
-                countryCode = ui.item.countryCode;
-                $('#latitude').val(latitude);
-                $('#longitude').val(longitude);
-                // Update map iframe
-                $('.gmap_iframe').attr('src', 'https://maps.google.com/maps?q=' + latitude + ',' +
-                    longitude + '&t=k&z=16&ie=UTF8&iwloc=&output=embed');
-
-            });
 
             // $("#dntHaveAddress").change(function() {
             //     if ($(this).is(":checked")) {

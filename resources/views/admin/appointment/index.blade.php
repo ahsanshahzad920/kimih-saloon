@@ -77,53 +77,6 @@
                                         </tr>
                                     </thead>
                                     <tbody class="list form-check-all">
-                                        @foreach ($appointments as $appointment)
-                                            <tr>
-                                                {{-- <td class="status"><span
-                                                        class="badge bg-success-subtle text-success text-uppercase">Completed</span>
-                                                </td> --}}
-                                                <td class="align-middle">{{ $appointment->ref ?? 'N/A' }}</td>
-                                                <td class="align-middle">{{ $appointment->title ?? 'N/A' }}</td>
-                                                <td class="align-middle">{{ $appointment->client->name ?? 'N/A' }}</td>
-                                                <td class="align-middle">
-                                                    @foreach ($appointment->services as $service)
-                                                        {{ $service->service->service_name ?? 'N/A' }} <br>
-                                                    @endforeach
-                                                </td>
-                                                <td class="align-middle">{{ $appointment->userCreatedBy->name ?? 'N/A' }}
-                                                </td>
-                                                <td class="align-middle">
-                                                    {{ $appointment->created_at->format('d-m-Y') ?? 'N/A' }}</td>
-                                                <td class="align-middle">{{ $appointment->start ?? 'N/A' }}</td>
-                                                @php
-                                                    $start = \Carbon\Carbon::parse($appointment->start);
-                                                    $end = \Carbon\Carbon::parse($appointment->end);
-                                                    $duration = $start->diff($end);
-                                                @endphp
-                                                <td class="align-middle">{{ $duration ?? 'N/A' }}</td>
-                                                <td class="align-middle">{{ $appointment->teamMember->name ?? 'N/A' }}</td>
-                                                <td class="align-middle">{{ $appointment->grand_total ?? 'N/A' }}</td>
-                                                <td class="status"><span
-                                                        class="badge bg-success-subtle text-success text-uppercase">{{ $appointment->status ?? 'N/A' }}</span>
-                                                </td>
-
-                                                <td>
-                                                    <div class="d-flex gap-2">
-                                                        <div class="edit">
-                                                            <a href="#" class="btn btn-sm btn-success edit-item-btn"
-                                                                data-appointment-details="{{ $appointment }}">Edit</a>
-                                                        </div>
-                                                        <button type="button"
-                                                            class="btn btn-sm btn-danger remove-item-btn delSubBtn"
-                                                            data-id="{{ $appointment->id }}">
-                                                            Remove
-                                                        </button>
-
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-
                                     </tbody>
                                 </table>
                                 <div class="noresult" style="display: none">
@@ -338,26 +291,31 @@
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajaxy/1.6.1/scripts/jquery.ajaxy.min.js"></script> --}}
 
     <script>
+        var table;
         $(document).ready(function() {
-            // $('#example').DataTable();
-
-            // // Custom pagination events
-            // $('.prev-page').on('click', function() {
-            //     table.page('previous').draw('page');
-            // });
-
-            // $('.next-page').on('click', function() {
-            //     table.page('next').draw('page');
-            // });
-
-
-
-            var table = $('#example').DataTable({
+            table = $('#example').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: '{{ route('appointment-list.data') }}',
+                pageLength: 10,
                 dom: 'Bfrtip',
-                select: true,
                 select: {
                     style: 'multi'
                 },
+                columns: [
+                    { data: 'ref', name: 'ref' },
+                    { data: 'title', name: 'title' },
+                    { data: 'client_name', name: 'client.name' },
+                    { data: 'services_list', name: 'services_list', orderable: false, searchable: false },
+                    { data: 'created_by_name', name: 'userCreatedBy.name', orderable: false, searchable: false },
+                    { data: 'created_date', name: 'created_at' },
+                    { data: 'start', name: 'start' },
+                    { data: 'duration', name: 'duration', orderable: false, searchable: false },
+                    { data: 'team_member_name', name: 'teamMember.name' },
+                    { data: 'grand_total', name: 'grand_total' },
+                    { data: 'status_badge', name: 'status' },
+                    { data: 'action', name: 'action', orderable: false, searchable: false }
+                ],
                 buttons: [{
                         extend: 'pdf',
                         footer: true,
@@ -383,8 +341,22 @@
                 ]
             });
 
-            $('#custom-filter').keyup(function() {
-                table.search(this.value).draw();
+            // Custom pagination controls (default DataTables pagination UI is hidden)
+            $('#prevPage').on('click', function() {
+                table.page('previous').draw('page');
+            });
+
+            $('#nextPage').on('click', function() {
+                table.page('next').draw('page');
+            });
+
+            var searchTimer;
+            $('#custom-filter').on('keyup', function() {
+                clearTimeout(searchTimer);
+                var value = this.value;
+                searchTimer = setTimeout(function() {
+                    table.search(value).draw();
+                }, 300);
             });
 
             $('#download-pdf').on('click', function() {
@@ -576,7 +548,7 @@
                                 });
 
                                 // Refresh Data Table
-                                $("#example").load(window.location + " #example");
+                                table.ajax.reload(null, false);
                             }
                         },
                         error: function(xhr, status, error) {
@@ -718,7 +690,7 @@
                                 timer: 1500
                             });
                             // Refresh Data Table
-                            $("#example").load(window.location + " #example");
+                            table.ajax.reload(null, false);
                             $('#event-details-modal').modal('hide');
                         }
                     },

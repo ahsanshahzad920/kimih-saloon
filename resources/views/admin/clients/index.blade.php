@@ -83,39 +83,6 @@
                                         </tr>
                                     </thead>
                                     <tbody class="list form-check-all">
-                                        @foreach ($clients as $client)
-                                            <tr>
-                                                <th scope="row">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" name="chk_child">
-                                                    </div>
-                                                </th>
-                                                <td class="align-middle">{{ $client->user->name ?? '' }}</td>
-                                                <td class="align-middle">{{ $client->user->email ?? 'N/A' }}</td>
-                                                <td class="align-middle client-phone">{{ $client->user->phone ?? 'N/A' }}
-                                                </td>
-                                                <td class="align-middle">0.00</td>
-                                                <td class="align-middle">{{ $client->created_at->format('d-m-Y') }}</td>
-                                                <td>
-                                                    <div class="d-flex gap-2">
-                                                        <button type="button"
-                                                            class="btn btn-outline-primary me-2 send-message-btn"
-                                                            data-bs-toggle="modal" data-bs-target="#sendMessageModal">
-                                                            Send Message
-                                                        </button>
-                                                        <div class="edit">
-                                                            <a href="{{ route('clients.edit', $client->user->id??'') }}"
-                                                                class="btn btn-success edit-item-btn">Edit</a>
-                                                        </div>
-                                                        <button type="button"
-                                                            class="btn btn-sm btn-danger remove-item-btn delSubBtn"
-                                                            data-id="{{ $client->user->id??'' }}">
-                                                            Remove
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        @endforeach
                                     </tbody>
                                 </table>
 
@@ -204,26 +171,26 @@
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajaxy/1.6.1/scripts/jquery.ajaxy.min.js"></script> --}}
 
     <script>
+        var table;
         $(document).ready(function() {
-            // $('#example').DataTable();
-
-            // // Custom pagination events
-            // $('.prev-page').on('click', function() {
-            //     table.page('previous').draw('page');
-            // });
-
-            // $('.next-page').on('click', function() {
-            //     table.page('next').draw('page');
-            // });
-
-
-
-            var table = $('#example').DataTable({
+            table = $('#example').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: '{{ route('clients.data') }}',
+                pageLength: 10,
                 dom: 'Bfrtip',
-                select: true,
                 select: {
                     style: 'multi'
                 },
+                columns: [
+                    { data: 'checkbox', name: 'checkbox', orderable: false, searchable: false },
+                    { data: 'client_name', name: 'user.name' },
+                    { data: 'email', name: 'user.email' },
+                    { data: 'phone', name: 'user.phone' },
+                    { data: 'sales', name: 'sales', orderable: false, searchable: false },
+                    { data: 'created_date', name: 'created_at' },
+                    { data: 'action', name: 'action', orderable: false, searchable: false }
+                ],
                 buttons: [{
                         extend: 'pdf',
                         footer: true,
@@ -249,8 +216,13 @@
                 ]
             });
 
-            $('#custom-filter').keyup(function() {
-                table.search(this.value).draw();
+            var searchTimer;
+            $('#custom-filter').on('keyup', function() {
+                clearTimeout(searchTimer);
+                var value = this.value;
+                searchTimer = setTimeout(function() {
+                    table.search(value).draw();
+                }, 300);
             });
 
             $('#download-pdf').on('click', function() {
@@ -440,7 +412,7 @@
                                 });
 
                                 // Refresh Data Table
-                                $("#example").load(window.location + " #example");
+                                table.ajax.reload(null, false);
                             }
                         },
                         error: function(xhr, status, error) {

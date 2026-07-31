@@ -13,6 +13,13 @@
     <style>
         .vscomp-wrapper {
             width: 450px !important;
+            max-width: 100%;
+        }
+
+        @media (max-width: 575.98px) {
+            .vscomp-wrapper {
+                width: 100% !important;
+            }
         }
     </style>
 @endsection
@@ -49,7 +56,7 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="row">
-                            <div class="col-xl-3">
+                            <div class="col-12 col-xl-3">
                                 <div class="card card-h-100">
                                     <div class="card-body">
                                         {{-- <button class="btn btn-primary w-100" id="btn-new-event"><i
@@ -99,7 +106,7 @@
                                 <!--end card-->
                             </div> <!-- end col-->
 
-                            <div class="col-xl-9">
+                            <div class="col-12 col-xl-9">
                                 <div class="card card-h-100">
                                     <div class="card-body">
                                         <div id="calendar"></div>

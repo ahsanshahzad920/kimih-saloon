@@ -136,16 +136,18 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('roles.destroy');
     Route::resource('permissions', PermissionController::class);
     // Client Routes
+    Route::get('clients/data', [ClientController::class, 'ajax'])->name('clients.data');
     Route::resource('clients', ClientController::class);
+    // Shop QR code (must be registered before the profile resource route,
+    // otherwise profile.show's GET profile/{profile} swallows this URL)
+    Route::get('profile/qr-code', [ProfileController::class, 'qrCode'])->name('profile.qr-code');
+    Route::get('profile/qr-code/download', [ProfileController::class, 'downloadQrCode'])->name('profile.qr-code.download');
     // Profile Routes
     Route::resource('profile', ProfileController::class);
     Route::put('/profile-image-update/{id}', [ProfileController::class, 'updateProfileImage']);
     Route::get('profileImageDelete/{id}', [ProfileController::class, 'deleteImage'])->name('profileImage-delete');
     // Password Update Route
     Route::put('password/update', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
-    // Shop QR code
-    Route::get('profile/qr-code', [ProfileController::class, 'qrCode'])->name('profile.qr-code');
-    Route::get('profile/qr-code/download', [ProfileController::class, 'downloadQrCode'])->name('profile.qr-code.download');
     // Catalogue module routes
     Route::prefix('catalogues')->group(function () {
         // service routes
@@ -172,6 +174,7 @@ Route::middleware('auth', 'verified')->group(function () {
     });
 
     // sales routes
+    Route::get('sales/data', [SaleController::class, 'ajax'])->name('sales.data');
     Route::resource('sales', SaleController::class);
     Route::resource('/payment-transactions', SalePaymentTransactionController::class);
     Route::resource('daily-sales', DailySalesController::class);
@@ -194,6 +197,7 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::delete('/appointments/{eventId}', [CalendarController::class, 'deleteAppointment'])->name('appointments.delete');
 
     // Appointments Routes
+    Route::get('appointment-list/data', [AppointmentController::class, 'ajax'])->name('appointment-list.data');
     Route::resource('appointment-list', AppointmentController::class);
 
     // Filter routes
