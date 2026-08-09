@@ -15,34 +15,38 @@
 
     {{-- SEO / AEO: Pakistan targeting --}}
     @php
-        $seoTitle = trim(($__env->yieldContent('title') ?: 'Book Beauty & Wellness Services in Pakistan'));
-        $seoDescription = $__env->yieldContent('meta_description') ?: 'Book salons, spas, barbers, and beauty & wellness services near you in Karachi, Lahore, Islamabad, and across Pakistan. Compare prices, read reviews, and book instantly on Kimih.';
-        $seoCanonical = $__env->yieldContent('canonical') ?: url()->current();
-        $seoImage = $__env->yieldContent('og_image') ?: asset('assets/images/favicon.png');
+        // NOTE: @section('name', 'value') already HTML-escapes its value internally,
+        // so yieldContent() below returns pre-escaped strings. Echo them with {!! !!}
+        // (not {{ }}) everywhere to avoid double-escaping "&" into "&amp;amp;".
+        $seoTitle = trim($__env->yieldContent('title', 'Book Beauty & Wellness Services in Pakistan'));
+        $seoDescription = $__env->yieldContent('meta_description', 'Book salons, spas, barbers, and beauty & wellness services near you in Karachi, Lahore, Islamabad, and across Pakistan. Compare prices, read reviews, and book instantly on Kimih.');
+        $seoCanonical = $__env->yieldContent('canonical', url()->current());
+        $seoImage = $__env->yieldContent('og_image', asset('assets/images/favicon.png'));
+        $seoSiteName = e(settings()->site_name ?? 'Kimih');
     @endphp
-    <meta name="description" content="{{ $seoDescription }}">
+    <meta name="description" content="{!! $seoDescription !!}">
     <meta name="robots" content="index, follow, max-image-preview:large">
     <meta name="geo.region" content="PK">
     <meta name="geo.placename" content="Pakistan">
     <meta name="language" content="English">
-    <link rel="canonical" href="{{ $seoCanonical }}">
-    <link rel="alternate" hreflang="en-pk" href="{{ $seoCanonical }}">
-    <link rel="alternate" hreflang="x-default" href="{{ $seoCanonical }}">
+    <link rel="canonical" href="{!! $seoCanonical !!}">
+    <link rel="alternate" hreflang="en-pk" href="{!! $seoCanonical !!}">
+    <link rel="alternate" hreflang="x-default" href="{!! $seoCanonical !!}">
 
     {{-- Open Graph --}}
-    <meta property="og:site_name" content="{{ settings()->site_name ?? 'Kimih' }}">
+    <meta property="og:site_name" content="{!! $seoSiteName !!}">
     <meta property="og:type" content="website">
     <meta property="og:locale" content="en_PK">
-    <meta property="og:title" content="{{ $seoTitle }} | {{ settings()->site_name ?? 'Kimih' }}">
-    <meta property="og:description" content="{{ $seoDescription }}">
-    <meta property="og:url" content="{{ $seoCanonical }}">
-    <meta property="og:image" content="{{ $seoImage }}">
+    <meta property="og:title" content="{!! $seoTitle !!} | {!! $seoSiteName !!}">
+    <meta property="og:description" content="{!! $seoDescription !!}">
+    <meta property="og:url" content="{!! $seoCanonical !!}">
+    <meta property="og:image" content="{!! $seoImage !!}">
 
     {{-- Twitter Card --}}
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{{ $seoTitle }} | {{ settings()->site_name ?? 'Kimih' }}">
-    <meta name="twitter:description" content="{{ $seoDescription }}">
-    <meta name="twitter:image" content="{{ $seoImage }}">
+    <meta name="twitter:title" content="{!! $seoTitle !!} | {!! $seoSiteName !!}">
+    <meta name="twitter:description" content="{!! $seoDescription !!}">
+    <meta name="twitter:image" content="{!! $seoImage !!}">
 
     {{-- JSON-LD: Organization + Website (sitewide, for AEO / answer engines) --}}
     <script type="application/ld+json">
@@ -88,7 +92,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.places_api_key', 'AIzaSyCv7T8wOWYwc4vCgkiF60CZ_WM9b0nzdQA') }}&libraries=places"></script>
 
-    <title>{{ $seoTitle }} | {{ settings()->site_name ?? 'Kimih' }} Pakistan</title>
+    <title>{!! $seoTitle !!} | {!! $seoSiteName !!} Pakistan</title>
     <link rel="icon" type="image/png" href="{{ asset('assets/images/favicon.png') }}">
     <style>
         .myc-available-time {
