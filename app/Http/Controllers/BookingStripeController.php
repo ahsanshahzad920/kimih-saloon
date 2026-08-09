@@ -8,7 +8,10 @@ use App\Models\PaidPlan;
 use App\Models\Product;
 use App\Models\Sale;
 use App\Models\Service;
+use App\Services\EasypaisaService;
+use App\Services\JazzCashService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Stripe;
 
@@ -21,8 +24,186 @@ class BookingStripeController extends Controller
         $this->stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
     }
 
+    public function jazzcashCheckout(Request $request, JazzCashService $jazzCash)
+    {
+        if (!(settings()?->jazzcash_enabled ?? true)) {
+            return response()->json(['status' => 400, 'message' => 'JazzCash is currently disabled.']);
+        }
+
+        $grandTotal = $this->bookingGrandTotal($request->services);
+        $txnRefNo = 'JBK' . now()->format('YmdHis') . rand(1000, 9999);
+
+        Cache::put('checkout_' . $txnRefNo, $request->all(), now()->addHour());
+
+        $checkout = $jazzCash->buildCheckoutFields(
+            $txnRefNo,
+            $this->taxCalculate($grandTotal),
+            route('booking.jazzcash.callback'),
+            'Kimih Appointment Booking'
+        );
+
+        return response()->json(['status' => 200] + $checkout);
+    }
+
+    public function jazzcashCallback(Request $request)
+    {
+        $jazzCash = new JazzCashService();
+        $response = $request->all();
+
+        if (!$jazzCash->verifyResponse($response) || !$jazzCash->isSuccessful($response)) {
+            return redirect()->route('customer.appointments')->with('error', 'JazzCash payment failed or could not be verified.');
+        }
+
+        $data = Cache::pull('checkout_' . $response['pp_TxnRefNo']);
+        if (!$data) {
+            return redirect()->route('customer.appointments')->with('error', 'This payment session has expired.');
+        }
+
+        $this->completeBookingCheckout($data, 'JazzCash', $response['pp_RetreivalReferenceNo'] ?? $response['pp_TxnRefNo']);
+
+        return redirect()->route('customer.appointments');
+    }
+
+    public function easypaisaCheckout(Request $request, EasypaisaService $easypaisa)
+    {
+        if (!(settings()?->easypaisa_enabled ?? true)) {
+            return response()->json(['status' => 400, 'message' => 'Easypaisa is currently disabled.']);
+        }
+
+        $grandTotal = $this->bookingGrandTotal($request->services);
+        $orderRefNum = 'EBK' . now()->format('YmdHis') . rand(1000, 9999);
+
+        Cache::put('checkout_' . $orderRefNum, $request->all(), now()->addHour());
+
+        $checkout = $easypaisa->buildCheckoutFields(
+            $orderRefNum,
+            $this->taxCalculate($grandTotal),
+            route('booking.easypaisa.callback')
+        );
+
+        return response()->json(['status' => 200] + $checkout);
+    }
+
+    public function easypaisaCallback(Request $request)
+    {
+        $easypaisa = new EasypaisaService();
+        $response = $request->all();
+
+        if (!$easypaisa->isSuccessful($response)) {
+            return redirect()->route('customer.appointments')->with('error', 'Easypaisa payment failed or could not be verified.');
+        }
+
+        $orderRefNum = $response['orderRefNumber'] ?? $response['orderRefNum'] ?? null;
+        $data = $orderRefNum ? Cache::pull('checkout_' . $orderRefNum) : null;
+        if (!$data) {
+            return redirect()->route('customer.appointments')->with('error', 'This payment session has expired.');
+        }
+
+        $this->completeBookingCheckout($data, 'Easypaisa', $response['transactionId'] ?? $orderRefNum);
+
+        return redirect()->route('customer.appointments');
+    }
+
+    private function bookingGrandTotal($serviceIds): float
+    {
+        $total = 0;
+        foreach ($serviceIds as $serviceId) {
+            $service = Service::find($serviceId);
+            $total += $service->price ?? 0;
+        }
+        return $total;
+    }
+
+    /**
+     * Shared appointment + sale creation used by every gateway's success callback.
+     * $data is the raw original checkout request payload (services, start, end, business_id, etc).
+     */
+    private function completeBookingCheckout(array $data, string $paymentMethod, ?string $transactionId): Appointment
+    {
+        $data['service_ids'] = implode(',', $data['services']);
+        $data['start'] = date('Y-m-d H:i:s', strtotime($data['start']));
+        $data['end'] = date('Y-m-d H:i:s', strtotime($data['end']));
+        $data['status'] = 'Booked';
+        $data['payment_status'] = 'paid';
+        $data['created_by'] = $data['business_id'];
+        $data['updated_by'] = $data['business_id'];
+        $data['grand_total'] = 0;
+        $data['ref'] = 'AP-' . rand(111111, 999999);
+
+        $appointment = Appointment::create($data);
+
+        $services = $data['services'];
+        foreach ($services as $service) {
+            $service = Service::find($service);
+            $appointment->services()->create([
+                'service_id' => $service->id,
+                'price' => $service->price ?? 0,
+            ]);
+            $data['grand_total'] += $service->price;
+        }
+        $g_total = $this->taxCalculate($data['grand_total']);
+        $appointment->update(['grand_total' => $g_total]);
+
+        $data['client_id'] = auth()->id();
+        $data['cash_received'] = $g_total;
+        $data['grand_total'] = $g_total;
+        $data['order_items'] = $services;
+        $data['payment_method'] = $paymentMethod;
+        $data['invoice_number'] = 'INV-' . rand(10000, 99999) . date('Ymd') . rand(10000, 99999);
+        $data['date'] = date('Y-m-d');
+        $data['created_by'] = $data['updated_by'] = auth()->id();
+
+        if (!isset($data['status']) || $data['status'] != 'Unpaid') {
+            if ($data['grand_total'] > $data['cash_received']) {
+                $data['status'] = 'Part Paid';
+            } elseif ($data['cash_received'] == 0) {
+                $data['status'] = 'Unpaid';
+            } else {
+                $data['status'] = 'Paid';
+            }
+        }
+
+        $sale = Sale::create($data);
+
+        foreach ($data['order_items'] as $item) {
+            $appointment->status = 'Booked';
+            $appointment->save();
+
+            $sale->items()->create([
+                'sale_id' => $sale->id,
+                'item_id' => $appointment->id,
+                'type' => 'appointment',
+                'quantity' => '1',
+                'price' => $appointment->grand_total,
+                'sub_total' => $appointment->grand_total,
+                'created_by' => $data['business_id'],
+                'updated_by' => $data['business_id'],
+            ]);
+        }
+
+        if (!isset($data['status']) || $data['status'] != 'Unpaid') {
+            $sale->payments()->create([
+                'client_id' => $sale->client_id,
+                'cash_received_by' => $sale->cash_received_by,
+                'payment_date' => $sale->date,
+                'payment_method' => $paymentMethod,
+                'paid_amount' => $g_total,
+                'type' => 'Sale',
+                'created_by' => auth()->id(),
+                'updated_by' => auth()->id(),
+                'stripe_id' => $transactionId,
+            ]);
+        }
+
+        return $appointment;
+    }
+
     public function stripeCheckout(Request $request)
     {
+        if (!(settings()?->stripe_enabled ?? false)) {
+            return response()->json(['status' => 400, 'message' => 'Stripe is currently disabled.']);
+        }
+
         $jsonEncode = json_encode($request->all());
 
         $services = $request->services;

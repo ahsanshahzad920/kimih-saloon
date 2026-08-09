@@ -6,8 +6,11 @@ use App\Models\AddToCart;
 use App\Models\Product;
 use App\Models\Sale;
 use App\Models\User;
+use App\Services\EasypaisaService;
+use App\Services\JazzCashService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Stripe;
 
@@ -20,8 +23,147 @@ class StripeController extends Controller
         $this->stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
     }
 
+    public function jazzcashCheckout(Request $request, JazzCashService $jazzCash)
+    {
+        if (!(settings()?->jazzcash_enabled ?? true)) {
+            return response()->json(['status' => 400, 'message' => 'JazzCash is currently disabled.']);
+        }
+
+        $request->validate([
+            'store_id' => 'required',
+            'grand_total' => 'required',
+            'items' => 'required',
+        ]);
+
+        $txnRefNo = 'JPR' . now()->format('YmdHis') . rand(1000, 9999);
+        Cache::put('checkout_' . $txnRefNo, $request->all(), now()->addHour());
+
+        $checkout = $jazzCash->buildCheckoutFields(
+            $txnRefNo,
+            $this->taxCalculate($request->grand_total),
+            route('stripe.checkout.jazzcash.callback'),
+            'Kimih Product Order'
+        );
+
+        return response()->json(['status' => 200] + $checkout);
+    }
+
+    public function jazzcashCallback(Request $request)
+    {
+        $jazzCash = new JazzCashService();
+        $response = $request->all();
+
+        if (!$jazzCash->verifyResponse($response) || !$jazzCash->isSuccessful($response)) {
+            return redirect()->route('customer.product.orders')->with('error', 'JazzCash payment failed or could not be verified.');
+        }
+
+        $data = Cache::pull('checkout_' . $response['pp_TxnRefNo']);
+        if (!$data) {
+            return redirect()->route('customer.product.orders')->with('error', 'This payment session has expired.');
+        }
+
+        $this->completeProductCheckout($data, 'JazzCash', $response['pp_RetreivalReferenceNo'] ?? $response['pp_TxnRefNo']);
+
+        return redirect()->route('customer.product.orders');
+    }
+
+    public function easypaisaCheckout(Request $request, EasypaisaService $easypaisa)
+    {
+        if (!(settings()?->easypaisa_enabled ?? true)) {
+            return response()->json(['status' => 400, 'message' => 'Easypaisa is currently disabled.']);
+        }
+
+        $request->validate([
+            'store_id' => 'required',
+            'grand_total' => 'required',
+            'items' => 'required',
+        ]);
+
+        $orderRefNum = 'EPR' . now()->format('YmdHis') . rand(1000, 9999);
+        Cache::put('checkout_' . $orderRefNum, $request->all(), now()->addHour());
+
+        $checkout = $easypaisa->buildCheckoutFields(
+            $orderRefNum,
+            $this->taxCalculate($request->grand_total),
+            route('stripe.checkout.easypaisa.callback')
+        );
+
+        return response()->json(['status' => 200] + $checkout);
+    }
+
+    public function easypaisaCallback(Request $request)
+    {
+        $easypaisa = new EasypaisaService();
+        $response = $request->all();
+
+        if (!$easypaisa->isSuccessful($response)) {
+            return redirect()->route('customer.product.orders')->with('error', 'Easypaisa payment failed or could not be verified.');
+        }
+
+        $orderRefNum = $response['orderRefNumber'] ?? $response['orderRefNum'] ?? null;
+        $data = $orderRefNum ? Cache::pull('checkout_' . $orderRefNum) : null;
+        if (!$data) {
+            return redirect()->route('customer.product.orders')->with('error', 'This payment session has expired.');
+        }
+
+        $this->completeProductCheckout($data, 'Easypaisa', $response['transactionId'] ?? $orderRefNum);
+
+        return redirect()->route('customer.product.orders');
+    }
+
+    /**
+     * Shared sale creation used by every gateway's success callback.
+     * $data is the raw original checkout request payload (store_id, grand_total, items, client_id).
+     */
+    private function completeProductCheckout(array $data, string $paymentMethod, ?string $transactionId): Sale
+    {
+        $data['invoice_number'] = 'INV-' . rand(10000, 99999) . date('Ymd') . rand(10000, 99999);
+        $data['date'] = date('Y-m-d');
+        $data['sub_total'] = $data['grand_total'] = $data['grand_total'];
+        $data['cash_received'] = $data['grand_total'];
+        $data['cash_return'] = 0;
+        $data['due_amount'] = 0;
+        $data['status'] = 'Completed';
+        $data['payment_method'] = $paymentMethod;
+        $data['created_by'] = $data['updated_by'] = $data['store_id'];
+        $data['client_id'] = auth()->id();
+
+        $sale = Sale::create($data);
+
+        foreach ($data['items'] as $item) {
+            $product = Product::find($item['product_id']);
+            $sale->items()->create([
+                'item_id' => $item['product_id'],
+                'type' => 'product',
+                'quantity' => $item['quantity'],
+                'price' => $product->retail_price,
+                'sub_total' => $product->retail_price * $item['quantity'],
+                'created_by' => $data['store_id'],
+                'updated_by' => $data['store_id'],
+            ]);
+            AddToCart::find($item['cart_id'])->delete();
+        }
+
+        $sale->payments()->create([
+            'client_id' => $sale->client_id,
+            'payment_date' => $sale->date,
+            'payment_method' => $paymentMethod,
+            'paid_amount' => $sale->cash_received,
+            'type' => 'Sale',
+            'created_by' => $data['store_id'],
+            'updated_by' => $data['store_id'],
+            'stripe_id' => $transactionId,
+        ]);
+
+        return $sale;
+    }
+
     public function stripeCheckout(Request $request)
     {
+        if (!(settings()?->stripe_enabled ?? false)) {
+            return response()->json(['status' => 400, 'message' => 'Stripe is currently disabled.']);
+        }
+
         $request->validate([
             'store_id' => 'required',
             'grand_total' => 'required',

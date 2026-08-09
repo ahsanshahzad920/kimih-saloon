@@ -141,6 +141,28 @@
                                 @enderror
                             </div>
 
+                            <div class="form-group mb-4">
+                                <label class="mb-2 d-block">Payment Methods</label>
+                                <div class="form-check form-switch mb-2">
+                                    <input class="form-check-input" type="checkbox" role="switch" name="stripe_enabled"
+                                        id="stripe_enabled" value="1"
+                                        {{ old('stripe_enabled', $settings->stripe_enabled ?? false) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="stripe_enabled">Stripe</label>
+                                </div>
+                                <div class="form-check form-switch mb-2">
+                                    <input class="form-check-input" type="checkbox" role="switch" name="jazzcash_enabled"
+                                        id="jazzcash_enabled" value="1"
+                                        {{ old('jazzcash_enabled', $settings->jazzcash_enabled ?? true) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="jazzcash_enabled">JazzCash</label>
+                                </div>
+                                <div class="form-check form-switch mb-2">
+                                    <input class="form-check-input" type="checkbox" role="switch" name="easypaisa_enabled"
+                                        id="easypaisa_enabled" value="1"
+                                        {{ old('easypaisa_enabled', $settings->easypaisa_enabled ?? true) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="easypaisa_enabled">Easypaisa</label>
+                                </div>
+                            </div>
+
                             <button type="submit" class="btn btn-success add-btn rounded-3 me-2">Submit</button>
                             <a href="{{ route('settings.index') }}" class="btn cancel-btn">Back</a>
                         </form>

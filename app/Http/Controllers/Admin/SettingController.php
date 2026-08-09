@@ -43,6 +43,12 @@ class SettingController extends Controller
             'partner_terms' => 'nullable|string',
         ]);
 
+        $paymentToggles = [
+            'stripe_enabled' => $request->boolean('stripe_enabled'),
+            'jazzcash_enabled' => $request->boolean('jazzcash_enabled'),
+            'easypaisa_enabled' => $request->boolean('easypaisa_enabled'),
+        ];
+
         // Fetch the single settings record or create a new one if it doesn't exist
         $settings = Setting::first();
 
@@ -112,6 +118,7 @@ class SettingController extends Controller
                 'cancellation_policy' => $validated['cancellation_policy'],
                 'partner_terms' => $validated['partner_terms'],
                 'updated_by' => auth()->id(),
+                ...$paymentToggles,
             ]);
         } else {
             Setting::create([
@@ -125,6 +132,7 @@ class SettingController extends Controller
                 'cancellation_policy' => $validated['cancellation_policy'],
                 'partner_terms' => $validated['partner_terms'],
                 'created_by' => auth()->id(),
+                ...$paymentToggles,
             ]);
         }
 

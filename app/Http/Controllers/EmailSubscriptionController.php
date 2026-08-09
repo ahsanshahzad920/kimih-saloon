@@ -9,8 +9,11 @@ use App\Jobs\SendEmailJob;
 use Illuminate\Http\Request;
 use App\Mail\NewEmailRegistered;
 use App\Models\EmailSubscription;
+use App\Services\EasypaisaService;
+use App\Services\JazzCashService;
 use Illuminate\Support\Facades\Log;
 use DB;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 use SebastianBergmann\Complexity\Complexity;
 use Illuminate\Support\Facades\Auth;
@@ -314,6 +317,47 @@ class EmailSubscriptionController extends Controller
             'amount' => 'required|integer',
         ]);
 
+        $gateway = $request->input('payment_gateway', 'stripe');
+
+        if ($gateway === 'jazzcash') {
+            if (!(settings()?->jazzcash_enabled ?? true)) {
+                return back()->with('error', 'JazzCash is currently disabled.');
+            }
+
+            $txnRefNo = 'JWL' . now()->format('YmdHis') . rand(1000, 9999);
+            Cache::put('recharge_' . $txnRefNo, $request->all(), now()->addHour());
+
+            $checkout = (new JazzCashService())->buildCheckoutFields(
+                $txnRefNo,
+                (float) $request->amount,
+                route('recharge.jazzcash.callback'),
+                'Kimih Wallet Recharge'
+            );
+
+            return view('payment.gateway-redirect', $checkout);
+        }
+
+        if ($gateway === 'easypaisa') {
+            if (!(settings()?->easypaisa_enabled ?? true)) {
+                return back()->with('error', 'Easypaisa is currently disabled.');
+            }
+
+            $orderRefNum = 'EWL' . now()->format('YmdHis') . rand(1000, 9999);
+            Cache::put('recharge_' . $orderRefNum, $request->all(), now()->addHour());
+
+            $checkout = (new EasypaisaService())->buildCheckoutFields(
+                $orderRefNum,
+                (float) $request->amount,
+                route('recharge.easypaisa.callback')
+            );
+
+            return view('payment.gateway-redirect', $checkout);
+        }
+
+        if (!(settings()?->stripe_enabled ?? false)) {
+            return back()->with('error', 'Stripe is currently disabled.');
+        }
+
         $amount = (int) $request->amount;
 
         // Calculate platform fee (2.5%)
@@ -381,5 +425,52 @@ class EmailSubscriptionController extends Controller
         return redirect()->route('user.wallet')->with('success', 'Balance updated successfully!');
     }
 
+    public function jazzcashRechargeCallback(Request $request)
+    {
+        $jazzCash = new JazzCashService();
+        $response = $request->all();
 
+        if (!$jazzCash->verifyResponse($response) || !$jazzCash->isSuccessful($response)) {
+            return redirect()->route('user.wallet')->with('error', 'JazzCash payment failed or could not be verified.');
+        }
+
+        $data = Cache::pull('recharge_' . $response['pp_TxnRefNo']);
+        if (!$data) {
+            return redirect()->route('user.wallet')->with('error', 'This payment session has expired.');
+        }
+
+        $this->creditWalletAfterFees((float) $data['amount']);
+
+        return redirect()->route('user.wallet')->with('success', 'Balance updated successfully!');
+    }
+
+    public function easypaisaRechargeCallback(Request $request)
+    {
+        $easypaisa = new EasypaisaService();
+        $response = $request->all();
+
+        if (!$easypaisa->isSuccessful($response)) {
+            return redirect()->route('user.wallet')->with('error', 'Easypaisa payment failed or could not be verified.');
+        }
+
+        $orderRefNum = $response['orderRefNumber'] ?? $response['orderRefNum'] ?? null;
+        $data = $orderRefNum ? Cache::pull('recharge_' . $orderRefNum) : null;
+        if (!$data) {
+            return redirect()->route('user.wallet')->with('error', 'This payment session has expired.');
+        }
+
+        $this->creditWalletAfterFees((float) $data['amount']);
+
+        return redirect()->route('user.wallet')->with('success', 'Balance updated successfully!');
+    }
+
+    private function creditWalletAfterFees(float $originalAmount): void
+    {
+        $platformFee = $originalAmount * 0.025;
+        $amountAfterFees = $originalAmount - $platformFee;
+
+        $user = auth()->user();
+        $user->balance += $amountAfterFees;
+        $user->save();
+    }
 }

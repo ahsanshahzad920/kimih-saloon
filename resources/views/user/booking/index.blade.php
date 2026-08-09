@@ -142,6 +142,27 @@
 
                         </ul>
                         <hr>
+                        <div class="mb-2">
+                            <label class="fw-bold d-block">Payment Method</label>
+                            @if (settings()?->jazzcash_enabled ?? true)
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="payment_gateway" id="bk_pg_jazzcash" value="jazzcash" checked>
+                                    <label class="form-check-label" for="bk_pg_jazzcash">JazzCash</label>
+                                </div>
+                            @endif
+                            @if (settings()?->easypaisa_enabled ?? true)
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="payment_gateway" id="bk_pg_easypaisa" value="easypaisa" {{ (settings()?->jazzcash_enabled ?? true) ? '' : 'checked' }}>
+                                    <label class="form-check-label" for="bk_pg_easypaisa">Easypaisa</label>
+                                </div>
+                            @endif
+                            @if (settings()?->stripe_enabled ?? false)
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="payment_gateway" id="bk_pg_stripe" value="stripe">
+                                    <label class="form-check-label" for="bk_pg_stripe">Card (Stripe)</label>
+                                </div>
+                            @endif
+                        </div>
                         <div class="d-flex justify-content-end">
                             <button id="payButton" class="me-2 btn btn-outline-dark" style="display:none;">
                                 Pay through Wallet
@@ -675,10 +696,16 @@
                 );
 
 
+                let bookingGateway = $('input[name="payment_gateway"]:checked').val() || 'jazzcash';
+                let bookingCheckoutRoutes = {
+                    jazzcash: "{{ route('booking.jazzcash.checkout') }}",
+                    easypaisa: "{{ route('booking.easypaisa.checkout') }}",
+                    stripe: "{{ route('booking.stripe.checkout') }}",
+                };
+
                 $.ajax({
                     type: "post",
-                    // url: "{{ route('booking.store') }}",
-                    url: "{{ route('booking.stripe.checkout') }}",
+                    url: bookingCheckoutRoutes[bookingGateway],
                     headers: {
                         'X-CSRF-TOKEN': "{{ csrf_token() }}"
                     },
@@ -695,10 +722,13 @@
                         team_member_id: $('#example-select').val(),
                     },
                     success: function(response) {
-                        if (response.status) {
-                            toastr.success(response.message);
-                            // window.location.href = "{{ route('customer.appointments') }}";
+                        if (response.status == 200 && response.url) {
+                            toastr.success(response.message || 'Redirecting to payment...');
                             window.location.href = response.url;
+                        } else if (response.status == 200 && response.action) {
+                            submitGatewayRedirectForm(response.action, response.fields);
+                        } else {
+                            toastr.error(response.message || 'Unable to start checkout');
                         }
                     }
                 });

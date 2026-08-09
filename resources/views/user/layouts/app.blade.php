@@ -458,6 +458,22 @@
     <script src="{{ asset('assets/js/aos.js') }}" type="text/javascript"></script>
     <script src="{{ asset('assets/js/tweenMax.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('assets/js/custom.js') }}"></script>
+    <script>
+        function submitGatewayRedirectForm(action, fields) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = action;
+            Object.keys(fields).forEach(function(key) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.value = fields[key];
+                form.appendChild(input);
+            });
+            document.body.appendChild(form);
+            form.submit();
+        }
+    </script>
     @yield('scripts')
 
     @if (session()->has('success'))

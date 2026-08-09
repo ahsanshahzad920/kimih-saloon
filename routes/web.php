@@ -372,10 +372,16 @@ Route::get('about', [AboutController::class, 'frontEndShow'])->name('about');
 Route::view('comming-soon', 'comming-soon');  // Route to display the coming soon page
 // Route::redirect('/', 'comming-soon');
 
-// Stripe Payment Controller
+// Product Checkout - Stripe / JazzCash / Easypaisa
 Route::controller(StripeController::class)->group(function () {
     Route::post('stripe/checkout', 'stripeCheckout')->name('stripe.checkout');
     Route::get('stripe/checkout/successs', 'stripeCheckoutSuccess')->name('stripe.checkout.success');
+
+    Route::post('stripe/checkout/jazzcash', 'jazzcashCheckout')->name('stripe.checkout.jazzcash');
+    Route::match(['get', 'post'], 'stripe/checkout/jazzcash/callback', 'jazzcashCallback')->name('stripe.checkout.jazzcash.callback');
+
+    Route::post('stripe/checkout/easypaisa', 'easypaisaCheckout')->name('stripe.checkout.easypaisa');
+    Route::match(['get', 'post'], 'stripe/checkout/easypaisa/callback', 'easypaisaCallback')->name('stripe.checkout.easypaisa.callback');
 });
 
 Route::post('/product-reviews', [ProductReviewController::class, 'store'])->name('product.review.store');
@@ -385,7 +391,16 @@ Route::get('/product/{id}/reviews', [ProductReviewController::class, 'getReviews
 Route::controller(BookingStripeController::class)->group(function () {
     Route::post('booking/stripe/checkout', 'stripeCheckout')->name('booking.stripe.checkout');
     Route::get('booking/stripe/checkout/successs', 'stripeCheckoutSuccess')->name('booking.stripe.checkout.success');
+
+    Route::post('booking/jazzcash/checkout', 'jazzcashCheckout')->name('booking.jazzcash.checkout');
+    Route::match(['get', 'post'], 'booking/jazzcash/callback', 'jazzcashCallback')->name('booking.jazzcash.callback');
+
+    Route::post('booking/easypaisa/checkout', 'easypaisaCheckout')->name('booking.easypaisa.checkout');
+    Route::match(['get', 'post'], 'booking/easypaisa/callback', 'easypaisaCallback')->name('booking.easypaisa.callback');
 });
+
+Route::match(['get', 'post'], 'recharge/jazzcash/callback', [EmailSubscriptionController::class, 'jazzcashRechargeCallback'])->name('recharge.jazzcash.callback');
+Route::match(['get', 'post'], 'recharge/easypaisa/callback', [EmailSubscriptionController::class, 'easypaisaRechargeCallback'])->name('recharge.easypaisa.callback');
 
 Route::view('my-wallet', 'user.my-wallet')->name('user.wallet');
 // Route::get('google-reviews', [FeedbackController::class, 'frontEndShowReviews'])->name('reviews');

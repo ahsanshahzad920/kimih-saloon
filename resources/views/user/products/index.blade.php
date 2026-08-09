@@ -427,6 +427,27 @@
                 @endauth
 
             </form> --}}
+            <div class="mb-2">
+                <label class="fw-bold d-block">Payment Method</label>
+                @if (settings()?->jazzcash_enabled ?? true)
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="payment_gateway" id="pg_jazzcash" value="jazzcash" checked>
+                        <label class="form-check-label" for="pg_jazzcash">JazzCash</label>
+                    </div>
+                @endif
+                @if (settings()?->easypaisa_enabled ?? true)
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="payment_gateway" id="pg_easypaisa" value="easypaisa" {{ (settings()?->jazzcash_enabled ?? true) ? '' : 'checked' }}>
+                        <label class="form-check-label" for="pg_easypaisa">Easypaisa</label>
+                    </div>
+                @endif
+                @if (settings()?->stripe_enabled ?? false)
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="payment_gateway" id="pg_stripe" value="stripe">
+                        <label class="form-check-label" for="pg_stripe">Card (Stripe)</label>
+                    </div>
+                @endif
+            </div>
             <div class="d-flex justify-content-end mt-2">
                 <button class="btn btn-primary btn-dark" id="checkoutBtn">Checkout</button>
             </div>
@@ -1022,9 +1043,14 @@
                 //     return;
                 // }
                 let shop_id = {{ $shop->id }};
+                let gateway = $('input[name="payment_gateway"]:checked').val() || 'jazzcash';
+                let checkoutRoutes = {
+                    jazzcash: "{{ route('stripe.checkout.jazzcash') }}",
+                    easypaisa: "{{ route('stripe.checkout.easypaisa') }}",
+                    stripe: "{{ route('stripe.checkout') }}",
+                };
                 $.ajax({
-                    // url: "{{ route('shop.products.checkout', $shop->businessUser->slug) }}",
-                    url: "{{ route('stripe.checkout') }}",
+                    url: checkoutRoutes[gateway],
                     method: 'POST',
                     data: {
                         items: items,
@@ -1035,17 +1061,17 @@
                     },
                     success: function(response) {
                         console.log(response);
-                        if (response.status) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: response.message,
-                                showConfirmButton: false,
-                                timer: 1000,
-                            });
+                        if (response.status == 200 && response.url) {
                             window.location.href = response.url;
-                            // window.location.href = "{{ route('customer.product.orders') }}";
-                            // window.location.href = "/";
-
+                        } else if (response.status == 200 && response.action) {
+                            submitGatewayRedirectForm(response.action, response.fields);
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: response.message || 'Unable to start checkout',
+                                showConfirmButton: false,
+                                timer: 1500,
+                            });
                         }
                     }
                 });

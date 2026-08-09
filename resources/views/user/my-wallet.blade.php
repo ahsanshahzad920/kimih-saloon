@@ -50,7 +50,37 @@
                                 </div>
                             </div>
                         </div>
-                        
+
+                        <div class="row mb-3">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label>Payment Method</label><br>
+                                    @if (settings()?->jazzcash_enabled ?? true)
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="payment_gateway"
+                                                id="gateway_jazzcash" value="jazzcash" checked>
+                                            <label class="form-check-label" for="gateway_jazzcash">JazzCash</label>
+                                        </div>
+                                    @endif
+                                    @if (settings()?->easypaisa_enabled ?? true)
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="payment_gateway"
+                                                id="gateway_easypaisa" value="easypaisa"
+                                                {{ (settings()?->jazzcash_enabled ?? true) ? '' : 'checked' }}>
+                                            <label class="form-check-label" for="gateway_easypaisa">Easypaisa</label>
+                                        </div>
+                                    @endif
+                                    @if (settings()?->stripe_enabled ?? false)
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="payment_gateway"
+                                                id="gateway_stripe" value="stripe">
+                                            <label class="form-check-label" for="gateway_stripe">Card (Stripe)</label>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+
                         <button type="submit" class="btn btn-success add-btn rounded-3 me-2">Send</button>
                     </form>
                 </div>

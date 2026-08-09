@@ -21,5 +21,15 @@ class Setting extends Model
         'term_of_service',
         'cancellation_policy',
         'partner_terms',
+
+        'stripe_enabled',
+        'jazzcash_enabled',
+        'easypaisa_enabled',
+    ];
+
+    protected $casts = [
+        'stripe_enabled' => 'boolean',
+        'jazzcash_enabled' => 'boolean',
+        'easypaisa_enabled' => 'boolean',
     ];
 }
