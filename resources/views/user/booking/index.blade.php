@@ -64,7 +64,7 @@
                                                     <p>{{ $service->duration ?? '' }}</p>
                                                 </div>
                                                 <div class="col-lg-4 text-end">
-                                                    <h6>AED {{ $service->price ?? '' }}</h6>
+                                                    <h6>Rs {{ $service->price ?? '' }}</h6>
                                                 </div>
                                             </div>
                                         </div>
@@ -133,7 +133,7 @@
 
                         <div class="d-flex justify-content-between align-items-center mb-2" id="grandTotalDiv">
                             <h6>Total:</h6>
-                            <span class=" fw-bold" id="total">AED 0.00</span>
+                            <span class=" fw-bold" id="total">Rs 0.00</span>
                         </div>
                         <ul style="display: none;" id="tax-info">
                             <li style="list-style-type: none;" class="fw-bold">Excluding Taxes</li>
@@ -217,7 +217,7 @@
                         </div>
                                             <div class="d-flex justify-content-between">
                             <span>${details.duration ?? ''} . ${details.available_for ?? ''}</span>
-                            <span>AED ${details.price}</span>
+                            <span>Rs ${details.price}</span>
                         </div>
                                         </div>
                                     </div>
@@ -311,18 +311,18 @@
             }
 
             async function taxCalculator(originalAmount) {
-                // Constants for fees in AED
+                // Constants for fees in Rs
                 const ourFeeRate = 0.025;
                 const stripeFeeRate = 0.029; // Example Stripe fee rate (2.9%)
-                const stripeFixedFeeAED = 1; // Fixed fee in AED
-                const textFeeAED = 0.15;
-                const emailFeeAED = 0.05;
+                const stripeFixedFeeRs = 1; // Fixed fee in Rs
+                const textFeeRs = 0.15;
+                const emailFeeRs = 0.05;
 
                 // Calculate the fees
                 const ourFee = originalAmount * ourFeeRate;
-                const stripeFee = (originalAmount * stripeFeeRate) + stripeFixedFeeAED;
-                const totalTextFee = textFeeAED * 2; // Assuming 2 texts
-                const totalEmailFee = emailFeeAED; // Assuming 1 email
+                const stripeFee = (originalAmount * stripeFeeRate) + stripeFixedFeeRs;
+                const totalTextFee = textFeeRs * 2; // Assuming 2 texts
+                const totalEmailFee = emailFeeRs; // Assuming 1 email
 
                 // Calculate the total amount
                 const totalAmount = originalAmount + ourFee + stripeFee + totalTextFee + totalEmailFee;
@@ -368,7 +368,7 @@
                 console.log('sldfjdlfkj', amountWithTax);
                 taxedAmount = amountWithTax;
 
-                $('#total').text(`AED ${total}`);
+                $('#total').text(`Rs ${total}`);
 
                 function checkBalance() {
                     let payButton = document.getElementById('payButton'); // Ensure this ID matches your HTML

@@ -102,7 +102,7 @@
                                                     {{ $plan->name ?? '' }}
                                                 </td>
                                                 <td class="productimgname">
-                                                    AED{{ $plan->price ?? 0 }}
+                                                    Rs{{ $plan->price ?? 0 }}
                                                 </td>
 
                                                 <td>

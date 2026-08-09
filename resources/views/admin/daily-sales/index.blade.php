@@ -47,25 +47,25 @@
                                             <td class="fw-semibold">Services</td>
                                             <td>{{$serviceQty ?? '0'}}</td>
                                             <td>0</td>
-                                            <td>AED {{$servicePrice ?? '0.00'}}</td>
+                                            <td>Rs {{$servicePrice ?? '0.00'}}</td>
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold">Products</td>
                                             <td>{{$productQty ?? '0'}}</td>
                                             <td>0</td>
-                                            <td>AED {{$productPrice ?? '0.00'}}</td>
+                                            <td>Rs {{$productPrice ?? '0.00'}}</td>
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold">Memberships</td>
                                             <td>{{$membershipQty ?? '0'}}</td>
                                             <td>0</td>
-                                            <td>AED {{$membershipPrice ?? '0.00'}}</td>
+                                            <td>Rs {{$membershipPrice ?? '0.00'}}</td>
                                         </tr>
                                         <tr>
                                             <td class="fw-bolder">Total Sales</td>
                                             <td class="fw-bolder">{{$totalQty ?? '0'}}</td>
                                             <td class="fw-bolder">0</td>
-                                            <td class="fw-bolder">AED {{$totalPrice ?? '0.00'}}</td>
+                                            <td class="fw-bolder">Rs {{$totalPrice ?? '0.00'}}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -90,22 +90,22 @@
                                     <tbody>
                                         <tr>
                                             <td class="fw-bolder">Cash</td>
-                                            <td>AED {{$cash ?? '0.00'}}</td>
-                                            <td>AED 0</td>
+                                            <td>Rs {{$cash ?? '0.00'}}</td>
+                                            <td>Rs 0</td>
                                         </tr>
                                         <tr>
                                             <td class="fw-bolder">Other</td>
-                                            <td>AED {{$other ?? '0.00'}}</td>
+                                            <td>Rs {{$other ?? '0.00'}}</td>
                                             <td>0</td>
                                         </tr>
                                         <tr>
                                             <td class="fw-bolder">Payments collected</td>
-                                            <td class="fw-bolder">AED {{$payment_collected ?? '0.00'}}</td>
+                                            <td class="fw-bolder">Rs {{$payment_collected ?? '0.00'}}</td>
                                             <td>0</td>
                                         </tr>
                                         <tr>
                                             <td class="fw-bolder">Outstanding</td>
-                                            <td class="fw-bolder">AED {{$outstanding ?? '0.00'}}</td>
+                                            <td class="fw-bolder">Rs {{$outstanding ?? '0.00'}}</td>
                                             <td></td>
                                         </tr>
 

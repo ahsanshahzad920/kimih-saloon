@@ -98,6 +98,8 @@ Route::get('queue-work', function () {
 });
 
 
+Route::get('sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
+
 // Clients Routes
 Route::resource('/', HomeController::class);
 Route::get('/search', [HomeController::class, 'searchShop'])->name('shop.search');

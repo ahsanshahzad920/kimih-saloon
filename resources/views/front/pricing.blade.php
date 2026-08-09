@@ -134,7 +134,7 @@
 
                             <div class="text-center">
                                 <div class="price-amount">
-                                    ${{ number_format((float)($plan->price ?? 0), 2) }}
+                                    Rs {{ number_format((float)($plan->price ?? 0), 2) }}
                                 </div>
                                 <span class="price-period">per month</span>
                             </div>

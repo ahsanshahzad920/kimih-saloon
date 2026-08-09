@@ -81,13 +81,13 @@
                                     <tr>
                                         <td class="align-middle">{{ $product->product->sku ?? '' }}
                                             ({{ $product->product->name ?? '' }})</td>
-                                        <td class="align-middle">$ {{ $product->price ?? '' }}</td>
+                                        <td class="align-middle">Rs {{ $product->price ?? '' }}</td>
                                         <td class="align-middle"> {{ $product->quantity ?? '' }}
                                             {{ $product->sale_units->short_name ?? '' }}</td>
-                                        <td class="align-middle">$ {{ $product->product->sell_price ?? '' }}</td>
-                                        <td class="align-middle">$ {{ $product->discount ?? '' }}</td>
-                                        <td class="align-middle">$ {{ $product->order_tax ?? '' }}</td>
-                                        <td class="align-middle">$ {{ $product->sub_total ?? '' }}</td>
+                                        <td class="align-middle">Rs {{ $product->product->sell_price ?? '' }}</td>
+                                        <td class="align-middle">Rs {{ $product->discount ?? '' }}</td>
+                                        <td class="align-middle">Rs {{ $product->order_tax ?? '' }}</td>
+                                        <td class="align-middle">Rs {{ $product->sub_total ?? '' }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -99,30 +99,30 @@
                             <div class="row border-bottom subheading">
                                 <div class="col-md-6 col-6">Order Tax</div>
                                 {{-- {{$sale->grand_total * ($sale->order_tax ?? 0 / 100)}} --}}
-                                <div class="col-md-6 col-6">$ {{ $sale->order_tax ?? '0' }} %</div>
+                                <div class="col-md-6 col-6">Rs {{ $sale->order_tax ?? '0' }} %</div>
                             </div>
 
                             <div class="row border-bottom">
                                 <div class="col-md-6 col-6">Discount</div>
-                                <div class="col-md-6 col-6">$ {{ $sale->discount ?? '0.00' }}</div>
+                                <div class="col-md-6 col-6">Rs {{ $sale->discount ?? '0.00' }}</div>
                             </div>
 
                             <div class="row border-bottom">
                                 <div class="col-md-6 col-6">Shipping</div>
-                                <div class="col-md-6 col-6">$ {{ $sale->shipping ?? '0.00' }}</div>
+                                <div class="col-md-6 col-6">Rs {{ $sale->shipping ?? '0.00' }}</div>
                             </div>
 
                             <div class="row border-bottom">
                                 <div class="col-md-6 col-6">Grand Total</div>
-                                <div class="col-md-6 col-6">$ {{ $sale->grand_total ?? '0.00' }}</div>
+                                <div class="col-md-6 col-6">Rs {{ $sale->grand_total ?? '0.00' }}</div>
                             </div>
                             <div class="row border-bottom">
                                 <div class="col-md-6 col-6">Paid</div>
-                                <div class="col-md-6 col-6">$ {{ $sale->amount_recieved ?? '0.00' }}</div>
+                                <div class="col-md-6 col-6">Rs {{ $sale->amount_recieved ?? '0.00' }}</div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6 col-6">Due</div>
-                                <div class="col-md-6 col-6">$ {{ $sale->change_return ?? '0.00' }}</div>
+                                <div class="col-md-6 col-6">Rs {{ $sale->change_return ?? '0.00' }}</div>
                             </div>
                         </div>
                     </div>

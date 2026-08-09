@@ -171,17 +171,17 @@
                             <div class="col-md-4 border rounded-2 pt-2">
                                 <div class="row border-bottom subheading">
                                     <div class="col-md-6 col-6">Subtotal</div>
-                                    <div class="col-md-6 col-6" id="subtotal">AED{{$stock_order->sub_total ?? ''}}</div>
+                                    <div class="col-md-6 col-6" id="subtotal">Rs{{$stock_order->sub_total ?? ''}}</div>
                                 </div>
 
                                 <div class="row border-bottom">
                                     <div class="col-md-6 col-6">Fees</div>
-                                    <div class="col-md-6 col-6" id="total_fees">AED{{$stock_order->total_fees ?? ''}}</div>
+                                    <div class="col-md-6 col-6" id="total_fees">Rs{{$stock_order->total_fees ?? ''}}</div>
                                 </div>
 
                                 <div class="row disabled-bg">
                                     <div class="col-md-6 col-6">Grand Total</div>
-                                    <div class="col-md-6 col-6" id="grand_total">AED{{$stock_order->grand_total ?? ''}}</div>
+                                    <div class="col-md-6 col-6" id="grand_total">Rs{{$stock_order->grand_total ?? ''}}</div>
                                 </div>
                             </div>
                         </div>
@@ -484,10 +484,10 @@
             }
 
             // Update the UI
-            // $('#shipping_display').text(`$${shipping.toFixed(2)}`);
-            $('#grand_total').text(`$${grandTotal.toFixed(2)}`);
-            $('#total_fees').text(`$${feesTotal.toFixed(2)}`);
-            $('#subtotal').text(`$${subtotal.toFixed(2)}`);
+            // $('#shipping_display').text(`Rs ${shipping.toFixed(2)}`);
+            $('#grand_total').text(`Rs ${grandTotal.toFixed(2)}`);
+            $('#total_fees').text(`Rs ${feesTotal.toFixed(2)}`);
+            $('#subtotal').text(`Rs ${subtotal.toFixed(2)}`);
 
         }
 

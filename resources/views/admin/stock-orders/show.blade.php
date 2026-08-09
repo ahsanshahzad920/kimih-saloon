@@ -83,13 +83,13 @@
                                     <tr>
                                         <td class="align-middle">{{ $product->product->sku ?? '' }}
                                             ({{ $product->product->name ?? '' }})</td>
-                                        <td class="align-middle">$ {{ $product->price ?? '' }}</td>
+                                        <td class="align-middle">Rs {{ $product->price ?? '' }}</td>
                                         <td class="align-middle"> {{ $product->return_quantity ?? '' }}
                                             {{ $product->sale_units->short_name ?? '' }}</td>
-                                        <td class="align-middle">$ {{ $product->product->sell_price ?? '0.00' }}</td>
-                                        <td class="align-middle">$ {{ $product->discount ?? '0.00' }}</td>
-                                        <td class="align-middle">$ {{ $product->order_tax ?? '0.00' }}</td>
-                                        <td class="align-middle">$ {{ $product->subtotal ?? '0.00' }}</td>
+                                        <td class="align-middle">Rs {{ $product->product->sell_price ?? '0.00' }}</td>
+                                        <td class="align-middle">Rs {{ $product->discount ?? '0.00' }}</td>
+                                        <td class="align-middle">Rs {{ $product->order_tax ?? '0.00' }}</td>
+                                        <td class="align-middle">Rs {{ $product->subtotal ?? '0.00' }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -101,30 +101,30 @@
                             <div class="row border-bottom subheading">
                                 <div class="col-md-6 col-6">Order Tax</div>
 
-                                <div class="col-md-6 col-6">$ {{ $sale_return->order_tax ?? '0' }} %</div>
+                                <div class="col-md-6 col-6">Rs {{ $sale_return->order_tax ?? '0' }} %</div>
                             </div>
 
                             <div class="row border-bottom">
                                 <div class="col-md-6 col-6">Discount</div>
-                                <div class="col-md-6 col-6">$ {{ $sale_return->discount ?? '0.00' }}</div>
+                                <div class="col-md-6 col-6">Rs {{ $sale_return->discount ?? '0.00' }}</div>
                             </div>
 
                             <div class="row border-bottom">
                                 <div class="col-md-6 col-6">Shipping</div>
-                                <div class="col-md-6 col-6">$ {{ $sale_return->shipping ?? '0.00' }}</div>
+                                <div class="col-md-6 col-6">Rs {{ $sale_return->shipping ?? '0.00' }}</div>
                             </div>
 
                             <div class="row border-bottom">
                                 <div class="col-md-6 col-6">Grand Total</div>
-                                <div class="col-md-6 col-6">$ {{ $sale_return->grand_total ?? '0.00' }}</div>
+                                <div class="col-md-6 col-6">Rs {{ $sale_return->grand_total ?? '0.00' }}</div>
                             </div>
                             <div class="row border-bottom">
                                 <div class="col-md-6 col-6">Paid</div>
-                                <div class="col-md-6 col-6">$ {{ $sale_return->amount_paid ?? '0.00' }}</div>
+                                <div class="col-md-6 col-6">Rs {{ $sale_return->amount_paid ?? '0.00' }}</div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6 col-6">Due</div>
-                                <div class="col-md-6 col-6">$ {{ $sale_return->amount_due ?? '0.00' }}</div>
+                                <div class="col-md-6 col-6">Rs {{ $sale_return->amount_due ?? '0.00' }}</div>
                             </div>
                         </div>
                     </div>

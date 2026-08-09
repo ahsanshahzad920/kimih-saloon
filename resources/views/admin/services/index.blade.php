@@ -63,7 +63,7 @@
                                         <tr>
                                             <th scope="row">Hair Color</th>
                                             <td>1h 15min</td>
-                                            <td>$21</td>
+                                            <td>Rs 21</td>
                                             <td>
                                                 <div class="d-flex gap-2">
                                                     <div class="edit">
@@ -81,7 +81,7 @@
                                         <tr>
                                             <th scope="row">Blow Dry</th>
                                             <td>1h 15min</td>
-                                            <td>$21</td>
+                                            <td>Rs 21</td>
                                             <td>
                                                 <div class="d-flex gap-2">
                                                     <div class="edit">
@@ -99,7 +99,7 @@
                                         <tr>
                                             <th scope="row">Hair Color</th>
                                             <td>1h 15min</td>
-                                            <td>$21</td>
+                                            <td>Rs 21</td>
                                             <td>
                                                 <div class="d-flex gap-2">
                                                     <div class="edit">
@@ -117,7 +117,7 @@
                                         <tr>
                                             <th scope="row">Hair Cutting</th>
                                             <td>1h 15min</td>
-                                            <td>$21</td>
+                                            <td>Rs 21</td>
                                             <td>
                                                 <div class="d-flex gap-2">
                                                     <div class="edit">
@@ -216,7 +216,7 @@
                                                                         <div class="d-flex align-items-center gap-3">
                                                                             <div class="d-none d-md-flex gap-3 text-muted small">
                                                                                 <span>{{ $service->duration }} min</span>
-                                                                                <span>AED {{ $service->price }}</span>
+                                                                                <span>Rs {{ $service->price }}</span>
                                                                             </div>
                                                                             <a href="{{ route('services.edit', $service->id) }}" class="text-muted">
                                                                                 <i class="fa fa-pencil"></i>
@@ -287,7 +287,7 @@
                                                                     <div class="d-flex align-items-center gap-3">
                                                                         <div class="d-none d-md-flex gap-3 text-muted small">
                                                                             <span>{{ $service->duration }} min</span>
-                                                                            <span>AED {{ $service->price }}</span>
+                                                                            <span>Rs {{ $service->price }}</span>
                                                                         </div>
                                                                         <a href="{{ route('services.edit', $service->id) }}" class="text-muted">
                                                                             <i class="fa fa-pencil"></i>
@@ -360,7 +360,7 @@
                                                             <strong class="ms-2 pb-1 fs-6">{{ $service->service_name }}</strong>
                                                         </div>
                                                         <div>{{ $service->duration }}</div>
-                                                        <div>AED {{ $service->price }}</div>
+                                                        <div>Rs {{ $service->price }}</div>
                                                     </div>
                                                 </a>
                                             @endforeach

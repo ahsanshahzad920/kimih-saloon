@@ -131,16 +131,16 @@
                             <div>
                                 <div class=" d-flex justify-content-between align-items-center">
                                     <p>Subtotal</p>
-                                    <p>AED 40</p>
+                                    <p>Rs 40</p>
                                 </div>
                                 <div class=" d-flex justify-content-between align-items-center">
                                     <p>Tax</p>
-                                    <p>AED 0</p>
+                                    <p>Rs 0</p>
                                 </div>
                                 <hr>
                                 <div class=" d-flex justify-content-between align-items-center">
                                     <p>To pay</p>
-                                    <h6>AED 40</h6>
+                                    <h6>Rs 40</h6>
                                 </div>
                                 <button class="default-btn w-100 mt-4">Continue</button>
                             </div>

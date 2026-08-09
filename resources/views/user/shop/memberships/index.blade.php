@@ -37,7 +37,7 @@
                             <h2>{{$membership->name ?? ''}}</h2>
                             <div class="d-flex justify-content-between">
                                 <span>Membership Price: </span>
-                                <span class="fw-bold">AED{{$membership->price}}</span>
+                                <span class="fw-bold">Rs{{$membership->price}}</span>
                             </div>
                             <div class="d-flex justify-content-between">
                                 <span>Validity:</span>
@@ -54,7 +54,7 @@
                                 @foreach ($membership->services as $service)
                                     <li>
                                         <div class="content">
-                                            <h3>{{$service->service_name ?? ''}} <span>AED{{$service->price ?? ''}}</span>
+                                            <h3>{{$service->service_name ?? ''}} <span>Rs{{$service->price ?? ''}}</span>
                                             </h3>
                                             <p>Clean {{$service->duration ?? ''}}</p>
                                         </div>

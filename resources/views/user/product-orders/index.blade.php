@@ -36,7 +36,7 @@
                                             <p class="card-text"> <i class="bi bi-alarm me-2"></i>
                                                 <span>{{ $formattedDate ?? '' }}</span></p>
                                             <div class="d-flex justify-content-between">
-                                                <p class="card-text fw-bold">AED {{ $order->grand_total ?? '' }} .
+                                                <p class="card-text fw-bold">Rs {{ $order->grand_total ?? '' }} .
                                                     {{ count($order->items) }} Products</p>
                                             </div>
 

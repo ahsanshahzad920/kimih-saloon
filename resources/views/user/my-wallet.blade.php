@@ -10,7 +10,7 @@
                 <div class="col-lg-8">
                     <div class="wallet-balance shadow-lg">
                         <h2><i class="fas fa-wallet"></i> My Wallet</h2>
-                        <p>Your current balance is: <strong>AED{{ number_format(auth()->user()->balance, 2) }}</strong></p>
+                        <p>Your current balance is: <strong>Rs{{ number_format(auth()->user()->balance, 2) }}</strong></p>
                     </div>
                 </div>
                 <button type="button"
@@ -39,7 +39,7 @@
                         <div class="row mb-3">
                             <div class="col-lg-12">
                                 <div class="form-group">
-                                    <label for="modalPhone">Enter Amount(AED) + (2.5% Platform Fees)</label>
+                                    <label for="modalPhone">Enter Amount(Rs) + (2.5% Platform Fees)</label>
                                     <input type="number"
                                         class="form-control {{ $errors->has('amount') ? 'is-invalid' : '' }}"
                                         name="amount" id="modalPhone" placeholder="e.g:100"

@@ -1,6 +1,7 @@
 @extends('user.layouts.app')
 
-@section('title', 'Frequently Asked Questions (FAQ) | Kimih')
+@section('title', 'Frequently Asked Questions - Salon Booking in Pakistan')
+@section('meta_description', 'Answers to common questions about booking salons, spas & beauty appointments, payments, and cancellations on Kimih in Pakistan.')
 
 @section('styles')
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
@@ -248,6 +249,27 @@
 @endsection
 
 @section('content')
+
+@if ($faqs->count() > 0)
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+        @foreach ($faqs as $faq)
+        {
+            "@type": "Question",
+            "name": {!! json_encode(strip_tags($faq->question ?? '')) !!},
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": {!! json_encode(strip_tags($faq->answer ?? '')) !!}
+            }
+        }@if (!$loop->last),@endif
+        @endforeach
+    ]
+}
+</script>
+@endif
 
 {{-- Hero Section --}}
 <div class="faq-hero-section">

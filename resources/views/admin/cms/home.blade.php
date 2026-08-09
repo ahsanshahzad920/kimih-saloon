@@ -44,7 +44,7 @@
                                         <tr>
                                             <th scope="row">Hair Color</th>
                                             <td>1h 15min</td>
-                                            <td>$21</td>
+                                            <td>Rs 21</td>
                                             <td>
                                                 <div class="d-flex gap-2">
                                                     <div class="edit">
@@ -62,7 +62,7 @@
                                         <tr>
                                             <th scope="row">Blow Dry</th>
                                             <td>1h 15min</td>
-                                            <td>$21</td>
+                                            <td>Rs 21</td>
                                             <td>
                                                 <div class="d-flex gap-2">
                                                     <div class="edit">
@@ -80,7 +80,7 @@
                                         <tr>
                                             <th scope="row">Hair Color</th>
                                             <td>1h 15min</td>
-                                            <td>$21</td>
+                                            <td>Rs 21</td>
                                             <td>
                                                 <div class="d-flex gap-2">
                                                     <div class="edit">
@@ -98,7 +98,7 @@
                                         <tr>
                                             <th scope="row">Hair Cutting</th>
                                             <td>1h 15min</td>
-                                            <td>$21</td>
+                                            <td>Rs 21</td>
                                             <td>
                                                 <div class="d-flex gap-2">
                                                     <div class="edit">

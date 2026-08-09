@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="">
+<html lang="en-PK">
 
 <head>
     <meta charset="UTF-8">
@@ -12,6 +12,67 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="manifest" href="{{ asset('manifest.json') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/pwa-responsive.css') }}">
+
+    {{-- SEO / AEO: Pakistan targeting --}}
+    @php
+        $seoTitle = trim(($__env->yieldContent('title') ?: 'Book Beauty & Wellness Services in Pakistan'));
+        $seoDescription = $__env->yieldContent('meta_description') ?: 'Book salons, spas, barbers, and beauty & wellness services near you in Karachi, Lahore, Islamabad, and across Pakistan. Compare prices, read reviews, and book instantly on Kimih.';
+        $seoCanonical = $__env->yieldContent('canonical') ?: url()->current();
+        $seoImage = $__env->yieldContent('og_image') ?: asset('assets/images/favicon.png');
+    @endphp
+    <meta name="description" content="{{ $seoDescription }}">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <meta name="geo.region" content="PK">
+    <meta name="geo.placename" content="Pakistan">
+    <meta name="language" content="English">
+    <link rel="canonical" href="{{ $seoCanonical }}">
+    <link rel="alternate" hreflang="en-pk" href="{{ $seoCanonical }}">
+    <link rel="alternate" hreflang="x-default" href="{{ $seoCanonical }}">
+
+    {{-- Open Graph --}}
+    <meta property="og:site_name" content="{{ settings()->site_name ?? 'Kimih' }}">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="en_PK">
+    <meta property="og:title" content="{{ $seoTitle }} | {{ settings()->site_name ?? 'Kimih' }}">
+    <meta property="og:description" content="{{ $seoDescription }}">
+    <meta property="og:url" content="{{ $seoCanonical }}">
+    <meta property="og:image" content="{{ $seoImage }}">
+
+    {{-- Twitter Card --}}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $seoTitle }} | {{ settings()->site_name ?? 'Kimih' }}">
+    <meta name="twitter:description" content="{{ $seoDescription }}">
+    <meta name="twitter:image" content="{{ $seoImage }}">
+
+    {{-- JSON-LD: Organization + Website (sitewide, for AEO / answer engines) --}}
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "{{ settings()->site_name ?? 'Kimih' }}",
+        "url": "{{ url('/') }}",
+        "logo": "{{ asset('assets/images/favicon.png') }}",
+        "areaServed": {
+            "@type": "Country",
+            "name": "Pakistan"
+        },
+        "sameAs": []
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "{{ settings()->site_name ?? 'Kimih' }}",
+        "url": "{{ url('/') }}",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "{{ url('/search') }}?query={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
+
     @yield('top-styles')
     <script src="{{ asset('assets/js/jquery.min.js') }}"></script>
     <link rel="stylesheet" href="{{ asset('assets/css/plugins.css') }}">
@@ -27,8 +88,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.places_api_key', 'AIzaSyCv7T8wOWYwc4vCgkiF60CZ_WM9b0nzdQA') }}&libraries=places"></script>
 
-    <title>@yield('title') | {{ settings()->site_name ?? 'Kimih' }} - Discover Your Next Beauty & Wellness Experience</title>
-    <meta name="description" content="Discover and book beauty, massage, hair, nail, spa, and wellness services from trusted professionals near you. Compare prices, reviews, and options instantly.">
+    <title>{{ $seoTitle }} | {{ settings()->site_name ?? 'Kimih' }} Pakistan</title>
     <link rel="icon" type="image/png" href="{{ asset('assets/images/favicon.png') }}">
     <style>
         .myc-available-time {
@@ -251,7 +311,7 @@
                             <div class="product-desc mb-30 pl-20">
                                 <h3>Nail Polish Removers </h3>
                                 <div class="price">
-                                    <span class="old-price">$140.00 </span>
+                                    <span class="old-price">Rs 140.00 </span>
                                     <span class="new-price">- $110.00</span>
                                 </div>
                                 <div class="product-review">

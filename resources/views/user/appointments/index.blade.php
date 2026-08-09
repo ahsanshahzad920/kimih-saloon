@@ -41,7 +41,7 @@
                                             <h5 class="card-title d-flex justify-content-between"><span>{{$appointment->title ?? ''}}</span> <span class="badge rounded-pill text-bg-primary">{{$appointment->status ?? ''}}</span></h5>
                                             <p class="card-text"> <i class="bi bi-alarm me-2"></i> <span>{{$formattedDate ?? ''}}</span></p>
                                             <div class="d-flex justify-content-between">
-                                                <p class="card-text"><small class="text-body-secondary">AED {{$appointment->grand_total ?? ''}} . {{count($appointment->services)}} item</small></p>
+                                                <p class="card-text"><small class="text-body-secondary">Rs {{$appointment->grand_total ?? ''}} . {{count($appointment->services)}} item</small></p>
 
                                             </div>
 
@@ -81,7 +81,7 @@
                                             </p>
                                             <div class="d-flex justify-content-between">
                                                 <p class="card-text">
-                                                    <small class="text-body-secondary">AED
+                                                    <small class="text-body-secondary">Rs
                                                         {{ $appointment->grand_total ?? '' }} .
                                                         {{ count($appointment->services) }} item</small>
                                                 </p>

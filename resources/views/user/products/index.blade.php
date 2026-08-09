@@ -104,7 +104,7 @@
                                 <div class="viewProduct">
                                     <img src="{{ asset('/storage' . $product->images[0]['img_path']) }}"
                                         class="product-img" alt="No Image Found">
-                                    <div class="product-price">AED {{ number_format($product->retail_price, 2) }} <span
+                                    <div class="product-price">Rs {{ number_format($product->retail_price, 2) }} <span
                                             class="product-save">Save {{ $product->save_percentage }}%</span></div>
                                     <div>{{ $product->name }}</div>
                                 </div>
@@ -131,7 +131,7 @@
                                     <div class="viewProduct">
                                         <img src="{{ asset('/storage' . $product->images[0]['img_path']) }}"
                                             class="product-img" alt="No Image Found">
-                                        <div class="product-price">AED {{ number_format($product->retail_price, 2) }}
+                                        <div class="product-price">Rs {{ number_format($product->retail_price, 2) }}
                                             <span class="product-save">Save {{ $product->save_percentage }}%</span>
                                         </div>
                                         <div>{{ $product->name }}</div>
@@ -177,7 +177,7 @@
                             <div class="product-desc mb-30 pl-20">
                                 <h3>Nail Polish Removers </h3>
                                 <div class="price">
-                                    <span class="old-price">$140.00 </span>
+                                    <span class="old-price">Rs 140.00 </span>
                                     <span class="new-price">- $110.00</span>
                                 </div>
                                 <div class="review-form">
@@ -363,7 +363,7 @@
                                     <h5 class="card-title">{{ $cart->product->name ?? '' }}</h5>
                                     <p class="card-text">{{ $cart->product->measureType ?? '' }}
                                         {{ $cart->product->amount ?? '' }}</p>
-                                    <p class="card-text">AED {{ $cart->product->retail_price ?? '' }}</p>
+                                    <p class="card-text">Rs {{ $cart->product->retail_price ?? '' }}</p>
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="input-counter-area">
                                             <div class="input-group">
@@ -401,7 +401,7 @@
             <hr>
             <div class="d-flex justify-content-between p-2 mt-3">
                 <span class="fw-bold">Total</span>
-                <span class="fw-bold">AED <span class="grand_total">200.00</span></span>
+                <span class="fw-bold">Rs <span class="grand_total">200.00</span></span>
             </div>
             <ul id="tax-info">
                 <li style="list-style-type: none;" class="fw-bold">Excluding Taxes</li>
@@ -544,7 +544,7 @@
             //         'img_path'
             //     ]);
             //     modal.find('.product-desc h3').text(product.name);
-            //     modal.find('.product-desc .price .old-price').text('AED ' + product.retail_price);
+            //     modal.find('.product-desc .price .old-price').text('Rs ' + product.retail_price);
             //     let save_price = (product.retail_price - product.supply_price) / product.retail_price * 100;
             //     modal.find('.product-desc .price .new-price').text('Save ' + save_price.toFixed(2) + '%');
             //     modal.find('.product-desc p').text(product.product_short_description);
@@ -574,7 +574,7 @@
             //             modal.find('.products-quickView-image img').attr('src', '/storage' +
             //                 product.images[0]['img_path']);
             //             modal.find('.product-desc h3').text(product.name);
-            //             modal.find('.product-desc .price .old-price').text('AED ' + product
+            //             modal.find('.product-desc .price .old-price').text('Rs ' + product
             //                 .retail_price);
             //             let save_price = (product.retail_price - product.supply_price) / product
             //                 .retail_price * 100;
@@ -618,7 +618,7 @@
                         modal.find('.products-quickView-image img').attr('src', '/storage' +
                             product.images[0]['img_path']);
                         modal.find('.product-desc h3').text(product.name);
-                        modal.find('.product-desc .price .old-price').text('AED ' + product
+                        modal.find('.product-desc .price .old-price').text('Rs ' + product
                             .retail_price);
                         let save_price = (product.retail_price - product.supply_price) / product
                             .retail_price * 100;
@@ -809,7 +809,7 @@
                                     <div class="card-body">
                                         <h5 class="card-title">${cart.product.name}</h5>
                                         <p class="card-text">${cart.product.measureType} ${cart.product.amount}</p>
-                                        <p class="card-text">AED ${cart.product.retail_price}</p>
+                                        <p class="card-text">Rs ${cart.product.retail_price}</p>
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div class="input-counter-area">
                                                 <div class="input-group">
@@ -925,18 +925,18 @@
             }
 
             async function taxCalculator(originalAmount) {
-                // Constants for fees in AED
+                // Constants for fees in Rs
                 const ourFeeRate = 0.025;
                 const stripeFeeRate = 0.029; // Example Stripe fee rate (2.9%)
-                const stripeFixedFeeAED = 1; // Fixed fee in AED
-                const textFeeAED = 0.15;
-                const emailFeeAED = 0.05;
+                const stripeFixedFeeRs = 1; // Fixed fee in Rs
+                const textFeeRs = 0.15;
+                const emailFeeRs = 0.05;
 
                 // Calculate the fees
                 const ourFee = originalAmount * ourFeeRate;
-                const stripeFee = (originalAmount * stripeFeeRate) + stripeFixedFeeAED;
-                const totalTextFee = textFeeAED * 2; // Assuming 2 texts
-                const totalEmailFee = emailFeeAED; // Assuming 1 email
+                const stripeFee = (originalAmount * stripeFeeRate) + stripeFixedFeeRs;
+                const totalTextFee = textFeeRs * 2; // Assuming 2 texts
+                const totalEmailFee = emailFeeRs; // Assuming 1 email
 
                 // Calculate the total amount
                 const totalAmount = originalAmount + ourFee + stripeFee + totalTextFee + totalEmailFee;

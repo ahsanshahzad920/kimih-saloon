@@ -83,7 +83,7 @@
                             </div>
 
                             <div class="text-center save-btn total-pay text-white p-2 mt-5">
-                                <p class="m-0" >Total Payable: <span id="grand_total">$0</span></p>
+                                <p class="m-0" >Total Payable: <span id="grand_total">Rs 0</span></p>
                             </div>
 
                             <div class="row mt-4">
@@ -102,7 +102,7 @@
                                     <div class="form-group fw-bold">
                                         <label for="discount">Discount</label>
                                         <div class="input-group mt-2">
-                                            <input type="number" placeholder="$0.00"
+                                            <input type="number" placeholder="Rs 0.00"
                                                 class="form-control subheading"value="0" id="discount" name="discount" />
                                             <span class="input-group-text subheading" id="basic-addon2"><i
                                                     class="bi bi-currency-dollar"></i></span>
@@ -113,7 +113,7 @@
                                     <div class="form-group fw-bold">
                                         <label for="shipping">Shipping</label>
                                         <div class="input-group mt-2">
-                                            <input type="number" placeholder="$0.00" class="form-control subheading"
+                                            <input type="number" placeholder="Rs 0.00" class="form-control subheading"
                                                 id="shipping" value="0" name="shipping" />
                                             <span class="input-group-text subheading" id="basic-addon2"><i
                                                     class="bi bi-currency-dollar"></i></span>
@@ -191,7 +191,7 @@
                                                             {{ $product->name ?? '' }}
                                                         </h4>
                                                         <div class="d-flex justify-content-between">
-                                                            <p class="text-dark">AED{{ $product->sell_price ?? '' }}</p>
+                                                            <p class="text-dark">Rs{{ $product->sell_price ?? '' }}</p>
                                                             <a href="#" class="text-dark"><i
                                                                     class="fa-solid fa-cart-shopping"></i></a>
                                                         </div>
@@ -215,7 +215,7 @@
                                                         Product
                                                     </h4>
                                                     <div class="d-flex justify-content-between">
-                                                        <p class="text-dark">$19.99</p>
+                                                        <p class="text-dark">Rs 19.99</p>
                                                         <a href="#" class="text-dark"><i
                                                                 class="fa-solid fa-cart-shopping"></i></a>
                                                     </div>
@@ -231,7 +231,7 @@
                                                         Product
                                                     </h4>
                                                     <div class="d-flex justify-content-between">
-                                                        <p class="text-dark">$19.99</p>
+                                                        <p class="text-dark">Rs 19.99</p>
                                                         <a href="#" class="text-dark"><i
                                                                 class="fa-solid fa-cart-shopping"></i></a>
                                                     </div>
@@ -247,7 +247,7 @@
                                                         Product
                                                     </h4>
                                                     <div class="d-flex justify-content-between">
-                                                        <p class="text-dark">$19.99</p>
+                                                        <p class="text-dark">Rs 19.99</p>
                                                         <a href="#" class="text-dark"><i
                                                                 class="fa-solid fa-cart-shopping"></i></a>
                                                     </div>
@@ -263,7 +263,7 @@
                                                         Product
                                                     </h4>
                                                     <div class="d-flex justify-content-between">
-                                                        <p class="text-dark">$19.99</p>
+                                                        <p class="text-dark">Rs 19.99</p>
                                                         <a href="#" class="text-dark"><i
                                                                 class="fa-solid fa-cart-shopping"></i></a>
                                                     </div>
@@ -548,7 +548,7 @@
                 productItems.push(product);
             });
             // get values for grand_total, shipping, order_tax, discount
-            const grandTotal = $('#grand_total').text().replace('$', '');
+            const grandTotal = $('#grand_total').text().replace(/[^0-9.]/g, '');
             const shipping = $('#shipping').val();
             const orderTax = $('#order_tax').val();
             const discount = $('#discount').val();
@@ -838,7 +838,7 @@
             // console.log(shipping, subtotal, taxAmount, discountValue);
             const grandTotal = subtotal + taxAmount - discountValue + shipping;
 
-            $('#grand_total').text(`$${grandTotal.toFixed(2)}`);
+            $('#grand_total').text(`Rs ${grandTotal.toFixed(2)}`);
         }
 
         function productItemListing(){
@@ -911,16 +911,16 @@
             });
 
             customerName.textContent = customerSelect.options[customerSelect.selectedIndex].dataset.name;
-            receivedAmountInput.value = $('#grand_total').text().replace('$', '');
-            payingAmountInput.value = $('#grand_total').text().replace('$', '');
+            receivedAmountInput.value = $('#grand_total').text().replace(/[^0-9.]/g, '');
+            payingAmountInput.value = $('#grand_total').text().replace(/[^0-9.]/g, '');
             changeAmount.textContent = '0.00';
             totalProductsBadge.textContent = totalProducts;
             const orderTax = parseFloat($('#order_tax').val() == '' ? 0 : $('#order_tax').val()) / 100;
             const taxAmount = subTotal * orderTax;
 
-            $('#order-tax-pay').text(`$${taxAmount.toFixed(2)} (${orderTax * 100}%)`);
-            $('#discount-pay').text(`$${$('#discount').val()}`);
-            $('#shipping-pay').text(`$${$('#shipping').val()}`);
+            $('#order-tax-pay').text(`Rs ${taxAmount.toFixed(2)} (${orderTax * 100}%)`);
+            $('#discount-pay').text(`Rs ${$('#discount').val()}`);
+            $('#shipping-pay').text(`Rs ${$('#shipping').val()}`);
             $('#total-pay').text(`${$('#grand_total').text()}`);
 
             $('#payNowModal').modal('show');
@@ -937,7 +937,7 @@
             // Parse the input values to floats
             let amountRecieved = parseFloat(amountRecievedInput.value);
             let amountPay = parseFloat(amountPayInput.value);
-            let grandTotal =  parseFloat($('#grand_total').text().replace('$', ''));
+            let grandTotal =  parseFloat($('#grand_total').text().replace(/[^0-9.]/g, ''));
 
             if (amountPay > amountRecieved) {
                 toastr.error('Paying amount cannot be greater than received amount');
@@ -1022,7 +1022,7 @@
                                         ${product.images[0] ? `<img src="{{ Storage::url('${product.images[0].img_path}') }}" alt="No" class="w-100" style="max-height: 130px">` : `<img src="{{ asset('back/assets/image/no-image.png') }}" alt="" class="w-100" style="max-height: 130px" />`}
                                         <h4 class="text-center pt-2 heading text-dark">${product.name}</h4>
                                         <div class="d-flex justify-content-between">
-                                            <p class="text-dark">$${product.sell_price}</p>
+                                            <p class="text-dark">Rs ${product.sell_price}</p>
                                             <a href="#" class="text-dark"><i class="fa-solid fa-cart-shopping"></i></a>
                                         </div>
                                     </button>

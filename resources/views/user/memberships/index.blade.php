@@ -40,7 +40,7 @@
                                                     {{ $membership->membership->valid_for ?? '' }}</p>
                                             </div>
                                             <div class="d-flex justify-content-between">
-                                                <p class="card-text fw-bold">AED {{ $membership->membership->price ?? '' }}
+                                                <p class="card-text fw-bold">Rs {{ $membership->membership->price ?? '' }}
                                                     . {{ count($membership->membership->services) }} Services</p>
                                             </div>
 

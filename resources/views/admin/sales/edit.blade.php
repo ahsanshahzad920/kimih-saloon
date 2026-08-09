@@ -189,23 +189,23 @@
                         <div class="col-md-4 border rounded-2">
                             <div class="row border-bottom subheading">
                                 <div class="col-md-6 col-6">Order Tax</div>
-                                <div class="col-md-6 col-6" id="order_tax_display">AED{{ $sale->order_tax ?? '' }}</div>
+                                <div class="col-md-6 col-6" id="order_tax_display">Rs{{ $sale->order_tax ?? '' }}</div>
                                 {{-- <span> (0.00%)</span> --}}
                             </div>
 
                             <div class="row border-bottom">
                                 <div class="col-md-6 col-6">Discount</div>
-                                <div class="col-md-6 col-6" id="discount_display">AED{{ $sale->discount ?? '' }}</div>
+                                <div class="col-md-6 col-6" id="discount_display">Rs{{ $sale->discount ?? '' }}</div>
                             </div>
 
                             <div class="row border-bottom">
                                 <div class="col-md-6 col-6">Shipping</div>
-                                <div class="col-md-6 col-6" id="shipping_display">AED{{ $sale->shipping ?? '' }}</div>
+                                <div class="col-md-6 col-6" id="shipping_display">Rs{{ $sale->shipping ?? '' }}</div>
                             </div>
 
                             <div class="row disabled-bg">
                                 <div class="col-md-6 col-6">Grand Total</div>
-                                <div class="col-md-6 col-6" id="grand_total">AED{{ $sale->grand_total ?? '' }}</div>
+                                <div class="col-md-6 col-6" id="grand_total">Rs{{ $sale->grand_total ?? '' }}</div>
                             </div>
                         </div>
                     </div>
@@ -232,7 +232,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="discount" class="mb-1 fw-bold">Discount</label>
-                                    <input type="number" placeholder="$0.00" class="form-control subheading"
+                                    <input type="number" placeholder="Rs 0.00" class="form-control subheading"
                                         id="discount" value="{{ $sale->discount ?? '' }}" />
 
                                 </div>
@@ -243,7 +243,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="shipping" class="mb-1 fw-bold">Shipping </label>
-                                    <input type="number" placeholder="$0.00" class="form-control subheading"
+                                    <input type="number" placeholder="Rs 0.00" class="form-control subheading"
                                         id="shipping" value="{{ $sale->shipping ?? '' }}" />
                                 </div>
                             </div>
@@ -298,14 +298,14 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="amount_recieved" class="mb-1 fw-bold">Cash Recieved</label>
-                                    <input type="text" placeholder="$0.00" class="form-control subheading"
+                                    <input type="text" placeholder="Rs 0.00" class="form-control subheading"
                                         id="amount_recieved" value="{{ $sale->amount_recieved ?? '' }}" />
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="amount_pay" class="mb-1 fw-bold">Paying Amount</label>
-                                    <input type="text" placeholder="$0.00" class="form-control subheading"
+                                    <input type="text" placeholder="Rs 0.00" class="form-control subheading"
                                         id="amount_pay" {{ $sale->amount_pay ?? '' }} />
                                 </div>
                             </div>
@@ -503,44 +503,44 @@
                                                                         <tr>
                                                                             <td class="pt-3">1</td>
                                                                             <td class="pt-3">Banana</td>
-                                                                            <td class="pt-3">$3.00</td>
+                                                                            <td class="pt-3">Rs 3.00</td>
                                                                             <td class="pt-3">2 pc</td>
-                                                                            <td class="pt-3">$6.00</td>
+                                                                            <td class="pt-3">Rs 6.00</td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td class="pt-3">2</td>
                                                                             <td class="pt-3">Pineapple</td>
-                                                                            <td class="pt-3">$3.00</td>
+                                                                            <td class="pt-3">Rs 3.00</td>
                                                                             <td class="pt-3">1 pc</td>
-                                                                            <td class="pt-3">$0.00</td>
+                                                                            <td class="pt-3">Rs 0.00</td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td class="pt-3">3</td>
                                                                             <td class="pt-3">Pineapple</td>
-                                                                            <td class="pt-3">$3.00</td>
+                                                                            <td class="pt-3">Rs 3.00</td>
                                                                             <td class="pt-3">1 pc</td>
-                                                                            <td class="pt-3">$0.00</td>
+                                                                            <td class="pt-3">Rs 0.00</td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td class="pt-3">4</td>
                                                                             <td class="pt-3">Pineapple</td>
-                                                                            <td class="pt-3">$3.00</td>
+                                                                            <td class="pt-3">Rs 3.00</td>
                                                                             <td class="pt-3">1 pc</td>
-                                                                            <td class="pt-3">$0.00</td>
+                                                                            <td class="pt-3">Rs 0.00</td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td class="pt-3">5</td>
                                                                             <td class="pt-3">Pineapple</td>
-                                                                            <td class="pt-3">$3.00</td>
+                                                                            <td class="pt-3">Rs 3.00</td>
                                                                             <td class="pt-3">1 pc</td>
-                                                                            <td class="pt-3">$0.00</td>
+                                                                            <td class="pt-3">Rs 0.00</td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td class="pt-3">6</td>
                                                                             <td class="pt-3">Pineapple</td>
-                                                                            <td class="pt-3">$3.00</td>
+                                                                            <td class="pt-3">Rs 3.00</td>
                                                                             <td class="pt-3">1 pc</td>
-                                                                            <td class="pt-3">$0.00</td>
+                                                                            <td class="pt-3">Rs 0.00</td>
                                                                         </tr>
                                                                     </tbody>
                                                                 </table>
@@ -557,7 +557,7 @@
                                                                         <div class="col-md-6 col-6">Tax</div>
                                                                         <div class="col-md-6 col-6 fw-bold text-secondary"
                                                                             id="order_tax_modal">
-                                                                            $0.00 (0.00%)
+                                                                            Rs 0.00 (0.00%)
                                                                         </div>
                                                                     </div>
 
@@ -565,7 +565,7 @@
                                                                         <div class="col-md-6 col-6">Discount</div>
                                                                         <div class="col-md-6 col-6 fw-bold text-secondary"
                                                                             id="discount_modal">
-                                                                            $0.00 (0.00%)
+                                                                            Rs 0.00 (0.00%)
                                                                         </div>
                                                                     </div>
 
@@ -573,14 +573,14 @@
                                                                         <div class="col-md-6 col-6">Shipping</div>
                                                                         <div class="col-md-6 col-6 fw-bold text-secondary"
                                                                             id="shipping_modal">
-                                                                            $0.00
+                                                                            Rs 0.00
                                                                         </div>
                                                                     </div>
                                                                     <div class="row fw-bold p-1 specific-border">
                                                                         <div class="col-md-6 col-6">Grand Total</div>
                                                                         <div class="col-md-6 col-6 fw-bold"
                                                                             id="grand_total_modal">
-                                                                            $0.00
+                                                                            Rs 0.00
                                                                         </div>
                                                                     </div>
 
@@ -590,7 +590,7 @@
                                                                         </div>
                                                                         <div class="col-md-6 col-6 fw-bold text-secondary"
                                                                             id="amount_recieved_modal">
-                                                                            $0.00
+                                                                            Rs 0.00
                                                                         </div>
                                                                     </div>
                                                                     <div class="row border-bottom p-1">
@@ -599,7 +599,7 @@
                                                                         </div>
                                                                         <div class="col-md-6 col-6 fw-bold text-secondary"
                                                                             id="change_return_modal">
-                                                                            $0.00
+                                                                            Rs 0.00
                                                                         </div>
                                                                     </div>
                                                                     <div class="row fw-bold p-1">
@@ -608,7 +608,7 @@
                                                                         </div>
                                                                         <div class="col-md-6 col-6 fw-bold"
                                                                             id="pendind_amount_modal">
-                                                                            $0.00
+                                                                            Rs 0.00
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -879,7 +879,7 @@
 
             function handlePaymentStatusChange() {
                 var payment_status = document.getElementById('payment_status');
-                var grandTotal = parseFloat(document.getElementById('grand_total').textContent.replace('$', ''));
+                var grandTotal = parseFloat(document.getElementById('grand_total').textContent.replace(/[^0-9.]/g, ''));
                 var amountPayInput = document.getElementById('amount_pay');
 
                 if (payment_status.value == 'paid') {
@@ -1013,10 +1013,10 @@
             const grandTotal = subtotal + taxAmount - discountValue + shipping;
 
             // Update the UI
-            $('#order_tax_display').text(`$${taxAmount.toFixed(2)} (${orderTax * 100}%)`);
-            $('#discount_display').text(`$${discountValue.toFixed(2)}`);
-            $('#shipping_display').text(`$${shipping.toFixed(2)}`);
-            $('#grand_total').text(`$${grandTotal.toFixed(2)}`);
+            $('#order_tax_display').text(`Rs ${taxAmount.toFixed(2)} (${orderTax * 100}%)`);
+            $('#discount_display').text(`Rs ${discountValue.toFixed(2)}`);
+            $('#shipping_display').text(`Rs ${shipping.toFixed(2)}`);
+            $('#grand_total').text(`Rs ${grandTotal.toFixed(2)}`);
             if ($('#payment_status').val() == 'paid') {
                 $('#amount_pay').val(grandTotal);
                 $('#amount_recieved').val(grandTotal);

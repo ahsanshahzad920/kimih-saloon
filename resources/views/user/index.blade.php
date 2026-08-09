@@ -1,6 +1,7 @@
 @extends('user.layouts.app')
 
-@section('title', 'Book beauty & wellness near you')
+@section('title', 'Book Salons & Beauty Services Near You in Pakistan')
+@section('meta_description', 'Find and book the best salons, spas, barbers, and beauty & wellness professionals in Karachi, Lahore, Islamabad, Rawalpindi & across Pakistan. Compare prices, read verified reviews, and book online in minutes with Kimih.')
 
 @section('styles')
     <link rel="preconnect" href="https://api.fontshare.com">

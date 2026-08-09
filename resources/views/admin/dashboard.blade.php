@@ -187,7 +187,7 @@
                                             <div class="row g-0 text-center">
                                                 <div class="col-6 col-sm-3">
                                                     <div class="p-3 border border-dashed border-start-0">
-                                                        <h5 class="mb-1">$<span class="counter-value"
+                                                        <h5 class="mb-1">Rs<span class="counter-value"
                                                                 data-target="22.89">0</span>k</h5>
 
                                                         <p class="text-muted mb-0">Sales</p>
@@ -292,7 +292,7 @@
                                             <div class="row g-0 text-center">
                                                 <div class="col-6 col-sm-3">
                                                     <div class="p-3 border border-dashed border-start-0">
-                                                        <h5 class="mb-1 text-success fw-bold">${{ number_format(array_sum($sales), 2) }}</h5>
+                                                        <h5 class="mb-1 text-success fw-bold">Rs {{ number_format(array_sum($sales), 2) }}</h5>
                                                         <p class="text-muted mb-0">Total Sales</p>
                                                     </div>
                                                 </div>
@@ -394,7 +394,7 @@
                                                                 </td>
                                                                 <td>
                                                                     <span class="fw-semibold text-dark">
-                                                                        ${{ number_format($booking->grand_total ?? 0, 2) }}
+                                                                        Rs {{ number_format($booking->grand_total ?? 0, 2) }}
                                                                     </span>
                                                                 </td>
                                                             </tr>
@@ -638,7 +638,7 @@
                     y: {
                         formatter: function(val, opts) {
                             if (opts && opts.seriesIndex === 0) {
-                                return '$' + parseFloat(val).toFixed(2);
+                                return 'Rs ' + parseFloat(val).toFixed(2);
                             }
                             return val;
                         }

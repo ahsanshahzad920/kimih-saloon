@@ -1,2 +1,9 @@
 User-agent: *
-Disallow:
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /auth
+Disallow: /customer
+Disallow: /storage
+Disallow: /api
+
+Sitemap: https://kimih.io/sitemap.xml

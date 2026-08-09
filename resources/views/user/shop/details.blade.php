@@ -1,6 +1,15 @@
 @extends('user.layouts.app')
 
-@section('title', ($user->businessUser->business_name ?? 'Shop Details') . ' | Kimih Booking')
+@php
+    $bizName = $user->businessUser->business_name ?? 'Salon';
+    $bizCity = $user->businessUser->city ?? 'Pakistan';
+    $bizImagesTop = $user->businessUser->images ?? collect();
+    $bizOgImage = ($bizImagesTop->count() > 0 && !empty($bizImagesTop->get(0)->image)) ? asset('storage/' . $bizImagesTop->get(0)->image) : asset('assets/images/favicon.png');
+@endphp
+
+@section('title', $bizName . ' - Book Online in ' . $bizCity)
+@section('meta_description', 'Book an appointment at ' . $bizName . ' in ' . $bizCity . ', Pakistan. View services, prices, reviews, and available time slots. Instant online booking on Kimih.')
+@section('og_image', $bizOgImage)
 
 @section('styles')
 <style>
@@ -60,9 +69,41 @@
 @endsection
 
 @section('content')
+@php
+    $ldRatingCount = $feedbacks->count() ?? 0;
+    $ldRatingAvg = $ldRatingCount > 0 ? round($feedbacks->avg('rating'), 1) : null;
+@endphp
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BeautySalon",
+    "name": "{{ addslashes($bizName) }}",
+    "image": "{{ $bizOgImage }}",
+    "url": "{{ url()->current() }}",
+    "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "{{ addslashes($bizCity) }}",
+        "addressCountry": "PK"
+    }
+    @if ($user->businessUser->latitude && $user->businessUser->longitude)
+    ,"geo": {
+        "@type": "GeoCoordinates",
+        "latitude": "{{ $user->businessUser->latitude }}",
+        "longitude": "{{ $user->businessUser->longitude }}"
+    }
+    @endif
+    @if ($ldRatingAvg)
+    ,"aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "{{ $ldRatingAvg }}",
+        "reviewCount": "{{ $ldRatingCount }}"
+    }
+    @endif
+}
+</script>
 <div class="fresha-page-wrapper py-4">
     <div class="container">
-        
+
         {{-- Breadcrumb --}}
         <div class="fresha-breadcrumb mb-3">
             <a href="/">Home</a>
@@ -192,7 +233,7 @@
                                     @endif
                                     <div class="service-meta">
                                         <span class="service-time"><i class="fa-regular fa-clock me-1"></i> {{ $service->duration ?? '30 mins' }}</span>
-                                        <span class="service-price">AED {{ number_format($service->price, 0) }}</span>
+                                        <span class="service-price">Rs {{ number_format($service->price, 0) }}</span>
                                     </div>
                                 </div>
                                 <div class="service-right">
@@ -381,7 +422,7 @@
                     <div class="cart-total-bar">
                         <div class="cart-total-row">
                             <span>Total</span>
-                            <span id="cartTotalSum">AED 0</span>
+                            <span id="cartTotalSum">Rs 0</span>
                         </div>
                     </div>
 
@@ -516,7 +557,7 @@
                     <p class="m-0">No services selected yet.<br/>Click <strong>+ Add</strong> on any service to start booking.</p>
                 </div>`;
             countBadge.innerText = '0 items';
-            totalSum.innerText = 'AED 0';
+            totalSum.innerText = 'Rs 0';
             return;
         }
 
@@ -530,7 +571,7 @@
                 <div class="cart-item-row">
                     <div class="cart-item-info">
                         <div class="title">${item.name}</div>
-                        <div class="subtitle">${item.duration} • AED ${item.price}</div>
+                        <div class="subtitle">${item.duration} • Rs ${item.price}</div>
                     </div>
                     <button class="cart-item-remove" onclick="removeCartItem('${id}')" title="Remove">&times;</button>
                 </div>
@@ -539,7 +580,7 @@
 
         container.innerHTML = html;
         countBadge.innerText = keys.length + (keys.length === 1 ? ' item' : ' items');
-        totalSum.innerText = 'AED ' + grandTotal.toLocaleString();
+        totalSum.innerText = 'Rs ' + grandTotal.toLocaleString();
     }
 </script>
 @endsection

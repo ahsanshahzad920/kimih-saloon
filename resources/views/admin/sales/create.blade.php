@@ -366,20 +366,20 @@
                             <div class="mt-3">
                                 <div class="d-flex justify-content-between align-items-center mb-2" id="subTotalDiv">
                                     <span class="">Subtotal:</span>
-                                    <span class="" id="subTotal">$0.00</span>
+                                    <span class="" id="subTotal">Rs 0.00</span>
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center mb-2">
                                     <span class="">Tax:</span>
-                                    <span class="" id="subTotal">$0.00</span>
+                                    <span class="" id="subTotal">Rs 0.00</span>
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center mb-2" id="grandTotalDiv">
                                     <h6>Total:</h6>
-                                    <span class=" fw-bold" id="grand_total">$0.00</span>
+                                    <span class=" fw-bold" id="grand_total">Rs 0.00</span>
                                 </div>
                                 <hr>
                                 <div class="d-flex justify-content-between align-items-center mb-2" id="toPayDiv">
                                     <h6>To pay:</h6>
-                                    <span class=" fw-bold" id="toPay">$0.00</span>
+                                    <span class=" fw-bold" id="toPay">Rs 0.00</span>
                                 </div>
                                 <div class="mt-2 d-flex justify-content-between align-items-center">
                                     <div class="dropdown">
@@ -435,7 +435,7 @@
                             data-details="${details}">
                             <div class="d-flex justify-content-between">
                                 <h5 id="item_name">Item Name</h5>
-                                <span id="item_price">$0.00</span>
+                                <span id="item_price">Rs 0.00</span>
 
                             </div>
                             <div class="d-flex justify-content-between">
@@ -560,7 +560,7 @@
                         </div>
                         <div class="mt-4 d-flex justify-content-between">
                             <h6>Total after discount</h6>
-                            <h6 id="totalAfterDiscount">$</h6>
+                            <h6 id="totalAfterDiscount">Rs</h6>
                         </div>
                     </div>
                 </div>
@@ -866,10 +866,10 @@
             const grandTotal = subtotal + taxAmount - discountValue + shipping;
 
             // Update the UI
-            $('#order_tax_display').text(`$${taxAmount.toFixed(2)} (${orderTax * 100}%)`);
-            $('#discount_display').text(`$${discountValue.toFixed(2)}`);
-            $('#shipping_display').text(`$${shipping.toFixed(2)}`);
-            $('#grand_total').text(`$${grandTotal.toFixed(2)}`);
+            $('#order_tax_display').text(`Rs ${taxAmount.toFixed(2)} (${orderTax * 100}%)`);
+            $('#discount_display').text(`Rs ${discountValue.toFixed(2)}`);
+            $('#shipping_display').text(`Rs ${shipping.toFixed(2)}`);
+            $('#grand_total').text(`Rs ${grandTotal.toFixed(2)}`);
             if ($('#payment_status').val() == 'paid') {
                 $('#amount_pay').val(grandTotal);
                 $('#amount_recieved').val(grandTotal);
@@ -1007,7 +1007,7 @@
                                             </div>
                                             <div class="d-flex justify-content-between">
                             <span>${details.duration ?? ''}</span>
-                            <span>$${details.price}</span>
+                            <span>Rs ${details.price}</span>
                         </div>
                                         </div>
                                     </div>
@@ -1034,7 +1034,7 @@
                                             </div>
                                             <div class="d-flex justify-content-between">
                                             <span>${details.barcodes[0]['code'] ?? ''}</span>
-                                            <span>$${details.price}</span>
+                                            <span>Rs ${details.price}</span>
                                         </div>
                                         </div>
                                     </div>
@@ -1064,7 +1064,7 @@
                                             </div>
                                             <div class="d-flex justify-content-between">
                                             <span>${details.no_of_session+" sessions" ?? ''} . ${details.total_service+" services" ?? ''}</span>
-                                            <span>$${details.price}</span>
+                                            <span>Rs ${details.price}</span>
                                         </div>
                                         </div>
                                     </div>
@@ -1091,7 +1091,7 @@
                                             </div>
                                             <div class="d-flex justify-content-between">
                                             <span>${details.total_services+" services" ?? ''}</span>
-                                            <span>$${details.price}</span>
+                                            <span>Rs ${details.price}</span>
                                         </div>
                                         </div>
                                     </div>
@@ -1117,7 +1117,7 @@
                 // console.log("det"+ dataDetails);
                 $('#item-head').text(`Edit ${dataDetails.type}`);
                 $('#item_name').text(dataDetails.name);
-                $('#item_price').text(`$${dataDetails.price}`);
+                $('#item_price').text(`Rs ${dataDetails.price}`);
 
                 if (dataDetails.type == 'service') {
                     $('#item_info').text(dataDetails.duration);
@@ -1161,12 +1161,12 @@
                         $(this).data('details').team_member = team_member;
 
                         if ($(this).data('details').price != updatedPrice) {
-                            $(this).find('span').eq(1).text(`$${updatedPrice}`);
+                            $(this).find('span').eq(1).text(`Rs ${updatedPrice}`);
                         }
                         if ($(this).data('details').saleQuantity != 1) {
-                            $(this).find('span').eq(1).text(`${saleQuantity}x $${updatedPrice}`);
+                            $(this).find('span').eq(1).text(`${saleQuantity}x Rs ${updatedPrice}`);
                         }
-                        // $(this).find('span').eq(0).text(`${saleQuantity}x $${updatedPrice}`);
+                        // $(this).find('span').eq(0).text(`${saleQuantity}x Rs ${updatedPrice}`);
                     }
                 });
 
@@ -1177,7 +1177,7 @@
 
             $('#addCartDisModelBtn').click(function() {
                 $('#discount_amount').val(0);
-                $('#totalAfterDiscount').text(`$${parseFloat($('#subTotal').text().replace('$', ''))}`);
+                $('#totalAfterDiscount').text(`Rs ${parseFloat($('#subTotal').text().replace(/[^0-9.]/g, ''))}`);
             });
 
             $('#discount_amount').on('input', function() {
@@ -1185,35 +1185,35 @@
                     const discountAmount = $(this).val();
                     // formula to calculate discount  percentage
                     // Discounted Price = Original Price - (Original Price * Discount Amount / 100)
-                    const totalAfterDiscount = parseFloat($('#subTotal').text().replace('$', '')) - (
-                        discountAmount / 100) * $('#subTotal').text().replace('$', '');
-                    $('#totalAfterDiscount').text(`$${totalAfterDiscount.toFixed(2)}`);
+                    const totalAfterDiscount = parseFloat($('#subTotal').text().replace(/[^0-9.]/g, '')) - (
+                        discountAmount / 100) * $('#subTotal').text().replace(/[^0-9.]/g, '');
+                    $('#totalAfterDiscount').text(`Rs ${totalAfterDiscount.toFixed(2)}`);
                 } else {
                     const discountAmount = parseFloat($(this).val());
-                    const totalAfterDiscount = parseFloat($('#subTotal').text().replace('$', '')) -
+                    const totalAfterDiscount = parseFloat($('#subTotal').text().replace(/[^0-9.]/g, '')) -
                         discountAmount;
-                    $('#totalAfterDiscount').text(`$${totalAfterDiscount.toFixed(2)}`);
+                    $('#totalAfterDiscount').text(`Rs ${totalAfterDiscount.toFixed(2)}`);
                 }
 
             });
 
             $('#saveDiscountChangesButton').click(function() {
-                let discountAmount = $('#subTotal').text().replace('$', '') - $('#totalAfterDiscount')
-                    .text().replace('$', '');
+                let discountAmount = $('#subTotal').text().replace(/[^0-9.]/g, '') - $('#totalAfterDiscount')
+                    .text().replace(/[^0-9.]/g, '');
                 let newDiv =
                     `
                     <div class="d-flex justify-content-between" id="discountDiv">
                         <span class="">Discount:</span>
-                        <span class="" id="discountedAmount">- $${discountAmount.toFixed(2)}</span>
+                        <span class="" id="discountedAmount">- Rs ${discountAmount.toFixed(2)}</span>
                     </div>
                 `;
                 if ($('#discountDiv').length) {
                     $('#discountDiv').remove();
                 }
                 $('#subTotalDiv').after(newDiv);
-                const totalAfterDiscount = $('#totalAfterDiscount').text().replace('$', '');
-                $('#toPay').text(`$${totalAfterDiscount}`);
-                $('#grand_total').text(`$${totalAfterDiscount}`);
+                const totalAfterDiscount = $('#totalAfterDiscount').text().replace(/[^0-9.]/g, '');
+                $('#toPay').text(`Rs ${totalAfterDiscount}`);
+                $('#grand_total').text(`Rs ${totalAfterDiscount}`);
                 $('#exampleModalToggle3 .btn-close').trigger('click');
             });
 
@@ -1245,18 +1245,18 @@
                 }
 
                 grand_total = total;
-                $('#toPay').text(`$${total}`);
+                $('#toPay').text(`Rs ${total}`);
                 if (parseFloat(parseFloat($(this).data('details').price) && $(this).data('details').fee)) {
                     grand_total = total + parseFloat($(this).data('details').fee);
                 }
 
             });
-            $('#subTotal').text(`$${total}`);
-            $('#grand_total').text(`$${grand_total}`);
+            $('#subTotal').text(`Rs ${total}`);
+            $('#grand_total').text(`Rs ${grand_total}`);
             if ($('#discountedAmount').length) {
-                grand_total = grand_total - parseFloat($('#discountedAmount').text().replace('- $', ''));
-                $('#toPay').text(`$${grand_total}`);
-                $('#grand_total').text(`$${grand_total}`);
+                grand_total = grand_total - parseFloat($('#discountedAmount').text().replace(/[^0-9.]/g, ''));
+                $('#toPay').text(`Rs ${grand_total}`);
+                $('#grand_total').text(`Rs ${grand_total}`);
 
             }
         }
@@ -1309,7 +1309,7 @@
     //                 </div>
     //                 <div class="d-flex justify-content-between">
     //                     <span>${details.duration ?? ''}</span>
-    //                     <span>$${details.price}</span>
+    //                     <span>Rs ${details.price}</span>
     //                 </div>
     //             </div>`;
         //         } else if (type == 'product') {
@@ -1330,7 +1330,7 @@
     //                                 </div>
     //                                 <div class="d-flex justify-content-between">
     //                                     <span>${details.barcodes[0]['code'] ?? ''}</span>
-    //                                     <span>$${details.price}</span>
+    //                                     <span>Rs ${details.price}</span>
     //                                 </div>
 
     //                         </div>`;
@@ -1351,7 +1351,7 @@
     //                                 </div>
     //                                 <div class="d-flex justify-content-between">
     //                                     <span>${details.no_of_session+" sessions" ?? ''} . ${details.total_service+" services" ?? ''}</span>
-    //                                     <span>$${details.price}</span>
+    //                                     <span>Rs ${details.price}</span>
     //                                 </div>
 
     //                         </div>`;
@@ -1431,15 +1431,15 @@
                 <hr id="cashDivHr">
                 <div class="d-flex justify-content-between align-items-center mb-2 mt-2" id="cashAmountDiv">
                     <p>Cash:</p>
-                    <span class=" fw-bold" id="cash_amount_received">$${cashReceived}</span>
+                    <span class=" fw-bold" id="cash_amount_received">Rs ${cashReceived}</span>
                 </div>
                 <div class="d-flex justify-content-between align-items-center mb-2 mt-2" id="dueAmountDiv">
                     <p>Left to pay:</p>
-                    <span class=" fw-bold" id="due_amount_span">$${dueAmount}</span>
+                    <span class=" fw-bold" id="due_amount_span">Rs ${dueAmount}</span>
                 </div>
                 <div class="d-flex justify-content-between align-items-center mb-2 mt-2" id="returnAmountDiv">
                     <p>Cash Return:</p>
-                    <span class=" fw-bold" id="return_amount_span">$${cashReturn}</span>
+                    <span class=" fw-bold" id="return_amount_span">Rs ${cashReturn}</span>
                 </div>
                 `;
                 if ($('#cashAmountDiv').length) {
@@ -1456,7 +1456,7 @@
                     $('#fullPaymentAddedHeading').remove();
                 }
                 $('#toPayDiv span').css('visibility', 'hidden');
-                $('#toPayDiv').append(`<span class="fw-bold" id="dueAmountSpan">$${dueAmount}</span>`);
+                $('#toPayDiv').append(`<span class="fw-bold" id="dueAmountSpan">Rs ${dueAmount}</span>`);
                 $('#addPaymentModelBtn').text('Submit');
                 $('#addPaymentModelBtn').attr('id', 'submitSaleBtn');
                 $('#exampleModalToggle6 .btn-close').trigger('click');
@@ -1466,15 +1466,15 @@
                 <hr id="cashDivHr">
                 <div class="d-flex justify-content-between align-items-center mb-2 mt-2" id="cashAmountDiv">
                     <p>Cash:</p>
-                    <span class=" fw-bold" id="cash_amount_received">$${cashReceived}</span>
+                    <span class=" fw-bold" id="cash_amount_received">Rs ${cashReceived}</span>
                 </div>
                 <div class="d-flex justify-content-between align-items-center mb-2 mt-2" id="dueAmountDiv">
                     <p>Left to pay:</p>
-                    <span class=" fw-bold" id="due_amount_span">$${dueAmount}</span>
+                    <span class=" fw-bold" id="due_amount_span">Rs ${dueAmount}</span>
                 </div>
                 <div class="d-flex justify-content-between align-items-center mb-2 mt-2" id="returnAmountDiv">
                     <p>Cash Return:</p>
-                    <span class=" fw-bold" id="return_amount_span">$${cashReturn}</span>
+                    <span class=" fw-bold" id="return_amount_span">Rs ${cashReturn}</span>
                 </div>
                 `;
                 if ($('#cashAmountDiv').length) {
@@ -1521,14 +1521,14 @@
 
             let formData = {
                 client_id: $('#client_id').val(),
-                sub_total: parseFloat($('#subTotal').text().replace('$', '')),
-                grand_total: parseFloat($('#grand_total').text().replace('$', '')),
-                discount: parseFloat($('#discountedAmount').text().replace('- $', '')) || 0,
+                sub_total: parseFloat($('#subTotal').text().replace(/[^0-9.]/g, '')),
+                grand_total: parseFloat($('#grand_total').text().replace(/[^0-9.]/g, '')),
+                discount: parseFloat($('#discountedAmount').text().replace(/[^0-9.]/g, '')) || 0,
                 // payment_method: $('input[name="payment_method"]:checked').val() || 0,
                 payment_method: $('#payment_method').val(),
-                cash_received: parseFloat($('#cash_amount_received').text().replace('$', '')) || 0,
-                cash_return: parseFloat($('#return_amount_span').text().replace('$', '')) || 0,
-                due_amount: parseFloat($('#due_amount_span').text().replace('$', '')) || 0,
+                cash_received: parseFloat($('#cash_amount_received').text().replace(/[^0-9.]/g, '')) || 0,
+                cash_return: parseFloat($('#return_amount_span').text().replace(/[^0-9.]/g, '')) || 0,
+                due_amount: parseFloat($('#due_amount_span').text().replace(/[^0-9.]/g, '')) || 0,
                 sale_note: $('#sale_note').val() || '',
                 cash_received_by: $('#cash_received_by').val() || '',
                 order_items: [],
@@ -1604,14 +1604,14 @@
 
             let formData = {
                 client_id: $('#client_id').val(),
-                sub_total: parseFloat($('#subTotal').text().replace('$', '')),
-                grand_total: parseFloat($('#grand_total').text().replace('$', '')),
-                discount: parseFloat($('#discountedAmount').text().replace('- $', '')) || 0,
+                sub_total: parseFloat($('#subTotal').text().replace(/[^0-9.]/g, '')),
+                grand_total: parseFloat($('#grand_total').text().replace(/[^0-9.]/g, '')),
+                discount: parseFloat($('#discountedAmount').text().replace(/[^0-9.]/g, '')) || 0,
                 payment_method: '',
                 // payment_method: $('#payment_method').val(),
                 cash_received: 0.00,
                 cash_return: 0.00,
-                due_amount: parseFloat($('#grand_total').text().replace('$', '')) || 0.00,
+                due_amount: parseFloat($('#grand_total').text().replace(/[^0-9.]/g, '')) || 0.00,
                 sale_note: $('#sale_note').val() || '',
                 status:"Unpaid",
                 // cash_received_by: $('#cash_received_by').val() || '',
