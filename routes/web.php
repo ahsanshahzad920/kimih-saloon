@@ -99,6 +99,7 @@ Route::get('queue-work', function () {
 
 
 Route::get('sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
+Route::redirect('sitemaps.xml', '/sitemap.xml', 301);
 
 // Clients Routes
 Route::resource('/', HomeController::class);
